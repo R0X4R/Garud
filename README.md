@@ -17,6 +17,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [HTTProbe](https://github.com/tomnomnom/httprobe)
   + [Get-title](https://github.com/tomnomnom/hacks/tree/master/get-title)
+  + [Waybackurls](https://github.com/tomnomnom/waybackurls)
   
 + **Installation**
 ```sh
@@ -25,7 +26,7 @@ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud && m
 
 + **Usage**
 ```
-garud target.com filename
+garud target.com filename {waybackurls or gau}
 ```
 
 ### About Garud

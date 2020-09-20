@@ -15,6 +15,13 @@ if [ -z "$2" ]
     exit 1
 fi
 
+if [ -z "$3" ]
+  then
+    echo "Tool not supplied either use waybackurls or gau"
+    echo "Usage : garud target.com filename waybackurls or gau"
+    exit 1
+fi
+
 if [ ! -d "$2" ]; then
         mkdir $2
 fi
@@ -63,7 +70,7 @@ echo -e "${NORMAL}Starting ${GREEN}Sublist3r${NORMAL} on $1..."
 python3 ~/tools/Sublist3r/sublist3r.py -d $1 -o $2-sublister.txt > /dev/null
 sleep 2
 
-echo -e "${BOLD}Filtering subdomains of ${RED}$1... ${NORMAL} "
+echo -e "${BOLD}\nFiltering subdomains of ${RED}$1... \n ${NORMAL} "
 cat $2-sublister.txt $2-assetfinder.txt |grep -v "*" |sort -u > $2-finalsubdomains.txt
 sleep 2
 
@@ -75,42 +82,42 @@ echo -e "${NORMAL}Starting ${GREEN}Get-titles${NORMAL} to collect all titles of 
 cat $2-alive.txt | get-title > $2-gettitle.txt
 sleep 2
 
-echo -e "${NORMAL}Starting subdomain takeover scan on $1..."
+echo -e "${NORMAL}Starting ${GREEN}subdomain takeover${NORMAL} scan on $1..."
 subjack -w $2-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $2-subjack.txt
 subzy -targets $2-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | sort -u > $2-subzy.txt
 sleep 2
 
-echo -e "${NORMAL}${BOLD}Starting ${GREEN}gau${NORMAL}${BOLD} param output on $1... ${NORMAL} "
+echo -e "${NORMAL}${BOLD}Starting ${GREEN}$3${NORMAL}${BOLD} param output on $1... ${NORMAL} "
 sleep 2
-cat $2-finalsubdomains.txt | gau > $2-gau.txt
+cat $2-finalsubdomains.txt | $3 > $2-$3.txt
 
 echo -e "Starting ${GREEN}XSS${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf xss > $2-xss.txt
+cat $2-$3.txt | gf xss > $2-xss.txt
 
 echo -e "Starting ${GREEN}SSRF${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf ssrf > $2-ssrf.txt
+cat $2-$3.txt | gf ssrf > $2-ssrf.txt
 
 echo -e "Starting ${GREEN}SSTI${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf ssti > $2-ssti.txt
+cat $2-$3.txt | gf ssti > $2-ssti.txt
 
 echo -e "Starting ${GREEN}REDIRECT${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf redirect > $2-redirect.txt
+cat $2-$3.txt | gf redirect > $2-redirect.txt
 
 echo -e "Starting ${GREEN}SQLi${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf sqli > $2-sqli.txt
+cat $2-$3.txt | gf sqli > $2-sqli.txt
 
 echo -e "Starting ${GREEN}LFI${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf sqli > $2-lfi.txt
+cat $2-$3.txt | gf sqli > $2-lfi.txt
 
 echo -e "Starting ${GREEN}RCE${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-gau.txt | gf sqli > $2-rce.txt
+cat $2-$3.txt | gf sqli > $2-rce.txt
 
 sleep 2
 echo -e "${BOLD}\nAll your outputs are save in ${GREEN}$2/ \n"
