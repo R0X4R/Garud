@@ -78,6 +78,23 @@ echo -e "${NORMAL}Starting ${GREEN}Httprobe${NORMAL} on all filtered subdomains.
 cat $2-finalsubdomains.txt | sort -u | uniq -u | httprobe > $2-alive.txt
 sleep 2
 
+echo -e "${NORMAL}Starting ${GREEN}Ping${NORMAL} on all filtered subdomains..."
+cat $2-finalsubdomains.txt | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $2-filtered.txt
+cat $2-filtered.txt | while read ip; 
+	do
+ping -c1 -W2 $ip > /dev/null
+if [[ $? -eq 0 ]];
+    then
+        echo -e "${ip}" | tee -a $2-live.txt > /dev/null
+
+    else
+        echo -e "${ip}" | tee -a $2-dead.txt > /dev/null
+    fi
+
+	done > random.txt;.
+rm random.txt
+sleep 2
+
 echo -e "${NORMAL}Starting ${GREEN}Get-titles${NORMAL} to collect all titles of all subdomains..."
 cat $2-alive.txt | get-title > $2-gettitle.txt
 sleep 2
