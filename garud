@@ -22,6 +22,12 @@ if [ -z "$3" ]
     exit 1
 fi
 
+wget -q --spider http://google.com
+if [ $? -ne 0 ];then
+    echo "Connect to internet before running this tool!"
+    exit 1
+fi
+
 if [ ! -d "$2" ]; then
         mkdir $2
 fi
