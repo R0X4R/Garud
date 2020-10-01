@@ -81,7 +81,7 @@ cat $2-sublister.txt $2-assetfinder.txt |grep -v "*" |sort -u > $2-finalsubdomai
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}Httprobe${NORMAL} on all filtered subdomains..."
-cat $2-finalsubdomains.txt | sort -u | uniq -u | httprobe > $2-alive.txt
+cat $2-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $2-alive.txt
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}Ping${NORMAL} on all filtered subdomains..."
@@ -136,11 +136,11 @@ cat $2-$3.txt | gf sqli > $2-sqli.txt
 
 echo -e "Starting ${GREEN}LFI${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-$3.txt | gf sqli > $2-lfi.txt
+cat $2-$3.txt | gf lfi > $2-lfi.txt
 
 echo -e "Starting ${GREEN}RCE${NORMAL} param filtering on $1... ${NORMAL} "
 sleep 2
-cat $2-$3.txt | gf sqli > $2-rce.txt
+cat $2-$3.txt | gf rce > $2-rce.txt
 
 sleep 2
 echo -e "${BOLD}\nAll your outputs are save in ${GREEN}$2/ \n"
