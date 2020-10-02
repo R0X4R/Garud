@@ -76,8 +76,12 @@ echo -e "${NORMAL}Starting ${GREEN}Sublist3r${NORMAL} on $1..."
 python3 ~/tools/Sublist3r/sublist3r.py -d $1 -o $2-sublister.txt > /dev/null
 sleep 2
 
+echo -e "${NORMAL}Starting ${GREEN}SubFinder${NORMAL} on $1..."
+subfinder -d $1 -o $2-subfinder.txt > /dev/null
+sleep 2
+
 echo -e "${BOLD}\nFiltering subdomains of ${RED}$1... \n ${NORMAL} "
-cat $2-sublister.txt $2-assetfinder.txt |grep -v "*" |sort -u > $2-finalsubdomains.txt
+cat $2-sublister.txt $2-assetfinder.txt $2-subfinder.txt | grep -v "*" |sort -u > $2-finalsubdomains.txt
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}HTTPx${NORMAL} on all filtered subdomains..."
