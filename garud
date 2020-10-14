@@ -77,7 +77,7 @@ python3 ~/tools/Sublist3r/sublist3r.py -d $1 -o $2-sublister.txt > /dev/null
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}SubFinder${NORMAL} on $1..."
-subfinder -d $1 -o $2-subfinder.txt > /dev/null
+subfinder -silent -d $1 -o $2-subfinder.txt > /dev/null
 sleep 2
 
 echo -e "${BOLD}\nFiltering subdomains of ${RED}$1... \n ${NORMAL} "
