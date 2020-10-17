@@ -68,16 +68,19 @@ cd $2/
 echo -e "${NORMAL}${BOLD}\nStarting scan on ${RED}$1${NORMAL}${BOLD}... \n"
 sleep 2
 
-echo -e "${NORMAL}Starting ${GREEN}Passive Subdomain Enumeration${NORMAL} on $1..."
-function Passive() {
-    subfinder -d $domain -o subfinder.txt &>/dev/null
-    assetfinder --subs-only $domain | sort -u > assetfinder.txt &>/dev/null
-    amass enum -passive -norecursive -noalts -d $domain -config /root/.config/amass/config.ini -o amass.txt &>/dev/null
-    findomain -t $domain -u findomain.txt &>/dev/null
-    cat subfinder.txt assetfinder.txt amass.txt findomain.txt | sort -u > $2-finalsubdomains.txt
-    rm subfinder.txt assetfinder.txt amass.txt findomain.txt
-}
-Passive
+echo -e "${NORMAL}Starting ${GREEN}Passive Subdomain Enumeration${NORMAL} on $1... \n"
+
+echo -e "${NORMAL}Running ${GREEN}Subfinder${NORMAL} ..."
+subfinder -d $1 -o subfinder.txt &>/dev/null
+echo -e "${NORMAL}Running ${GREEN}Assetfinder${NORMAL} ..."
+assetfinder --subs-only $1 | sort -u > assetfinder.txt &>/dev/null
+echo -e "${NORMAL}Running ${GREEN}Amass${NORMAL} ..."
+amass enum -passive -norecursive -noalts -d $1 -config /root/.config/amass/config.ini -o amass.txt &>/dev/null
+echo -e "${NORMAL}Running ${GREEN}Findomain${NORMAL} ..."
+findomain -t $1 -u findomain.txt &>/dev/null
+
+cat subfinder.txt assetfinder.txt amass.txt findomain.txt | sort -u > $2-finalsubdomains.txt
+rm subfinder.txt assetfinder.txt amass.txt findomain.txt
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}HTTPx${NORMAL} on all filtered subdomains..."
