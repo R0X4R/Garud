@@ -10,12 +10,13 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
 + **Tools used - You must need to install these tools to use this script**<br/>
 
   + [SubFinder](https://github.com/projectdiscovery/subfinder)
-  + [Sublist3r](https://github.com/aboul3la/Sublist3r)
+  + [Findomain](https://github.com/Edu4rdSHL/findomain)
+  + [Amass](https://github.com/OWASP/Amass)
+  + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
   + [Gau](https://github.com/lc/gau)
   + [Subzy](https://github.com/LukaSikic/subzy)
   + [Subjack](https://github.com/haccer/subjack): save [fingerprints.json](https://github.com/haccer/subjack/blob/master/fingerprints.json) file into ~/tools/ directory.
-  + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [HTTPX](https://github.com/projectdiscovery/httpx)
   + [Waybackurls](https://github.com/tomnomnom/waybackurls)
   
