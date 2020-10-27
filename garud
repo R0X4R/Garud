@@ -73,13 +73,14 @@ show_menus() {
     sleep 1
     echo -e "${NORMAL}${BOLD}\n   Target:${NORMAL}${GREEN} $domain ${NORMAL}"
     echo -e "${BOLD}   Output:${NORMAL}${GREEN} $file ${NORMAL} \n "
+    echo -e "${BOLD}${RED}   Warning:${NORMAL}You must need to run Sudomain Enum before using any other tool. ${NORMAL} \n "
     echo "   0. Install all the tools"
     echo "   1. Subdomain Enumeration"
     echo "   2. Get Titles"
     echo "   3. Subdomain Takeover"
     echo "   4. Waybackurls"
     echo "   5. Gau"
-    echo "   6. Gf Patterns"
+    echo "   6. Gf Patterns (You must have to run waybackurls or gau before using GF)"
     echo "   7. Full scan"
     echo -e "   8. Exit \n"
 }
