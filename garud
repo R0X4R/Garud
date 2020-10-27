@@ -106,7 +106,7 @@ rm random.txt
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}Get-titles${NORMAL} to collect all titles of all subdomains..."
-cat $2-alive.txt | httpx -silent -title| tr "[]" " " > $2-gettitle.txt
+cat $2-alive.txt | get-title > $2-gettitle.txt
 sleep 2
 
 echo -e "${NORMAL}Starting ${GREEN}subdomain takeover${NORMAL} scan on $1..."
