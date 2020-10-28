@@ -201,9 +201,8 @@ run_all () {
     run_gettitle
     run_subtake
     run_wayback
-    run_gau
     run_gf
-    pause
+    exit 0
 }
 
 trap '' SIGINT SIGQUIT SIGTSTP
