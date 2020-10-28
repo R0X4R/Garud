@@ -26,7 +26,7 @@ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud && m
 
 + **Usage**
 ```sh
-garud target.com <filename> <waybackurls or gau>
+garud -d target.com -f filename
 ```
 
 ### About Garud
