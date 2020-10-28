@@ -24,14 +24,14 @@ done
 if [ -z "$domain" ]
   then
     echo "Target domain not supplied"
-    echo "Usage : garud target.com filename"
+    echo "Usage : garud -d target.com -f filename"
     exit 1
 fi
 
 if [ -z "$file" ]
   then
     echo "Output filename not supplied"
-    echo "Usage : garud target.com filename"
+    echo "Usage : garud -d target.com -f filename"
     exit 1
 fi
 
@@ -197,12 +197,12 @@ run_gf() {
 }
 
 run_all () {
-    run_gau
-    run_gettitle
-    run_gf
     run_subenum
+    run_gettitle
     run_subtake
     run_wayback
+    run_gau
+    run_gf
     pause
 }
 
