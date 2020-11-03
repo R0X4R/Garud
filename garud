@@ -99,12 +99,12 @@ read_option(){
 	6) run_gf ;;
     7) run_all ;;
 	8) exit 0;;
-	*) echo -e "${RED}Error...${NORMAL}" && sleep 2
+	*) echo -e "${RED}   Error...${NORMAL}" && sleep 2
 	esac
 }
 
 pause(){
-  read -p "Press [Enter] key to continue..." fackEnterKey
+  read -p "   Press [Enter] key to continue..." fackEnterKey
 }
  
 load_colors() {
@@ -173,7 +173,7 @@ run_wayback() {
 }
 
 run_gau() {
-    cat $file-finalsubdomains.txt | gau > $file-params.txt
+    cat $file-finalsubdomains.txt | gau >> $file-params.txt
     echo -e "${YELLOW}Done. ${NORMAL}\n"
     pause
 }
@@ -201,6 +201,7 @@ run_all () {
     run_gettitle
     run_subtake
     run_wayback
+    run_gau
     run_gf
     exit 0
 }
