@@ -87,7 +87,7 @@ show_menus() {
 
 read_option(){
 	local choice
-	read -p "Enter choice [ 1 - 8] " choice
+	read -p "   Enter choice [ 0 - 8 ] " choice
 	case $choice in
     
     0) run_tools ;;
@@ -137,7 +137,7 @@ install_tools() {
     go get github.com/haccer/subjack &> /dev/null
     go get -u github.com/tomnomnom/assetfinder &> /dev/null
     GO111MODULE=auto go get -u -v github.com/projectdiscovery/httpx/cmd/httpx &> /dev/null
-    echo -e "${YELLOW}Finished installing tools ${NORMAL}\n"
+    echo -e "${YELLOW}   Finished installing tools ${NORMAL}\n"
     pause
 }
 
@@ -149,61 +149,67 @@ run_subenum() {
     cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
     sleep 2
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    echo -e "${YELLOW}   Done. ${NORMAL}\n"
     pause
 }
 
 run_gettitle() {
     cat $file-alive.txt | get-title > $file-gettitle.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    echo -e "${YELLOW}   Done. ${NORMAL}\n"
     pause
 }
 
 run_subtake() {
     subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt
     subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | sort -u > $file-subzy.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    echo -e "${YELLOW}   Done. ${NORMAL}\n"
     pause
 }
 
 run_wayback() {
     cat $file-finalsubdomains.txt | waybackurls > $file-params.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    echo -e "${YELLOW}   Done. ${NORMAL}\n"
     pause
 }
 
 run_gau() {
     cat $file-finalsubdomains.txt | gau >> $file-params.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    echo -e "${YELLOW}   Done. ${NORMAL}\n"
     pause
 }
 
 run_gf() {
     cat $file-params.txt | gf xss > $file-xss.txt
-    sleep 2
     cat $file-params.txt | gf ssrf > $file-ssrf.txt
-    sleep 2
     cat $file-params.txt | gf ssti > $file-ssti.txt
-    sleep 2
     cat $file-params.txt | gf redirect > $file-redirect.txt
-    sleep 2
     cat $file-params.txt | gf sqli > $file-sqli.txt
-    sleep 2
     cat $file-params.txt | gf lfi > $file-lfi.txt
-    sleep 2
     cat $file-params.txt | gf rce > $file-rce.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    echo -e "${YELLOW}   Done. ${NORMAL}\n"
     pause
 }
 
 run_all () {
-    run_subenum
-    run_gettitle
-    run_subtake
-    run_wayback
-    run_gau
-    run_gf
-    exit 0
+    assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
+    python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
+    subfinder -silent -d $domain -o $file-subfinder.txt > /dev/null
+    cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+    sleep 2
+    cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
+    cat $file-alive.txt | get-title > $file-gettitle.txt
+    subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt
+    subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | sort -u > $file-subzy.txt
+    cat $file-finalsubdomains.txt | waybackurls >> $file-params.txt
+    cat $file-finalsubdomains.txt | gau >> $file-params.txt
+    cat $file-params.txt | gf xss > $file-xss.txt
+    cat $file-params.txt | gf ssrf > $file-ssrf.txt
+    cat $file-params.txt | gf ssti > $file-ssti.txt
+    cat $file-params.txt | gf redirect > $file-redirect.txt
+    cat $file-params.txt | gf sqli > $file-sqli.txt
+    cat $file-params.txt | gf lfi > $file-lfi.txt
+    cat $file-params.txt | gf rce > $file-rce.txt
+    pause
 }
 
 trap '' SIGINT SIGQUIT SIGTSTP
