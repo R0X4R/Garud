@@ -12,6 +12,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [SubFinder](https://github.com/projectdiscovery/subfinder)
   + [Sublist3r](https://github.com/aboul3la/Sublist3r)
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
+  + [Get Title](https://github.com/tomnomnom/hacks/tree/master/get-title)
   + [Gau](https://github.com/lc/gau)
   + [Subzy](https://github.com/LukaSikic/subzy)
   + [Subjack](https://github.com/haccer/subjack): save [fingerprints.json](https://github.com/haccer/subjack/blob/master/fingerprints.json) file into ~/tools/ directory.
