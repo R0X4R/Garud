@@ -145,8 +145,9 @@ run_subenum() {
     assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
     python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
     subfinder -silent -d $domain -o $file-subfinder.txt > /dev/null
+    amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
     sleep 2
-    cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+    cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
     sleep 2
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
     echo -e "${YELLOW}   Done. ${NORMAL}\n"
