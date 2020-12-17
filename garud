@@ -90,14 +90,14 @@ read_option(){
 	read -p "   Enter choice [ 0 - 8 ] " choice
 	case $choice in
     
-    0) install_tools ;;
+    	0) install_tools ;;
 	1) run_subenum ;;
 	2) run_gettitle ;;
 	3) run_subtake ;;
 	4) run_wayback ;;
 	5) run_gau ;;
 	6) run_gf ;;
-    7) run_all ;;
+    	7) run_all ;;
 	8) exit 0;;
 	*) echo -e "${RED}   Error...${NORMAL}" && sleep 2
 	esac
@@ -116,6 +116,7 @@ load_colors() {
 }
 
 install_tools() {
+	cd $HOME
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo -e "${YELLOW} Installing dependencies!"
 	sudo apt update &> /dev/null
@@ -168,7 +169,7 @@ install_tools() {
     if [ -f "$HOME/.bashrc" ]; then
 	echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc
     elif [ -f "$HOME/.zshrc" ]; then
-	echo -e "autoload -Uz compinit \n compinit >> $HOME/.zshrc
+	echo -e "autoload -Uz compinit \n compinit" >> $HOME/.zshrc
 	echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.zsh' >> $HOME/.zshrc
     fi
     echo -e "${YELLOW}Creating gf configs\n"
@@ -194,7 +195,6 @@ install_tools() {
 }
 
 run_subenum() {
-    cd $file
     echo -e "${YELLOW}Performing sub-domain enumeration ${NORMAL}"
     echo -e "${GREEN}Running assetfinder"
     assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
@@ -214,7 +214,6 @@ run_subenum() {
 }
 
 run_gettitle() {
-    cd $file
     if [ ! -f "$file-alive.txt" ]; then
 	echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
     fi
@@ -237,7 +236,6 @@ run_subtake() {
 }
 
 run_wayback() {
-    cd $file
     if [ ! -f "$file-finalsubdomains.txt" ]; then
         echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
     fi
@@ -247,7 +245,6 @@ run_wayback() {
 }
 
 run_gau() {
-    cd $file
     if [ ! -f "$file-finalsubdomains.txt" ]; then
         echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
     fi
@@ -257,7 +254,6 @@ run_gau() {
 }
 
 run_gf() {
-    cd $file
     if [ ! -f "$file-params.txt" ]; then
         echo -e "${RED}ERROR: waybackurls and/or gau must be run 1st! ${NORMAL}"
     fi
