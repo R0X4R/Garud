@@ -231,7 +231,7 @@ run_subtake() {
     echo -e "${GREEN}Running subzy on discovered sub-domains."
     subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | sort -u > $file-subzy.txt
     echo -e "${GREEN}Running takeover on discovered sub-domains."
-    python3 $HOME/tools/takeover/takeover.py -l $file-finalsubdomains.txt -t 10 -o $file-takeover.txt
+    python3 $HOME/tools/takeover/takeover.py -l $file-finalsubdomains.txt -t 10 -o $file-takeover.txt &> /dev/null
     echo -e "${YELLOW}Done. ${NORMAL}\n"
 }
 
