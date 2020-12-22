@@ -3,7 +3,7 @@
 # Garud
 An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.<br/>
 
-![garud](https://user-images.githubusercontent.com/32596297/92571372-a8dd8380-f2a0-11ea-9f2e-274dc743ace1.gif)
+![garud](https://github.com/R0X4R/Garud/blob/master/garud.gif?raw=true)
 
 + **Requirements:** Go Language, Python 2.7 or Python 3.
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
@@ -13,6 +13,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Sublist3r](https://github.com/aboul3la/Sublist3r)
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
   + [Get Title](https://github.com/tomnomnom/hacks/tree/master/get-title)
+  + [Takeover.py](https://github.com/m4ll0k/takeover): echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py' >> ~/.bashrc
   + [Gau](https://github.com/lc/gau)
   + [Subzy](https://github.com/LukaSikic/subzy)
   + [Subjack](https://github.com/haccer/subjack): save [fingerprints.json](https://github.com/haccer/subjack/blob/master/fingerprints.json) file into ~/tools/ directory.
