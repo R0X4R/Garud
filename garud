@@ -83,6 +83,11 @@ load_colors() {
     YELLOW="\e[93m"
 }
 
+scan_targets() {
+    echo -e "${NORMAL}${BOLD}\n\n Target: ${RED}$domain${NORMAL}"
+    echo -e "${NORMAL}${BOLD} Output: ${GREEN}$(pwd)/${NORMAL}"
+}
+
 run_subenum() {
     echo -ne "${NORMAL}${BOLD}\n Scanning progress:   [${YELLOW} █                           ${NORMAL} ] 1% \r"
     sleep 1s
@@ -145,6 +150,7 @@ run_gf() {
 }
 
 run_scans() {
+    scan_targets
     run_subenum
     run_gettitle
     run_subtake
