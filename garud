@@ -1,5 +1,6 @@
 #!/bin/bash
-#coded by R0X4R
+# coded by R0X4R
+# Contributers: KathanP19 (https://github.com/KathanP19), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec).
 
 wget -q --spider http://google.com
 if [ $? -ne 0 ];then
@@ -83,8 +84,6 @@ load_colors() {
 }
 
 run_subenum() {
-    # echo -e "${NORMAL}${GREEN}\n \n[+] Starting subdomain enumeration on $domain ${NORMAL} "
-
     echo -ne "${NORMAL}${BOLD}\n Scanning progress:   [${YELLOW} █                           ${NORMAL} ] 1% \r"
     sleep 1s
     echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ██                            ${NORMAL} ] 8% \r"
@@ -107,7 +106,6 @@ run_subenum() {
 }
 
 run_gettitle() {
-    # echo -e "${GREEN}[+] Enumerating titles on $domain ${NORMAL} "
     sleep 1s
     echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ████████████                  ${NORMAL} ] 40% \r"
     cat $file-alive.txt | get-title > $file-gettitle.txt
@@ -115,7 +113,6 @@ run_gettitle() {
 }
 
 run_subtake() {
-    # echo -e "${GREEN}[+] Scanning for subdomain-takeover on $domain ${NORMAL} "
     sleep 1s
     echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ██████████████████            ${NORMAL} ] 60% \r"
     subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt &> /dev/null
@@ -124,7 +121,6 @@ run_subtake() {
 }
 
 run_params() {
-    # echo -e "${GREEN}[+] Scanning for all possible paramters on $domain ${NORMAL} "
     sleep 1s
     echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ████████████████████████      ${NORMAL} ] 80% \r"
     cat $file-finalsubdomains.txt | waybackurls > $file-waybackurls.txt
@@ -135,7 +131,6 @@ run_params() {
 }
 
 run_gf() {
-    # echo -e "${GREEN}[+] Scanning for all possible vulnerable paramters of target domains.${NORMAL} "
     cat $file-params.txt | gf xss > $file-xss.txt
     cat $file-params.txt | gf ssrf > $file-ssrf.txt
     cat $file-params.txt | gf ssti > $file-ssti.txt
