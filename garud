@@ -41,7 +41,7 @@ fi
 
 cd $file/
 
-show_menus() {
+show_logo() {
 	clear
 
     echo -e ${GREEN}"\n          .                                                      . "
@@ -71,41 +71,8 @@ show_menus() {
     echo -e "${NORMAL}${BOLD}\n                           coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
 
     sleep 1
-    echo -e "${NORMAL}${BOLD}\n   Target:${NORMAL}${GREEN} $domain ${NORMAL}"
-    echo -e "${BOLD}   Output:${NORMAL}${GREEN} $file ${NORMAL} \n "
-    echo -e "${BOLD}${RED}   Warning:${NORMAL}You must need to run Sudomain Enum before using any other tool. ${NORMAL} \n "
-    echo "   0. Install all the tools"
-    echo "   1. Subdomain Enumeration"
-    echo "   2. Get Titles"
-    echo "   3. Subdomain Takeover"
-    echo "   4. Waybackurls"
-    echo "   5. Gau"
-    echo "   6. Gf Patterns (You must have to run waybackurls or gau before using GF)"
-    echo "   7. Full scan"
-    echo -e "   8. Exit \n"
 }
 
-read_option(){
-	local choice
-	read -p "   Enter choice [ 0 - 8 ] " choice
-	case $choice in
-    
-    	0) install_tools ;;
-	1) run_subenum ;;
-	2) run_gettitle ;;
-	3) run_subtake ;;
-	4) run_wayback ;;
-	5) run_gau ;;
-	6) run_gf ;;
-    	7) run_all ;;
-	8) exit 0;;
-	*) echo -e "${RED}   Error...${NORMAL}" && sleep 2
-	esac
-}
-
-pause(){
-  read -p "   Press [Enter] key to continue..." fackEnterKey
-}
  
 load_colors() {
     RED="\e[31m"
@@ -115,149 +82,60 @@ load_colors() {
     YELLOW="\e[93m"
 }
 
-install_tools() {
-	cd $HOME
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo -e "${YELLOW} Installing dependencies!"
-	sudo apt update &> /dev/null
-	sudo apt install -y  amass golang-go python3-pip &> /dev/null
-	echo -e "&{YELLOW} Installing rust.  Press 1 when prompted."
-	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-	echo -e "${YELLOW} configuring go workspace."
-        mkdir -p $HOME/go/{bin,src,pkg}
-        chmod +x $HOME/go/bin
-        echo "export GOPATH=$HOME/go" >> $HOME/.bashrc
-        echo "export GOROOT=\"/usr/local/go/libexec\"" >> $HOME/.bashrc
-        echo "export PATH=\"$PATH:${GOPATH}/bin:${GOROOT}/bin\"" >> $HOME/.bashrc
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-	echo -e "${YELLOW} Installing dependencies!"
-	if [ ! -f "/usr/local/bin/brew" ]; then
-		echo -e "${YELLOW} Installing Homebrew"
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	fi
-	brew update &> /dev/null
-	brew tap caffix/amass &> /dev/null
-	brew install golang rust amass
-	echo -e "${YELLOW} configuring go workspace."
-	mkdir -p $HOME/go/{bin,src,pkg}
-	chmod +x $HOME/go/bin
-	echo "export GOPATH=$HOME/go" >> $HOME/.zshrc
-	echo "export GOROOT=\"$(brew --prefix golang)/libexec\"" >> $HOME/.zshrc
-	echo "export PATH=\"$PATH:${GOPATH}/bin:${GOROOT}/bin\"" >> $HOME/.zshrc
-    fi
-    if [ ! -f "$HOME/tools" ]; then
-	echo -e "${YELLOW}   Creating tools directory in $HOME\n"
-	mkdir -p $HOME/tools
-    fi
-    echo -e "${YELLOW}Installing Sublist3r\n"
-    git clone https://github.com/aboul3la/Sublist3r.git $HOME/tools/Sublist3r &> /dev/null
-    echo -e "${YELLOW}Installing Sublist3r python dependencies\n"
-    pip3 install -r $HOME/tools/Sublist3r/requirements.txt &> /dev/null
-    echo -e "${YELLOW}Installing subjack fingerprints.json\n"
-    wget https://raw.githubusercontent.com/haccer/subjack/master/fingerprints.json $HOME/tools/ &> /dev/null
-    echo -e "${YELLOW}Installing findomain\n"    
-    git clone https://github.com/Edu4rdSHL/findomain.git $HOME/tools/findomain &> /dev/null
-    cd $HOME/tools/findomain && cargo build --release && cp $HOME/tools/findomain/target/release/findomain /usr/local/bin/
-    rm -r $HOME/tools/findomain
-    echo -e "${YELLOW}Installing Subfinder\n"
-    GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder &> /dev/null
-    echo -e "${YELLOW}Installing waybackurls\n"
-    go get -u github.com/tomnomnom/waybackurls &> /dev/null
-    echo -e "${YELLOW}Installing gf\n"
-    go get -u github.com/tomnomnom/gf &> /dev/null
-    echo -e "${YELLOW}Adding gf completion to .bashrc\n"
-    if [ -f "$HOME/.bashrc" ]; then
-	echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc
-    elif [ -f "$HOME/.zshrc" ]; then
-	echo -e "autoload -Uz compinit \n compinit" >> $HOME/.zshrc
-	echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.zsh' >> $HOME/.zshrc
-    fi
-    echo -e "${YELLOW}Creating gf configs\n"
-    mkdir ~/.gf
-    cp -r $GOPATH/src/github.com/tomnomnom/gf/examples ~/.gf
-    git clone https://github.com/1ndianl33t/Gf-Patterns &> /dev/null
-    mv ~/Gf-Patterns/*.json ~/.gf
-    echo -e "${YELLOW}Installing gua\n"
-    GO111MODULE=on go get -u -v github.com/lc/gau &> /dev/null
-    echo -e "${YELLOW}Installing subzy\n"
-    go get -u -v github.com/lukasikic/subzy && cd $GOPATH/src/github.com/lukasikic/subzy && go mod init && go install &> /dev/null
-    echo -e "${YELLOW}Installing subjack\n"
-    go get github.com/haccer/subjack &> /dev/null
-    echo -e "${YELLOW}Installing assetfinder\n"
-    go get -u github.com/tomnomnom/assetfinder &> /dev/null
-    echo -e "${YELLOW}Installing httpx\n"
-    GO111MODULE=auto go get -u -v github.com/projectdiscovery/httpx/cmd/httpx &> /dev/null
-    echo -e "${YELLOW}Installing takeover."
-    git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover
-    cd $HOME/tools/takeover && python3 setup.py install
-    echo -e "${YELLOW}Finished installing tools ${NORMAL}\n"
-    pause
-}
-
 run_subenum() {
-    echo -e "${YELLOW}Performing sub-domain enumeration ${NORMAL}"
-    echo -e "${GREEN}Running assetfinder"
+    # echo -e "${NORMAL}${GREEN}\n \n[+] Starting subdomain enumeration on $domain ${NORMAL} "
+
+    echo -ne "${NORMAL}${BOLD}\n Scanning progress:   [${YELLOW} █                           ${NORMAL} ] 1% \r"
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ██                            ${NORMAL} ] 8% \r"
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ███                           ${NORMAL} ] 10% \r"
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ████                          ${NORMAL} ] 15% \r"
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} █████                         ${NORMAL} ] 18% \r"
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ██████                        ${NORMAL} ] 20% \r"
     assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
-    echo -e "${GREEN}Running sublist3r"
     python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
-    echo -e "${GREEN}Running subfinder"    
     subfinder -silent -d $domain -o $file-subfinder.txt > /dev/null
-    echo -e "${GREEN}Running amass"
     amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
-    sleep 2
-    echo -e "${GREEN}Compiling final sub-domain list!"
+    sleep 1s
     cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
-    sleep 2
-    echo -e "${GREEN}Checking final sub-domain list for live hosts"
+    sleep 1s
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
-    echo -e "${YELLOW}Done. ${NORMAL}"
 }
 
 run_gettitle() {
-    if [ ! -f "$file-alive.txt" ]; then
-	echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
-    fi
-    echo -e "${GREEN}Running get-title on discovered sub-domains."
+    # echo -e "${GREEN}[+] Enumerating titles on $domain ${NORMAL} "
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ████████████                  ${NORMAL} ] 40% \r"
     cat $file-alive.txt | get-title > $file-gettitle.txt
-    echo -e "${YELLOW}   Done. ${NORMAL}\n"
+    
 }
 
 run_subtake() {
-    if [ ! -f "$file-finalsubdomains.txt" ]; then
-        echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
-    fi
-    echo -e "${GREEN}Running subjack on discovered sub-domains"
-    subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt
-    echo -e "${GREEN}Running subzy on discovered sub-domains."
-    subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | sort -u > $file-subzy.txt
-    echo -e "${GREEN}Running takeover on discovered sub-domains."
-    python3 $HOME/tools/takeover/takeover.py -l $file-finalsubdomains.txt -t 10 -o $file-takeover.txt &> /dev/null
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    # echo -e "${GREEN}[+] Scanning for subdomain-takeover on $domain ${NORMAL} "
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ██████████████████            ${NORMAL} ] 60% \r"
+    subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt &> /dev/null
+    subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | tee $file-subzy.txt &> /dev/null
+    takeover.py -l $file-finalsubdomains.txt -t 10 -o $file-takeover.txt &> /dev/null
 }
 
-run_wayback() {
-    if [ ! -f "$file-finalsubdomains.txt" ]; then
-        echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
-    fi
-    echo -e "${GREEN}Running waybackurls on discovered sub-domains."
-    cat $file-finalsubdomains.txt | waybackurls > $file-params.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
-}
-
-run_gau() {
-    if [ ! -f "$file-finalsubdomains.txt" ]; then
-        echo -e "${RED}ERROR: Sub-domain enumeration must be run 1st! ${NORMAL}"
-    fi
-    echo -e "${GREEN}Running gau on discovered sub-domains."
-    cat $file-finalsubdomains.txt | gau >> $file-params.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+run_params() {
+    # echo -e "${GREEN}[+] Scanning for all possible paramters on $domain ${NORMAL} "
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ████████████████████████      ${NORMAL} ] 80% \r"
+    cat $file-finalsubdomains.txt | waybackurls > $file-waybackurls.txt
+    cat $file-finalsubdomains.txt | gau > $file-gau.txt
+    cat $file-gau.txt $file-waybackurls.txt | sort -u | uniq -u > $file-params.txt
+    rm $file-gau.txt
+    rm $file-waybackurls.txt
 }
 
 run_gf() {
-    if [ ! -f "$file-params.txt" ]; then
-        echo -e "${RED}ERROR: waybackurls and/or gau must be run 1st! ${NORMAL}"
-    fi
-    echo -e "${GREEN}Running gf on discovered URL's"
+    # echo -e "${GREEN}[+] Scanning for all possible vulnerable paramters of target domains.${NORMAL} "
     cat $file-params.txt | gf xss > $file-xss.txt
     cat $file-params.txt | gf ssrf > $file-ssrf.txt
     cat $file-params.txt | gf ssti > $file-ssti.txt
@@ -265,24 +143,24 @@ run_gf() {
     cat $file-params.txt | gf sqli > $file-sqli.txt
     cat $file-params.txt | gf lfi > $file-lfi.txt
     cat $file-params.txt | gf rce > $file-rce.txt
-    echo -e "${YELLOW}Done. ${NORMAL}\n"
+    sleep 2
+    echo -ne "${NORMAL}${BOLD} Scanning progress:   [${YELLOW} ██████████████████████████████ ${NORMAL}] 100% \r"
+    echo -ne "\n"
+    echo -e "${NORMAL}${BOLD} Scanning Completed... \n"
 }
 
-run_all () {
+run_scans() {
     run_subenum
     run_gettitle
     run_subtake
-    run_wayback
-    run_gau
+    run_params
     run_gf
-    exit 0
+    exit 1
 }
-
-trap '' SIGINT SIGQUIT SIGTSTP
 
 while true
 do
     load_colors
-    show_menus
-    read_option
+    show_logo
+    run_scans
 done
