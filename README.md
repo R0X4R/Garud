@@ -22,15 +22,17 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Waybackurls](https://github.com/tomnomnom/waybackurls)
   
 + **Installation**
-```sh
-git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud && mv garud /usr/local/bin/
-```
+
+    ```sh
+    git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud && mv garud /usr/local/bin/
+    ```
 + **Note:**  You can simply download pre-compiled binary [file](https://github.com/R0X4R/Garud/releases/download/v1.0/garud)
 
 + **Usage**
-```sh
-garud -d target.com -f filename
-```
+
+    ```sh
+    garud -d target.com -f filename
+    ```
 
 ### About Garud
 I made this tool to automate my recon and save my time. It really give me headache always type such command and then wait to complete one command and I type other command. So I collected some of the tools which is widely used in the bugbounty field. In this script I used Assetfinder, get-titles, httprobe, subjack, subzy, sublister, gau and gf patterns.<br/> 
