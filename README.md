@@ -25,6 +25,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
 ```sh
 git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud && mv garud /usr/local/bin/
 ```
++ **Note:**  You can simply download pre-compiled binary [file](https://github.com/R0X4R/Garud/releases/download/v1.0/garud)
 
 + **Usage**
 ```sh
