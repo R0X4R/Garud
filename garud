@@ -40,7 +40,7 @@ if [ -z "$domain" ]
     echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Error target not supplied. ${NORMAL}"
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
-    echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL}target-output \n"
+    echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL} target-output \n"
     exit 1
 fi
 
