@@ -22,17 +22,36 @@ while getopts ":d:f:" o; do
     esac
 done
 
+load_colors() {
+    RED="\e[31m"
+    BOLD="\e[1m"
+    NORMAL="\e[0m"
+    GREEN="\e[92m"
+    YELLOW="\e[93m"
+    BLINK="\e[5m"
+}
+
 if [ -z "$domain" ]
   then
-    echo "Target domain not supplied"
-    echo "Usage : garud -d target.com -f filename"
+    load_colors
+    echo -e "${RED}\n █▀▀ ▄▀█ █▀█ █░█ █▀▄"
+    echo -e "${RED} █▄█ █▀█ █▀▄ █▄█ █▄▀"
+    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Error target not supplied. ${NORMAL}"
+    echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
+    echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})\n"
     exit 1
 fi
 
 if [ -z "$file" ]
   then
-    echo "Output filename not supplied"
-    echo "Usage : garud -d target.com -f filename"
+    load_colors
+    echo -e "${RED}\n █▀▀ ▄▀█ █▀█ █░█ █▀▄"
+    echo -e "${RED} █▄█ █▀█ █▀▄ █▄█ █▄▀"
+    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Error output directory not supplied. ${NORMAL}"
+    echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
+    echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})\n"
     exit 1
 fi
 
@@ -72,15 +91,6 @@ show_logo() {
     echo -e "${NORMAL}${BOLD}\n                           coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
 
     sleep 1
-}
-
- 
-load_colors() {
-    RED="\e[31m"
-    BOLD="\e[1m"
-    NORMAL="\e[0m"
-    GREEN="\e[92m"
-    YELLOW="\e[93m"
 }
 
 scan_targets() {
