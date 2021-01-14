@@ -20,6 +20,10 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [HTTPX](https://github.com/projectdiscovery/httpx)
   + [Waybackurls](https://github.com/tomnomnom/waybackurls)
+  + [Kxss](https://github.com/Emoe/kxss)
+  + [QSreplace](https://github.com/tomnomnom/qsreplace)
+  + [FFuF](https://github.com/ffuf/ffuf)
+  + [Dalfox](https://github.com/hahwul/dalfox)
   
 + **Installation**
 
