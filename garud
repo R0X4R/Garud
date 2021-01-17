@@ -164,7 +164,16 @@ check_open() {
     cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do;do curl -s -L $host -I|grep "evil.com" && echo "$host - vulnerable" ;done > $file-vulnred.txt # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
     echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}100%${NORMAL}] \r"
     echo -ne "\n"
-    echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud. \n"
+    echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud."
+}
+
+slack_bot() {
+    echo -ne "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
+    function notification_text()
+    {
+    echo -e "Hii there,\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud.";
+    }
+    python3 ~/slack-bot.py "$(notification_text)."
 }
 
 run_scans() {
@@ -176,6 +185,7 @@ run_scans() {
     run_gf
     check_xss
     check_open
+    slack_bot
     exit 1
 }
 
