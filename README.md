@@ -37,7 +37,18 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
     ```sh
     garud -d target.com -f filename
     ```
-
++ **Slack Bot**
+   
+   ```sh
+   wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot.py ~/slack-bot.py
+   pip3 install slackclient slacker
+   ```
+   Add your slack token in slack-bot.py file. <br/>
+   
+   ![token-test](https://github.com/R0X4R/Garud/blob/master/token-key.jpg?raw=true)
+   - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)  
+   
+   
 ### About Garud
 I made this tool to automate my recon and save my time. It really give me headache always type such command and then wait to complete one command and I type other command. So I collected some of the tools which is widely used in the bugbounty field. In this script I used Assetfinder, get-titles, httprobe, subjack, subzy, sublister, gau and gf patterns.<br/> 
 The script first enumerates all the subdomains of the give target domain using assetfinder and sublister then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using get-title then it scans for subdomain takeover using subjack and subzy. Then it uses gau to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains. Then it'll save all the output in a text file like target-xss.txt. <bR/>
