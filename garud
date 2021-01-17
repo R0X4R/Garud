@@ -171,7 +171,7 @@ slack_bot() {
     echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
     function notification_text()
     {
-    echo -e "Hii there,\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud.";
+    echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud.";
     }
     python3 ~/slack-bot.py "$(notification_text)."
 }
