@@ -26,14 +26,14 @@ cp -r $GOPATH/src/github.com/tomnomnom/gf/examples ~/.gf
 git clone https://github.com/1ndianl33t/Gf-Patterns &> /dev/null
 mv ~/Gf-Patterns/*.json ~/.gf
 GO111MODULE=on go get -u -v github.com/lc/gau &> /dev/null
-go get -u -v github.com/lukasikic/subzy && cd $GOPATH/src/github.com/lukasikic/subzy && go mod init && go install &> /dev/null
+go get -u -v github.com/lukasikic/subzy && cd $HOME/go/src/github.com/lukasikic/subzy && go mod init && go install &> /dev/null
 go get github.com/haccer/subjack &> /dev/null
 go get -u github.com/tomnomnom/assetfinder &> /dev/null
 GO111MODULE=auto go get -u -v github.com/projectdiscovery/httpx/cmd/httpx &> /dev/null
-go get github.com/Emoe/kxss
-go get -u github.com/tomnomnom/qsreplace
-go get -u github.com/ffuf/ffuf
-go get -u github.com/hahwul/dalfox
+go get github.com/Emoe/kxss &> /dev/null
+go get -u github.com/tomnomnom/qsreplace &> /dev/null
+go get -u github.com/ffuf/ffuf &> /dev/null
+go get -u github.com/hahwul/dalfox &> /dev/null
 sudo cp $HOME/go/bin/* /usr/bin/
 git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover
 cd $HOME/tools/takeover && python3 setup.py install
