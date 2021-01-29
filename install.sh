@@ -34,9 +34,10 @@ go get github.com/Emoe/kxss &> /dev/null
 go get -u github.com/tomnomnom/qsreplace &> /dev/null
 go get -u github.com/ffuf/ffuf &> /dev/null
 go get -u github.com/hahwul/dalfox &> /dev/null
+GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei &> /dev/null
 sudo cp $HOME/go/bin/* /usr/bin/
-git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover
-cd $HOME/tools/takeover && python3 setup.py install
+nuclei -update-templates &> /dev/null
+git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover && cd $HOME/tools/takeover && python3 setup.py install
 echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
 pip3 install slackclient slacker
 source ~/.bashrc
