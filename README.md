@@ -13,7 +13,11 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Sublist3r](https://github.com/aboul3la/Sublist3r)
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
   + [Get Title](https://github.com/tomnomnom/hacks/tree/master/get-title)
-  + [Takeover.py](https://github.com/m4ll0k/takeover): echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py' >> ~/.bashrc
+  + [Takeover.py](https://github.com/m4ll0k/takeover) 
+    
+    ```sh
+    echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
+    ```
   + [Gau](https://github.com/lc/gau)
   + [Subzy](https://github.com/LukaSikic/subzy)
   + [Subjack](https://github.com/haccer/subjack): save [fingerprints.json](https://github.com/haccer/subjack/blob/master/fingerprints.json) file into ~/tools/ directory.
