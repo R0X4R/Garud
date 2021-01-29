@@ -97,7 +97,7 @@ show_logo() {
 
 scan_targets() {
     echo -e "${NORMAL}${BOLD}\n\n Target: ${RED}$domain${NORMAL}"
-    echo -e "${NORMAL}${BOLD} Output: ${GREEN}$(pwd)/${NORMAL}"
+    echo -e "${NORMAL}${BOLD} Output: ${GREEN}$(pwd)${NORMAL}"
 }
 
 run_subenum() {
@@ -176,7 +176,7 @@ slack_bot() {
     echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
     function notification_text()
     {
-    echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud.";
+    echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud";
     }
     python3 ~/slack-bot.py "$(notification_text)."
 }
