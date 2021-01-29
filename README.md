@@ -23,6 +23,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Kxss](https://github.com/Emoe/kxss)
   + [QSreplace](https://github.com/tomnomnom/qsreplace)
   + [FFuF](https://github.com/ffuf/ffuf)
+  + [Nuclei](https://github.com/projectdiscovery/nuclei)
   + [Dalfox](https://github.com/hahwul/dalfox)
   
 + **Installation** - Make sure you're root before installing the tool
