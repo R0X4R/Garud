@@ -14,13 +14,9 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
   + [Get Title](https://github.com/tomnomnom/hacks/tree/master/get-title)
   + [Takeover.py](https://github.com/m4ll0k/takeover) 
-    
-    ```sh
-    echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
-    ```
   + [Gau](https://github.com/lc/gau)
   + [Subzy](https://github.com/LukaSikic/subzy)
-  + [Subjack](https://github.com/haccer/subjack): save [fingerprints.json](https://github.com/haccer/subjack/blob/master/fingerprints.json) file into ~/tools/ directory.
+  + [Subjack](https://github.com/haccer/subjack)
   + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [HTTPX](https://github.com/projectdiscovery/httpx)
   + [Waybackurls](https://github.com/tomnomnom/waybackurls)
@@ -29,10 +25,10 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [FFuF](https://github.com/ffuf/ffuf)
   + [Dalfox](https://github.com/hahwul/dalfox)
   
-+ **Installation**
++ **Installation** - Make sure you're root before installing the tool
 
     ```sh
-    git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud && mv garud /usr/local/bin/
+    git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud install.sh && mv garud /usr/bin/ && ./install.sh
     ```
 + **Note:**  You can simply download pre-compiled binary [file](https://github.com/R0X4R/Garud/releases/download/v1.0/garud)
 
