@@ -101,29 +101,29 @@ scan_targets() {
 }
 
 run_subenum() {
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK}\n ● Scanning is in progress:${NORMAL}${BOLD} Scanning subdomains of $domain [${GREEN}20%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW}\n ● Scanning is in progress:${NORMAL}${BOLD} Scanning subdomains of $domain [${GREEN}${BLINK}20%${NORMAL}] \r"
     assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
     python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
     subfinder -silent -d $domain -o $file-subfinder.txt > /dev/null
     amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}30%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}${BLINK}30%${NORMAL}] \r"
     sleep 1s
     cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}35%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
 }
 
 run_gettitle() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}40%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
     cat $file-alive.txt | get-title > $file-gettitle.txt
     
 }
 
 run_subtake() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Checking for subdomain takeovers of subdomains of $domain [${GREEN}50%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for subdomain takeovers of subdomains of $domain [${GREEN}${BLINK}50%${NORMAL}] \r"
     subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt &> /dev/null
     subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | tee $file-subzy.txt &> /dev/null
     takeover.py -l $file-finalsubdomains.txt -t 10 -o $file-takeover.txt &> /dev/null
@@ -131,7 +131,7 @@ run_subtake() {
 
 run_params() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}70%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
     cat $file-finalsubdomains.txt | waybackurls > $file-waybackurls.txt
     cat $file-finalsubdomains.txt | gau > $file-gau.txt
     cat $file-gau.txt $file-waybackurls.txt | sort -u | uniq -u > $file-params.txt
@@ -140,7 +140,7 @@ run_params() {
 }
 
 run_gf() {
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}75%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}${BLINK}75%${NORMAL}] \r"
     cat $file-params.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' > $file-xss.txt
     cat $file-params.txt | gf ssrf > $file-ssrf.txt
     cat $file-params.txt | gf ssti > $file-ssti.txt
@@ -151,18 +151,23 @@ run_gf() {
 }
 
 check_xss() {
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}85%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
     cat $file-xss.txt | kxss > $file-xssvuln.txt
     dalfox file $file-xss.txt pipe --silence --no-color --no-spinner -o $file-dalfox.txt &> /dev/null
 }
 
+check_nuclei() {
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
+    cat $file-alive.txt | nuclei -t ~/nuclei-templates/ -silent > $file-nuclei.txt
+}
+
 check_open() {
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}97%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
     ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s > $file-ffufv.txt # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
     ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s >> $file-ffufv.txt
     ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s >> $file-ffufv.txt
     cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do;do curl -s -L $host -I|grep "evil.com" && echo "$host - vulnerable" ;done > $file-vulnred.txt # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
-    echo -ne "${NORMAL}${BOLD}${YELLOW}${BLINK} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}100%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
     echo -ne "\n"
     echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud."
 }
@@ -184,6 +189,7 @@ run_scans() {
     run_params
     run_gf
     check_xss
+    check_nuclei
     check_open
     slack_bot
     exit 1
