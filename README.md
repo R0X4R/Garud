@@ -3,7 +3,7 @@
 # Garud
 An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.<br/>
 
-![garud](https://github.com/R0X4R/Garud/blob/master/garud.gif?raw=true)
+![garud](https://github.com/R0X4R/Garud/blob/master/new-garud.gif?raw=true)
 
 + **Requirements:** Go Language, Python 2.7 or Python 3.
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
@@ -50,10 +50,10 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
    
    
 ### About Garud
-I made this tool to automate my recon and save my time. It really give me headache always type such command and then wait to complete one command and I type other command. So I collected some of the tools which is widely used in the bugbounty field. In this script I used Assetfinder, get-titles, httprobe, subjack, subzy, sublister, gau and gf patterns.<br/> 
-The script first enumerates all the subdomains of the give target domain using assetfinder and sublister then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using get-title then it scans for subdomain takeover using subjack and subzy. Then it uses gau to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains. Then it'll save all the output in a text file like target-xss.txt. <bR/>
+I made this tool to automate my recon and save my time. It really give me headache always type such command and then wait to complete one command and I type other command. So I collected some of the tools which is widely used in the bugbounty field. In this script I used Assetfinder, get-titles, httprobe, subjack, subzy, sublister, gau and gf patterns and then it uses ffuf, dalfox, nuclei and kxss to find some low hanging fruits.<br/> 
+The script first enumerates all the subdomains of the give target domain using assetfinder and sublister then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using get-title then it scans for subdomain takeover using subjack and subzy. Then it uses gau to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. <br/>
 
-![forthebadge](https://forthebadge.com/images/badges/open-source.svg) <a href="https://www.buymeacoffee.com/R0X4R" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a> ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
+![forthebadge](https://forthebadge.com/images/badges/open-source.svg) ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 
 #### Thanks to the authors of the tools used in this script.
 [@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer)
