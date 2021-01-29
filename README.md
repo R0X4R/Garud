@@ -35,8 +35,14 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
 
 + **Usage**
 
-    ```sh
-    garud -d target.com -f filename
+    ```css
+     █▀▀ ▄▀█ █▀█ █░█ █▀▄
+     █▄█ █▀█ █▀▄ █▄█ █▄▀
+     coded by R0X4R with <3
+
+     Usage: -d       target you want to scan (target.com)
+     Usage: -f       output directory where you want to save file (~/target-output/)
+     garud -d target.com -f target-output
     ```
 + **Slack Bot**
    
