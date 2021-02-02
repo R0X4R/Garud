@@ -3,7 +3,7 @@
 # Garud
 An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.<br/>
 
-![garud](https://github.com/R0X4R/Garud/blob/master/new-garud.gif?raw=true)
+  <img src="https://github.com/R0X4R/Garud/blob/master/image.gif?raw=true" align="center">
 
 + **Requirements:** Go Language, Python 2.7 or Python 3.
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
@@ -25,14 +25,14 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [FFuF](https://github.com/ffuf/ffuf)
   + [Nuclei](https://github.com/projectdiscovery/nuclei)
   + [Dalfox](https://github.com/hahwul/dalfox)
+  + [Dirsearch](https://github.com/maurosoria/dirsearch)
   
 + **Installation** - Make sure you're root before installing the tool
 
     ```sh
     git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud install.sh && mv garud /usr/bin/ && ./install.sh
     ```
-+ **Note:**  You can simply download pre-compiled binary [file](https://github.com/R0X4R/Garud/releases/download/v1.0/garud)
-
+    
 + **Usage**
 
     ```css
@@ -64,7 +64,7 @@ The script first enumerates all the subdomains of the give target domain using a
 ![forthebadge](https://forthebadge.com/images/badges/open-source.svg) ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 
 #### Thanks to the authors of the tools used in this script.
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v)
 
 
 
