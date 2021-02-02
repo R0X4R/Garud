@@ -11,17 +11,6 @@ fi
 domain=
 file=
 
-while getopts ":d:f:" o; do
-    case "${o}" in
-        d)
-            domain=${OPTARG} ;;
-
-        f)
-            file=${OPTARG} ;;
-
-    esac
-done
-
 load_colors() {
     RED="\e[31m"
     BOLD="\e[1m"
@@ -30,6 +19,34 @@ load_colors() {
     YELLOW="\e[93m"
     BLINK="\e[5m"
 }
+
+usage() {
+    load_colors
+    echo -e "${RED}\n █▀▀ ▄▀█ █▀█ █░█ █▀▄"
+    echo -e "${RED} █▄█ █▀█ █▀▄ █▄█ █▄▀"
+    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
+    echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
+    echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL} target-output \n"
+    exit 1
+}
+
+while getopts ":d:f:h:" o; do
+    case "${o}" in
+        d)
+            domain=${OPTARG} ;;
+
+        f)
+            file=${OPTARG} ;;
+        
+        h)
+            usage ;;
+        
+        *)
+            usage ;;
+
+    esac
+done
 
 if [ -z "$domain" ]
   then
@@ -112,6 +129,7 @@ run_subenum() {
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
+    cat $file-alive.txt | sed -E 's/^\s*.*:\/\///g' > $file-alwpr.txt
 }
 
 run_gettitle() {
@@ -152,13 +170,25 @@ run_gf() {
 
 check_xss() {
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
-    cat $file-xss.txt | kxss > $file-xssvuln.txt
-    dalfox file $file-xss.txt pipe --silence --no-color --no-spinner -o $file-dalfox.txt &> /dev/null
+    mkdir vulnerabilities/ &> /dev/null
+    cat $file-xss.txt | kxss > vulnerabilities/$file-xssvuln.txt
+    dalfox file $file-xss.txt pipe --silence --no-color --no-spinner -o vulnerabilities/$file-dalfox.txt &> /dev/null
+}
+
+check_mail() {
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-spf.txt &> /dev/null
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-email.txt &> /dev/null
 }
 
 check_nuclei() {
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
-    cat $file-alive.txt | nuclei -t ~/nuclei-templates/ -silent > $file-nuclei.txt
+    cat $file-alive.txt | nuclei -t ~/nuclei-templates/ -silent > vulnerabilities/$file-nuclei.txt
+}
+
+check_infoleak() {
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain using dirsearch [${GREEN}${BLINK}94%${NORMAL}] \r"
+    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 3 --exclude-texts "403 Forbidden" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt &> /dev/null
 }
 
 check_open() {
@@ -166,7 +196,7 @@ check_open() {
     ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s > $file-ffufv.txt # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
     ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s >> $file-ffufv.txt
     ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s >> $file-ffufv.txt
-    cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do;do curl -s -L $host -I|grep "evil.com" && echo "$host - vulnerable" ;done > $file-vulnred.txt # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
+    cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
     echo -ne "\n"
     echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud."
@@ -189,7 +219,9 @@ run_scans() {
     run_params
     run_gf
     check_xss
+    check_mail
     check_nuclei
+    check_infoleak
     check_open
     slack_bot
     exit 1
