@@ -20,9 +20,9 @@ echo -e "\nInstalling Go-lang tools"
 GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder &> /dev/null
 go get -u github.com/tomnomnom/waybackurls &> /dev/null
 go get -u github.com/tomnomnom/gf &> /dev/null
-echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc
+echo 'source $HOME/go/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc
 mkdir ~/.gf
-cp -r $GOPATH/src/github.com/tomnomnom/gf/examples ~/.gf
+cp -r $HOME/go/src/github.com/tomnomnom/gf/examples ~/.gf
 git clone https://github.com/1ndianl33t/Gf-Patterns &> /dev/null
 mv ~/Gf-Patterns/*.json ~/.gf
 GO111MODULE=on go get -u -v github.com/lc/gau &> /dev/null
@@ -37,6 +37,7 @@ go get -u github.com/hahwul/dalfox &> /dev/null
 GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei &> /dev/null
 sudo cp $HOME/go/bin/* /usr/bin/
 nuclei -update-templates &> /dev/null
+git clone https://github.com/maurosoria/dirsearch.git $HOME/tools/dirsearch && cd $HOME/tools/dirsearch && sudo pip3 install -r requirements.txt
 git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover && cd $HOME/tools/takeover && python3 setup.py install
 echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
 pip3 install slackclient slacker
