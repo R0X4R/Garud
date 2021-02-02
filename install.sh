@@ -41,6 +41,7 @@ git clone https://github.com/maurosoria/dirsearch.git $HOME/tools/dirsearch && c
 wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt && mv big.txt $HOME/wordlists/big.txt
 git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover && cd $HOME/tools/takeover && python3 setup.py install
 echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
+wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot.py ~/slack-bot.py
 pip3 install slackclient slacker
 echo -e "\n Please add your slack token in ~/slack-bot.py file"
 source ~/.bashrc
