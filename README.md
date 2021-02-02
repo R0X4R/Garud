@@ -3,7 +3,7 @@
 # Garud
 An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.<br/>
 
-  <img src="https://github.com/R0X4R/Garud/blob/master/image.gif?raw=true" align="center">
+![garud](https://github.com/R0X4R/Garud/blob/master/garud_1.gif?raw=true)
 
 + **Requirements:** Go Language, Python 2.7 or Python 3.
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
