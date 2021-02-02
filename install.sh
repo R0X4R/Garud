@@ -38,7 +38,9 @@ GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei &> /de
 sudo cp $HOME/go/bin/* /usr/bin/
 nuclei -update-templates &> /dev/null
 git clone https://github.com/maurosoria/dirsearch.git $HOME/tools/dirsearch && cd $HOME/tools/dirsearch && sudo pip3 install -r requirements.txt
+wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt && mv big.txt $HOME/wordlists/big.txt
 git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover && cd $HOME/tools/takeover && python3 setup.py install
 echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
 pip3 install slackclient slacker
+echo -e "\n Please add your slack token in ~/slack-bot.py file"
 source ~/.bashrc
