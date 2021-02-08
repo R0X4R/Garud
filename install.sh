@@ -33,10 +33,13 @@ GO111MODULE=auto go get -u -v github.com/projectdiscovery/httpx/cmd/httpx &> /de
 go get github.com/Emoe/kxss &> /dev/null
 go get -u github.com/tomnomnom/qsreplace &> /dev/null
 go get -u github.com/ffuf/ffuf &> /dev/null
-go get -u github.com/hahwul/dalfox &> /dev/null
+git clone https://github.com/hahwul/dalfox && cd dalfox && go install &> /dev/null
+go get -u github.com/tomnomnom/anew &> /dev/null
 GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei &> /dev/null
+GO111MODULE=on go get -v github.com/projectdiscovery/notify/cmd/notify &> /dev/null
 sudo cp $HOME/go/bin/* /usr/bin/
 nuclei -update-templates &> /dev/null
+git clone https://github.com/devanshbatham/ParamSpider $HOME/tools/ParamSpider && cd $HOME/tools/ParamSpider && sudo pip3 install -r requirements.txt
 git clone https://github.com/maurosoria/dirsearch.git $HOME/tools/dirsearch && cd $HOME/tools/dirsearch && sudo pip3 install -r requirements.txt
 wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt && mv big.txt $HOME/wordlists/big.txt
 git clone https://github.com/m4ll0k/takeover $HOME/tools/takeover && cd $HOME/tools/takeover && python3 setup.py install
@@ -44,4 +47,5 @@ echo "alias takeover.py='python3 $HOME/tools/takeover/takeover.py'" >> ~/.bashrc
 wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot.py ~/slack-bot.py
 pip3 install slackclient slacker
 echo -e "\n Please add your slack token in ~/slack-bot.py file"
+echo -e "\n Please add your slack webhook in ~/.config/notify/notify.conf file"
 source ~/.bashrc
