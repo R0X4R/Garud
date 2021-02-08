@@ -26,6 +26,9 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [Nuclei](https://github.com/projectdiscovery/nuclei)
   + [Dalfox](https://github.com/hahwul/dalfox)
   + [Dirsearch](https://github.com/maurosoria/dirsearch)
+  + [ANEW](https://github.com/tomnomnom/anew)
+  + [ParamSpider](https://github.com/devanshbatham/ParamSpider)
+  + [Notify](https://github.com/projectdiscovery/notify)
   
 + **Installation** - Make sure you're root before installing the tool
 
@@ -52,6 +55,9 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
    ```
    Add your slack token in slack-bot.py file. <br/>
    
+   **Slack Webhook for notify:** [Slack Blog](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
+   **Configure Notify:** [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
+   
    ![token-test](https://github.com/R0X4R/Garud/blob/master/token-key.jpg?raw=true)
    - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)  
    
@@ -64,7 +70,7 @@ The script first enumerates all the subdomains of the give target domain using a
 ![forthebadge](https://forthebadge.com/images/badges/open-source.svg) ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 
 #### Thanks to the authors of the tools used in this script.
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham)
 
 
 
