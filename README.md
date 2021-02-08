@@ -56,6 +56,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
    Add your slack token in slack-bot.py file. <br/>
    
    **Slack Webhook for notify:** [Slack Blog](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
+   
    **Configure Notify:** [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
    
    ![token-test](https://github.com/R0X4R/Garud/blob/master/token-key.jpg?raw=true)
