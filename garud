@@ -75,7 +75,12 @@ if [ -z "$file" ]
 fi
 
 if [ ! -d "$file" ]; then
-        mkdir $file
+    mkdir $file
+fi
+
+if [ ! -f "~/.config/notify/notify.conf" ]; then
+    load_colors
+    echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Notify conf file does not exist. Please configure your notify else you get many errors. ${NORMAL}"
 fi
 
 cd $file/
@@ -150,14 +155,17 @@ run_subtake() {
 run_params() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
-    cat $file-finalsubdomains.txt | waybackurls > $file-waybackurls.txt
-    cat $file-finalsubdomains.txt | gau > $file-gau.txt
-    cat $file-gau.txt $file-waybackurls.txt | sort -u | uniq -u > $file-params.txt
+    cat $file-finalsubdomains.txt | waybackurls | anew $file-waybackurls.txt &> /dev/null
+    cat $file-finalsubdomains.txt | gau | anew $file-gau.txt &>/dev/null
+    python3 ~/tools/ParamSpider/paramspider.py --domain $domain --exclude woff,css,js,png,svg,jpg --level high --quiet --output $file-paramspider.txt &> /dev/null
+    cat output/$file-paramspider.txt $file-gau.txt $file-waybackurls.txt | sort -u | uniq -u > $file-params.txt
     rm $file-gau.txt
     rm $file-waybackurls.txt
+    rm -rf output/
 }
 
 run_gf() {
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}${BLINK}75%${NORMAL}] \r"
     cat $file-params.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' > $file-xss.txt
     cat $file-params.txt | gf ssrf > $file-ssrf.txt
@@ -169,40 +177,48 @@ run_gf() {
 }
 
 check_xss() {
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
     mkdir vulnerabilities/ &> /dev/null
-    cat $file-xss.txt | kxss > vulnerabilities/$file-xssvuln.txt
-    dalfox file $file-xss.txt pipe --silence --no-color --no-spinner -o vulnerabilities/$file-dalfox.txt &> /dev/null
+    cat $file-xss.txt | kxss | tee vulnerabilities/$file-xssvuln.txt | notify -silent &> /dev/null
+    dalfox file $file-xss.txt pipe --silence --no-color --no-spinner | tee vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
 }
 
 check_mail() {
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-spf.txt &> /dev/null
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-email.txt &> /dev/null
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-spf.txt | notify -silent &> /dev/null
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-email.txt | notify -silent &> /dev/null
 }
 
 check_nuclei() {
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
-    cat $file-alive.txt | nuclei -t ~/nuclei-templates/ -silent > vulnerabilities/$file-nuclei.txt
+    cat $file-alive.txt | nuclei -t ~/nuclei-templates/ -silent -o vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
 }
 
 check_infoleak() {
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain using dirsearch [${GREEN}${BLINK}94%${NORMAL}] \r"
-    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 3 --exclude-texts "403 Forbidden" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt &> /dev/null
+    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 3 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
 }
 
 check_open() {
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
-    ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s > $file-ffufv.txt # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
-    ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s >> $file-ffufv.txt
-    ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s >> $file-ffufv.txt
-    cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
+    ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
+    ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null
+    ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | tee $file-ffufv.txt &> /dev/null
+    cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt | notify -silent &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
+    sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
+    sleep 1s
     echo -ne "\n"
     echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud."
 }
 
 slack_bot() {
+    sleep 3s
     echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
     function notification_text()
     {
