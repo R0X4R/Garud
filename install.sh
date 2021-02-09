@@ -9,6 +9,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 mkdir -p $HOME/go/{bin,src,pkg}
 chmod +x $HOME/go/bin
 echo "export GOPATH=$HOME/go" >> $HOME/.bashrc
+source ~/.bashrc
 echo -e "\nInstalling essential tools"
 mkdir -p $HOME/tools/
 git clone https://github.com/aboul3la/Sublist3r.git $HOME/tools/Sublist3r &> /dev/null
