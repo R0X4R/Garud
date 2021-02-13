@@ -141,6 +141,7 @@ run_gettitle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
     cat $file-alive.txt | get-title > $file-gettitle.txt
+    cat $file-alive.txt | aquatone -chrome-path /snap/bin/chromium -out $file-aqua_out/ -threads 5 -silent &> /dev/null
     
 }
 
