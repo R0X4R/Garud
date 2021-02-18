@@ -55,13 +55,11 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
    pip3 install slackclient slacker
    ```
    Add your slack token in slack-bot.py file. <br/>
-   
-   **Slack Webhook for notify:** [Slack Blog](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
-   
-   **Configure Notify:** [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
-   
+      
    ![token-test](https://github.com/R0X4R/Garud/blob/master/token-key.jpg?raw=true)
-   - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)  
+   - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)
+   - Slack Webhook for notify: [https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
+   - Configure Notify: [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file) 
    
    
 ### About Garud
