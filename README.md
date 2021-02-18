@@ -29,6 +29,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [ANEW](https://github.com/tomnomnom/anew)
   + [ParamSpider](https://github.com/devanshbatham/ParamSpider)
   + [Notify](https://github.com/projectdiscovery/notify)
+  + [Aquatone](https://github.com/michenriksen/aquatone)
   
 + **Installation** - Make sure you're root before installing the tool
 
@@ -71,7 +72,7 @@ The script first enumerates all the subdomains of the give target domain using a
 ![forthebadge](https://forthebadge.com/images/badges/open-source.svg) ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 
 #### Thanks to the authors of the tools used in this script.
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen)
 
 
 
