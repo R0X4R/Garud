@@ -1,6 +1,8 @@
 #!/bin/sh
 
 echo "Make sure you're root before installing the tools";
+sleep 5s;
+clear;
 echo "[*] Installing all dependencies";
 cd;
 apt update;
@@ -25,6 +27,8 @@ sudo apt-get install python3-pip;
 sudo apt-get install ruby;
 sudo apt install snapd;
 sudo snap install chromium;
+sleep 2s;
+clear;
 echo -e "\n[*] Installing essential tools"
 mkdir ~/tools;
 git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt;
@@ -69,6 +73,8 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 " >> /root/.bashrc;
+sleep 2s;
+clear;
 echo -e "\n[*] Please add your slack token in ~/slack-bot.py file";
 echo -e "\n[*] Please add your slack webhook in ~/.config/notify/notify.conf file";
 source ~/.bashrc;
