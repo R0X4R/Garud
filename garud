@@ -10,6 +10,7 @@ fi
 
 domain=
 file=
+excl=
 
 load_colors() {
     RED="\e[31m"
@@ -27,11 +28,12 @@ usage() {
     echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
+    echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-x\t ${BOLD}Exclude out of scope domains(${YELLOW}~/out-domains.txt${NORMAL})"
     echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL} target-output \n"
     exit 1
 }
 
-while getopts ":d:f:h:" o; do
+while getopts ":d:f:h:x:" o; do
     case "${o}" in
         d)
             domain=${OPTARG} ;;
@@ -41,6 +43,9 @@ while getopts ":d:f:h:" o; do
         
         h)
             usage ;;
+        
+        x)
+            excl=${OPTARG} ;;
         
         *)
             usage ;;
@@ -81,6 +86,7 @@ fi
 if [ ! -f "~/.config/notify/notify.conf" ]; then
     load_colors
     echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Notify conf file does not exist. Please configure your notify else you get many errors. ${NORMAL}"
+    
 fi
 
 cd $file/
@@ -130,7 +136,12 @@ run_subenum() {
     amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}${BLINK}30%${NORMAL}] \r"
     sleep 1s
-    cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+    if [ -f "$excl" ]
+        then
+            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | grep -vf $excl | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+        else
+            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+    fi
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
