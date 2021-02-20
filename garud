@@ -123,6 +123,28 @@ show_logo() {
     sleep 1
 }
 
+check_tools() {
+    echo ""
+    sleep 2
+    type -P assetfinder &>/dev/null && echo -e "${NORMAL}-${BOLD} Assetfinder: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Assetfinder: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P subfinder &>/dev/null && echo -e "-${BOLD} Subfinder: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subfinder: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P amass &>/dev/null && echo -e "-${BOLD} Amass: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Amass: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P anew &>/dev/null && echo -e "-${BOLD} Anew: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Anew: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P httpx &>/dev/null && echo -e "-${BOLD} HTTPx: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} HTTPx: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P get-title &>/dev/null && echo -e "-${BOLD} Get-title: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Get-title: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P aquatone &>/dev/null && echo -e "-${BOLD} Aquatone: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Aquatone: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P subjack &>/dev/null && echo -e "-${BOLD} Subjack: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subjack: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P subzy &>/dev/null && echo -e "-${BOLD} Subzy: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subzy: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P waybackurls &>/dev/null && echo -e "-${BOLD} Waybackurls: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Waybackurls: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P gau &>/dev/null && echo -e "-${BOLD} Gau: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Gau: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P gf &>/dev/null && echo -e "-${BOLD} GF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} GF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P kxss &>/dev/null && echo -e "-${BOLD} Kxss: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Kxss: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P dalfox &>/dev/null && echo -e "-${BOLD} Dalfox: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Dalfox: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P nuclei &>/dev/null && echo -e "-${BOLD} Nuclei: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Nuclei: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P ffuf &>/dev/null && echo -e "-${BOLD} FFUF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} FFUF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P notify &>/dev/null && echo -e "-${BOLD} Notify: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Notify: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+}
+
 scan_targets() {
     echo -e "${NORMAL}${BOLD}\n\n Target: ${RED}$domain${NORMAL}"
     echo -e "${NORMAL}${BOLD} Output: ${GREEN}$(pwd)${NORMAL}"
@@ -258,6 +280,10 @@ run_scans() {
 while true
 do
     load_colors
+    show_logo
+    check_tools
+    sleep 8
+    clear
     show_logo
     run_scans
 done
