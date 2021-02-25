@@ -44,6 +44,7 @@ echo -e "\n[*] Installing go-lang tools"
 GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder;
 go get -u github.com/tomnomnom/waybackurls;
 GO111MODULE=on go get -u -v github.com/lc/gau;
+go get github.com/hakluke/hakrawler;
 go get -u -v github.com/lukasikic/subzy;
 go get github.com/michenriksen/aquatone;
 go get github.com/haccer/subjack;
