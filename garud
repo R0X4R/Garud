@@ -135,8 +135,7 @@ check_tools() {
     type -P aquatone &>/dev/null && echo -e "-${BOLD} Aquatone: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Aquatone: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P subjack &>/dev/null && echo -e "-${BOLD} Subjack: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subjack: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P subzy &>/dev/null && echo -e "-${BOLD} Subzy: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subzy: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P waybackurls &>/dev/null && echo -e "-${BOLD} Waybackurls: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Waybackurls: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P gau &>/dev/null && echo -e "-${BOLD} Gau: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Gau: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    type -P hakrawler &>/dev/null && echo -e "-${BOLD} hakrawler: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} hakrawler: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P gf &>/dev/null && echo -e "-${BOLD} GF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} GF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P kxss &>/dev/null && echo -e "-${BOLD} Kxss: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Kxss: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P dalfox &>/dev/null && echo -e "-${BOLD} Dalfox: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Dalfox: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
@@ -189,12 +188,10 @@ run_subtake() {
 run_params() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
-    cat $file-finalsubdomains.txt | waybackurls | anew $file-waybackurls.txt &> /dev/null
-    cat $file-finalsubdomains.txt | gau | anew $file-gau.txt &>/dev/null
+    cat $file-finalsubdomains.txt | hakrawler -depth 5 -plain -wayback | anew $file-hakrawler.txt &> /dev/null
     python3 ~/tools/ParamSpider/paramspider.py --domain $domain --exclude woff,css,js,png,svg,jpg --level high --quiet --output $file-paramspider.txt &> /dev/null
-    cat output/$file-paramspider.txt $file-gau.txt $file-waybackurls.txt | sort -u | uniq -u > $file-params.txt
-    rm $file-gau.txt
-    rm $file-waybackurls.txt
+    cat output/$file-paramspider.txt $file-hakrawler.txt | sort -u | uniq -u > $file-params.txt
+    rm $file-hakrawler.txt
     rm -rf output/
 }
 
