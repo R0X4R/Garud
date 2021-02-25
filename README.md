@@ -14,12 +14,10 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
   + [Get Title](https://github.com/tomnomnom/hacks/tree/master/get-title)
   + [Takeover.py](https://github.com/m4ll0k/takeover) 
-  + [Gau](https://github.com/lc/gau)
   + [Subzy](https://github.com/LukaSikic/subzy)
   + [Subjack](https://github.com/haccer/subjack)
   + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [HTTPX](https://github.com/projectdiscovery/httpx)
-  + [Waybackurls](https://github.com/tomnomnom/waybackurls)
   + [Kxss](https://github.com/Emoe/kxss)
   + [QSreplace](https://github.com/tomnomnom/qsreplace)
   + [FFuF](https://github.com/ffuf/ffuf)
@@ -30,6 +28,7 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
   + [ParamSpider](https://github.com/devanshbatham/ParamSpider)
   + [Notify](https://github.com/projectdiscovery/notify)
   + [Aquatone](https://github.com/michenriksen/aquatone)
+  + [hakrawler](https://github.com/hakluke/hakrawler)
   
 + **Installation** - Make sure you're root before installing the tool
 
@@ -70,7 +69,7 @@ The script first enumerates all the subdomains of the give target domain using a
 ![forthebadge](https://forthebadge.com/images/badges/open-source.svg) ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 
 #### Thanks to the authors of the tools used in this script.
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@hakluke](https://github.com/hakluke/)
 
 
 
