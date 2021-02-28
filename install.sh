@@ -34,6 +34,7 @@ go get github.com/michenriksen/aquatone;
 go get github.com/haccer/subjack;
 go get -u github.com/tomnomnom/assetfinder;
 go get github.com/Emoe/kxss;
+go get -u github.com/tomnomnom/hacks/get-title;
 go get -u github.com/tomnomnom/qsreplace;
 go get -u github.com/ffuf/ffuf;
 GO111MODULE=on go get -v github.com/projectdiscovery/notify/cmd/notify;
