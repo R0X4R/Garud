@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "Make sure you're root before installing the tools";
 sleep 5s;
@@ -29,7 +29,6 @@ echo -e "\n[*] Installing go-lang tools"
 go get -u github.com/tomnomnom/waybackurls;
 GO111MODULE=on go get -u -v github.com/lc/gau;
 go get github.com/hakluke/hakrawler;
-go get -u -v github.com/lukasikic/subzy;
 go get github.com/michenriksen/aquatone;
 go get github.com/haccer/subjack;
 go get -u github.com/tomnomnom/assetfinder;
@@ -39,10 +38,12 @@ go get -u github.com/tomnomnom/qsreplace;
 go get -u github.com/ffuf/ffuf;
 GO111MODULE=on go get -v github.com/projectdiscovery/notify/cmd/notify;
 cd ~/tools/ && git clone https://github.com/hahwul/dalfox && cd dalfox && go install;
+cd ~/tools/ && git clone https://github.com/LukaSikic/subzy.git && cd subzy && go build subzy.go && mv subzy /usr/bin/;
 cd;
 go get -u github.com/tomnomnom/anew;
 go get -u github.com/tomnomnom/gf;
-mkdir tools-zip && cd tools-zip/;
+mkdir tools-zip/;
+cd tools-zip/;
 wget https://github.com/projectdiscovery/nuclei/releases/download/v2.2.0/nuclei_2.2.0_linux_amd64.tar.gz
 wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.3/httpx_1.0.3_linux_amd64.tar.gz
 wget https://github.com/projectdiscovery/subfinder/releases/download/v2.4.6/subfinder_2.4.6_linux_amd64.tar.gz
@@ -53,7 +54,7 @@ mv nuclei /usr/bin/
 mv subfinder /usr/bin/
 mv httpx /usr/bin/
 cd;
-rm -rf tools-zip;
+rm -rf tools-zip/;
 mkdir ~/.gf;
 cp -r ~/go/src/github.com/tomnomnom/gf/examples ~/.gf/;
 echo 'source ~/go/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc;
