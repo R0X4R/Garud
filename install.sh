@@ -14,7 +14,7 @@ sudo apt install snapd;
 sudo snap install chromium;
 sleep 2s;
 clear;
-echo -e "\n[*] Installing essential tools"
+echo -e "\n[*] Installing essential tools";
 mkdir ~/tools;
 git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt;
 cd ~/tools/ && wget https://raw.githubusercontent.com/haccer/subjack/master/fingerprints.json;
@@ -42,8 +42,8 @@ cd ~/tools/ && git clone https://github.com/LukaSikic/subzy.git && cd subzy && g
 cd;
 go get -u github.com/tomnomnom/anew;
 go get -u github.com/tomnomnom/gf;
-mkdir tools-zip/;
-cd tools-zip/;
+mkdir ~/tools-zip/;
+cd ~/tools-zip/;
 wget https://github.com/projectdiscovery/nuclei/releases/download/v2.2.0/nuclei_2.2.0_linux_amd64.tar.gz
 wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.3/httpx_1.0.3_linux_amd64.tar.gz
 wget https://github.com/projectdiscovery/subfinder/releases/download/v2.4.6/subfinder_2.4.6_linux_amd64.tar.gz
@@ -54,7 +54,7 @@ mv nuclei /usr/bin/
 mv subfinder /usr/bin/
 mv httpx /usr/bin/
 cd;
-rm -rf tools-zip/;
+rm -rf ~/tools-zip/;
 mkdir ~/.gf;
 cp -r ~/go/src/github.com/tomnomnom/gf/examples ~/.gf/;
 echo 'source ~/go/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc;
