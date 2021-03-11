@@ -44,15 +44,15 @@ go get -u github.com/tomnomnom/anew;
 go get -u github.com/tomnomnom/gf;
 mkdir ~/tools-zip/;
 cd ~/tools-zip/;
-wget https://github.com/projectdiscovery/nuclei/releases/download/v2.2.0/nuclei_2.2.0_linux_amd64.tar.gz
-wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.3/httpx_1.0.3_linux_amd64.tar.gz
-wget https://github.com/projectdiscovery/subfinder/releases/download/v2.4.6/subfinder_2.4.6_linux_amd64.tar.gz
-tar -xvf subfinder_2.4.6_linux_amd64.tar.gz;
-tar -xvf httpx_1.0.3_linux_amd64.tar.gz;
-tar -xvf nuclei_2.2.0_linux_amd64.tar.gz;
-mv nuclei /usr/bin/
-mv subfinder /usr/bin/
-mv httpx /usr/bin/
+wget https://github.com/projectdiscovery/nuclei/releases/download/v2.2.0/nuclei_2.2.0_linux_386.tar.gz
+wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.3/httpx_1.0.3_linux_386.tar.gz
+wget https://github.com/projectdiscovery/subfinder/releases/download/v2.4.6/subfinder_2.4.6_linux_386.tar.gz
+tar -xvf subfinder_2.4.6_linux_386.tar.gz;
+tar -xvf httpx_1.0.3_linux_386.tar.gz;
+tar -xvf nuclei_2.2.0_linux_386.tar.gz;
+mv nuclei /usr/bin/ ;
+mv subfinder /usr/bin/ ;
+mv httpx /usr/bin/ ;
 cd;
 rm -rf ~/tools-zip/;
 mkdir ~/.gf;
