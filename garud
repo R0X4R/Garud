@@ -140,6 +140,7 @@ check_tools() {
     type -P kxss &>/dev/null && echo -e "-${BOLD} Kxss: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Kxss: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P dalfox &>/dev/null && echo -e "-${BOLD} Dalfox: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Dalfox: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P nuclei &>/dev/null && echo -e "-${BOLD} Nuclei: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Nuclei: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
+    nuclei -update-templates &> /dev/null
     type -P ffuf &>/dev/null && echo -e "-${BOLD} FFUF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} FFUF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P notify &>/dev/null && echo -e "-${BOLD} Notify: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Notify: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
 }
@@ -180,9 +181,7 @@ run_gettitle() {
 run_subtake() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for subdomain takeovers of subdomains of $domain [${GREEN}${BLINK}50%${NORMAL}] \r"
-    subjack -w $file-finalsubdomains.txt -t 20 -ssl -c ~/tools/fingerprints.json -o $file-subjack.txt &> /dev/null
-    subzy -targets $file-finalsubdomains.txt -hide_fails --verify_ssl -concurrency 20 | tee $file-subzy.txt &> /dev/null
-    takeover.py -l $file-finalsubdomains.txt -t 10 -o $file-takeover.txt &> /dev/null
+    cat $file-alive.txt | nuclei -t ~/nuclei-templates/takeovers/ -o vulnerabilities/$file-takeovers.txt -silent | notify -silent &> /dev/null
 }
 
 run_params() {
@@ -215,6 +214,12 @@ check_xss() {
     dalfox file $file-xss.txt pipe --silence --no-color --no-spinner | tee vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
 }
 
+check_crlf() {
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for crlf in $domain [${GREEN}${BLINK}86%${NORMAL}] \r"
+    crlfuzz -l $file-alive.txt -s | anew vulnerabilities/$file-crlf.txt | notify -silent &> /dev/null
+}
+
 check_mail() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
@@ -237,6 +242,8 @@ check_infoleak() {
 check_open() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
+    cat $file-redirect.txt | qsreplace FUZZ | anew redirect-open.txt &> /dev/null
+    python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
     ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
     ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null
     ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | tee $file-ffufv.txt &> /dev/null
@@ -266,6 +273,7 @@ run_scans() {
     run_params
     run_gf
     check_xss
+    check_crlf
     check_mail
     check_nuclei
     check_infoleak
