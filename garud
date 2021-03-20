@@ -243,7 +243,8 @@ check_open() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
     cat $file-redirect.txt | qsreplace FUZZ | anew redirect-open.txt &> /dev/null
-    python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
+    python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
+    sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" vulnerabilities/redirect.txt &> /dev/null
     ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
     ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null
     ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | tee $file-ffufv.txt &> /dev/null
