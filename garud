@@ -133,8 +133,6 @@ check_tools() {
     type -P httpx &>/dev/null && echo -e "-${BOLD} HTTPx: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} HTTPx: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P get-title &>/dev/null && echo -e "-${BOLD} Get-title: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Get-title: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P aquatone &>/dev/null && echo -e "-${BOLD} Aquatone: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Aquatone: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P subjack &>/dev/null && echo -e "-${BOLD} Subjack: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subjack: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P subzy &>/dev/null && echo -e "-${BOLD} Subzy: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subzy: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P hakrawler &>/dev/null && echo -e "-${BOLD} hakrawler: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} hakrawler: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P gf &>/dev/null && echo -e "-${BOLD} GF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} GF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
     type -P kxss &>/dev/null && echo -e "-${BOLD} Kxss: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Kxss: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
