@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Make sure you're root before installing the tools"
 sleep 5s
