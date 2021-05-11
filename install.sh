@@ -12,7 +12,10 @@ sudo apt-get install ruby
 sudo apt-get install golang-go
 sudo apt install snapd
 sudo snap install chromium
+sudo snap install amass
 sleep 2s
+export PATH=$PATH:/snap/bin
+sudo snap refresh
 clear
 echo "Installing essential tools"
 mkdir ~/tools
