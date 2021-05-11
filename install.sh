@@ -36,25 +36,15 @@ go get -u github.com/tomnomnom/hacks/get-title
 go get -u github.com/tomnomnom/qsreplace
 go get -u github.com/ffuf/ffuf
 GO111MODULE=on go get -v github.com/projectdiscovery/notify/cmd/notify
+GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
+GO111MODULE=on go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
 cd ~/tools/ && git clone https://github.com/hahwul/dalfox && cd dalfox && go install
 cd ~/tools/ && git clone https://github.com/dwisiswant0/crlfuzz && cd crlfuzz/cmd/crlfuzz && go build . && sudo mv crlfuzz /usr/bin/
 cd
 go get -u github.com/tomnomnom/anew
 go get -u github.com/tomnomnom/gf
 cd
-mkdir ~/tools-zip/
-cd ~/tools-zip/
-wget https://github.com/projectdiscovery/nuclei/releases/download/v2.2.0/nuclei_2.2.0_linux_386.tar.gz
-wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.3/httpx_1.0.3_linux_386.tar.gz
-wget https://github.com/projectdiscovery/subfinder/releases/download/v2.4.6/subfinder_2.4.6_linux_386.tar.gz
-tar -xvf subfinder_2.4.6_linux_386.tar.gz
-tar -xvf httpx_1.0.3_linux_386.tar.gz
-tar -xvf nuclei_2.2.0_linux_386.tar.gz
-mv nuclei /usr/bin/ 
-mv subfinder /usr/bin/ 
-mv httpx /usr/bin/ 
-cd
-rm -rf ~/tools-zip/
 mkdir ~/.gf
 cp -r ~/go/src/github.com/tomnomnom/gf/examples ~/.gf/
 echo 'source ~/go/src/github.com/tomnomnom/gf/gf-completion.bash' >> ~/.bashrc
