@@ -25,7 +25,7 @@ usage() {
     load_colors
     echo -e "${RED}\n █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e "${RED} █▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-x\t ${BOLD}Exclude out of scope domains (${YELLOW}~/out-domains.txt${NORMAL})"
@@ -58,7 +58,7 @@ if [ -z "$domain" ]
     load_colors
     echo -e "${RED}\n █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e "${RED} █▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
     echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Error target not supplied. ${NORMAL}"
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
@@ -71,7 +71,7 @@ if [ -z "$file" ]
     load_colors
     echo -e "${RED}\n █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e "${RED} █▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
     echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Error output directory not supplied. ${NORMAL}"
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
@@ -113,7 +113,7 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
 
     echo -e "${RED}\n                             █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e "${RED}                             █▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\n                           coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}\n                           coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
     sleep 1
 }
 
