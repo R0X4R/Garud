@@ -1,41 +1,59 @@
-![eagle](https://user-images.githubusercontent.com/32596297/92586656-2fe82700-f2b4-11ea-83f5-8dedbb4d9c16.png)
+<h1 align="center">
+  <br>
+  <a href="https://github.com/R0X4R/Garud/"><img src="https://github.com/R0X4R/Garud/blob/master/garud.png?raw=true" width="500px" alt="Garud"></a>
+</h1>
+                                                                                                                                            
+<h4 align="center">An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.</h4>
 
-# Garud
-An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.<br/>
+<p align="center">
+<a href="#"><img src="https://madewithlove.org.in/badge.svg"></a>
+<a href="https://twitter.com/R0X4R"><img src="https://img.shields.io/twitter/follow/r0x4r?style=social"></a>
+<a href="https://github.com/R0X4R/Garud/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
+<a href="#"><img src="https://img.shields.io/badge/Made%20with-Bash-1f425f.svg"></a>
+<a href="https://github.com/R0X4R?tab=followers"><img src="https://img.shields.io/github/followers/R0X4R?style=social"></a>
+</p>
 
-![garud](https://github.com/R0X4R/Garud/blob/master/garud_1.gif?raw=true)
+---
 
-+ **Requirements:** Go Language, Python 2.7 or Python 3.
+I made this tool to automate my recon and save my time. It really give me headache always type such command and then wait to complete one command and I type other command. So I collected some of the tools which is widely used in the bugbounty field. In this script I used Assetfinder, subfinder, amass, httpx, sublister, gauplus and gf patterns and then it uses dirsearch, dalfox, nuclei and kxss to find some low hanging fruits.<br/> 
+
+The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
+
+<p align="center">
+<img src="https://github.com/R0X4R/Garud/blob/master/map.png?raw=true" alt="Garud Map">
+</p>
+
++ **Requirements:** Go Language and Python 3.
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
 + **Tools used - You must need to install these tools to use this script**<br/>
 
   + [SubFinder](https://github.com/projectdiscovery/subfinder)
   + [Sublist3r](https://github.com/aboul3la/Sublist3r)
   + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
-  + [Get Title](https://github.com/tomnomnom/hacks/tree/master/get-title)
-  + [Takeover.py](https://github.com/m4ll0k/takeover) 
-  + [Subzy](https://github.com/LukaSikic/subzy)
-  + [Subjack](https://github.com/haccer/subjack)
+  + [Smuggler](https://github.com/defparam/smuggler)
+  + [OpenRedireX](https://github.com/devanshbatham/OpenRedireX)
+  + [dnsx](https://github.com/projectdiscovery/dnsx)
   + [Assetfinder](https://github.com/tomnomnom/assetfinder)
   + [HTTPX](https://github.com/projectdiscovery/httpx)
   + [Kxss](https://github.com/Emoe/kxss)
   + [QSreplace](https://github.com/tomnomnom/qsreplace)
-  + [FFuF](https://github.com/ffuf/ffuf)
   + [Nuclei](https://github.com/projectdiscovery/nuclei)
   + [Dalfox](https://github.com/hahwul/dalfox)
   + [Dirsearch](https://github.com/maurosoria/dirsearch)
   + [ANEW](https://github.com/tomnomnom/anew)
-  + [ParamSpider](https://github.com/devanshbatham/ParamSpider)
   + [Notify](https://github.com/projectdiscovery/notify)
   + [Aquatone](https://github.com/michenriksen/aquatone)
-  + [hakrawler](https://github.com/hakluke/hakrawler)
+  + [urldedupe](https://github.com/ameenmaali/urldedupe)
+  + [Amass](https://github.com/OWASP/Amass)
+  + [Gauplus](https://github.com/bp0lr/gauplus)
+  + [crlfuzz](https://github.com/dwisiswant0/crlfuzz)
   
 + **Installation** - Make sure you're root before installing the tool
 
     ```sh
     git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud install.sh && mv garud /usr/bin/ && ./install.sh
     ```
-    
+
 + **Usage**
 
     ```css
@@ -49,6 +67,11 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
    Usage: -x       Exclude out of scope domains (~/out-domains.txt)
    garud -d target.com -f target-output
     ```
+
+  <p align="center">
+  <img src="https://github.com/R0X4R/Garud/blob/master/garud_1.gif?raw=true">
+  </p>
+    
 + **Slack Bot**
    
    ```sh
@@ -60,18 +83,10 @@ An automation tool that scans sub-domains, sub-domain takeover and then filters 
    ![token-test](https://github.com/R0X4R/Garud/blob/master/token-key.jpg?raw=true)
    - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)
    - Slack Webhook for notify: [https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
-   - Configure Notify: [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file) 
-   
-   
-### About Garud
-I made this tool to automate my recon and save my time. It really give me headache always type such command and then wait to complete one command and I type other command. So I collected some of the tools which is widely used in the bugbounty field. In this script I used Assetfinder, get-titles, httprobe, subjack, subzy, sublister, gau and gf patterns and then it uses ffuf, dalfox, nuclei and kxss to find some low hanging fruits.<br/> 
-
-The script first enumerates all the subdomains of the give target domain using assetfinder and sublister then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using get-title then it scans for subdomain takeover using subjack and subzy. Then it uses gau to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. <br/>
-
-![forthebadge](https://forthebadge.com/images/badges/open-source.svg) ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
+   - Configure Notify: [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
 
 #### Thanks to the authors of the tools used in this script.
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@LukaSikic](https://github.com/LukaSikic) [@haccer](https://github.com/haccer) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@hakluke](https://github.com/hakluke/)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t)
 
 
 
