@@ -9,7 +9,7 @@
 <a href="#"><img src="https://madewithlove.org.in/badge.svg"></a>
 <a href="https://twitter.com/R0X4R"><img src="https://img.shields.io/twitter/follow/r0x4r?style=social"></a>
 <a href="https://github.com/R0X4R/Garud/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+<a href="https://github.com/R0X4R/Garud/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 <a href="#"><img src="https://img.shields.io/badge/Made%20with-Bash-1f425f.svg"></a>
 <a href="https://github.com/R0X4R?tab=followers"><img src="https://img.shields.io/github/followers/R0X4R?style=social"></a>
 </p>
