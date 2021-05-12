@@ -83,64 +83,38 @@ if [ ! -d "$file" ]; then
     mkdir $file
 fi
 
-if [ ! -f "~/.config/notify/notify.conf" ]; then
-    load_colors
-    echo -e "${NORMAL}${BOLD}${RED}${BLINK}\n ● Notify conf file does not exist. Please configure your notify else you get many errors. ${NORMAL}"
-    
-fi
-
 cd $file/
 
 show_logo() {
 	clear
 
-    echo -e ${GREEN}"\n          .                                                      . "
-    echo -e ${GREEN}"        .n                   .                 .                  n. "
-    echo -e ${GREEN}"  .   .dP                  dP                   9b                 9b.    . "
-    echo -e ${GREEN}" 4    qXb         .       dX                     Xb       .        dXp     t "
-    echo -e ${GREEN}"dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb "
-    echo -e ${GREEN}"9XXb._       _.dXXXXb dXXXXbo.                 .odXXXXb dXXXXb._       _.dXXP "
-    echo -e ${GREEN}" 9XXXXXXXXXXXXXXXXXXXVXXXXXXXXOo.           .oOXXXXXXXXVXXXXXXXXXXXXXXXXXXXP "
-    echo -e ${GREEN}"  v9XXXXXXXXXXXXXXXXXXXXXi-   -vOOO8b   d8OOOi-   -vXXXXXXXXXXXXXXXXXXXXXPi "
-    echo -e ${GREEN}"    v9XXXXXXXXXXXPi v9XXi   DIE    v98v8Pi  HUMAN   vXXPi v9XXXXXXXXXXXPi "
-    echo -e ${GREEN}"        -------       9X.          .db|db.          .XP       ------- "
-    echo -e ${GREEN}"                        )b.  .dbo.dPivviv9b.odb.  .dX( "
-    echo -e ${GREEN}"                      ,dXXXXXXXXXXXb     dXXXXXXXXXXXb. "
-    echo -e ${GREEN}"                     dXXXXXXXXXXXPi   .   v9XXXXXXXXXXXb "
-    echo -e ${GREEN}"                    dXXXXXXXXXXXXb   d|b   dXXXXXXXXXXXXb "
-    echo -e ${GREEN}"                    9XXbi   vXXXXXb.dX|Xb.dXXXXXi   vdXXP "
-    echo -e ${GREEN}"                     vi      9XXXXXX(   )XXXXXXP      vi "
-    echo -e ${GREEN}"                              XXXX X.vvi.X XXXX "
-    echo -e ${GREEN}"                              XP^Xivb   divX^XX "
-    echo -e ${GREEN}"                              X. 9  v   i  P )X "
-    echo -e ${GREEN}"                              vb  v       i  di "
-    echo -e ${GREEN}"                               v             i "
+    echo -e ${GREEN}"""\n	
+          .                                                      .
+        .n                   .                 .                  n.
+  .   .dP                  dP                   9b                 9b.    .
+ 4    qXb         .       dX                     Xb       .        dXp     t
+dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
+9XXb._       _.dXXXXb dXXXXbo.                 .odXXXXb dXXXXb._       _.dXXP
+ 9XXXXXXXXXXXXXXXXXXXVXXXXXXXXOo.           .oOXXXXXXXXVXXXXXXXXXXXXXXXXXXXP
+  v9XXXXXXXXXXXXXXXXXXXXXi-   -vOOO8b   d8OOOi-   -vXXXXXXXXXXXXXXXXXXXXXPi
+    v9XXXXXXXXXXXPi v9XXi   DIE    v98v8Pi  HUMAN   vXXPi v9XXXXXXXXXXXPi
+        -------       9X.          .db|db.          .XP       -------
+                        )b.  .dbo.dPivviv9b.odb.  .dX(
+                      ,dXXXXXXXXXXXb     dXXXXXXXXXXXb.
+                     dXXXXXXXXXXXPi   .   v9XXXXXXXXXXXb
+                    dXXXXXXXXXXXXb   d|b   dXXXXXXXXXXXXb
+                    9XXbi   vXXXXXb.dX|Xb.dXXXXXi   vdXXP
+                     vi      9XXXXXX(   )XXXXXXP      vi
+                              XXXX X.vvi.X XXXX
+                              XP^Xivb   divX^XX
+                              X. 9  v   i  P )X
+                              vb  v       i  di
+                               v             i """
 
     echo -e "${RED}\n                             █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e "${RED}                             █▄█ █▀█ █▀▄ █▄█ █▄▀"
     echo -e "${NORMAL}${BOLD}\n                           coded by ${GREEN}R0X4R${NORMAL}${BOLD} with ${RED}<3"
-
     sleep 1
-}
-
-check_tools() {
-    echo ""
-    sleep 2
-    type -P assetfinder &>/dev/null && echo -e "${NORMAL}-${BOLD} Assetfinder: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Assetfinder: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P subfinder &>/dev/null && echo -e "-${BOLD} Subfinder: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Subfinder: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P amass &>/dev/null && echo -e "-${BOLD} Amass: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Amass: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P anew &>/dev/null && echo -e "-${BOLD} Anew: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Anew: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P httpx &>/dev/null && echo -e "-${BOLD} HTTPx: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} HTTPx: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P get-title &>/dev/null && echo -e "-${BOLD} Get-title: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Get-title: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P aquatone &>/dev/null && echo -e "-${BOLD} Aquatone: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Aquatone: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P hakrawler &>/dev/null && echo -e "-${BOLD} hakrawler: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} hakrawler: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P gf &>/dev/null && echo -e "-${BOLD} GF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} GF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P kxss &>/dev/null && echo -e "-${BOLD} Kxss: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Kxss: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P dalfox &>/dev/null && echo -e "-${BOLD} Dalfox: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Dalfox: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P nuclei &>/dev/null && echo -e "-${BOLD} Nuclei: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Nuclei: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    nuclei -update-templates &> /dev/null
-    type -P ffuf &>/dev/null && echo -e "-${BOLD} FFUF: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} FFUF: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
-    type -P notify &>/dev/null && echo -e "-${BOLD} Notify: ${NORMAL}${GREEN}working fine${NORMAL}" || { echo -e "-${BOLD} Notify: ${NORMAL}${RED}getting errors${NORMAL}\n "; exit 1; }
 }
 
 scan_targets() {
@@ -158,9 +132,9 @@ run_subenum() {
     sleep 1s
     if [ -f "$excl" ]
         then
-            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | grep -vf $excl | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | grep -vf $excl | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent > $file-finalsubdomains.txt
         else
-            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' > $file-finalsubdomains.txt
+            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent > $file-finalsubdomains.txt
     fi
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
@@ -171,45 +145,37 @@ run_subenum() {
 run_gettitle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
-    cat $file-alive.txt | get-title > $file-gettitle.txt
+    cat $file-alive.txt | httpx -status-code -title -silent > $file-title.txt
     cat $file-alive.txt | aquatone -chrome-path /snap/bin/chromium -out $file-aqua_out/ -threads 5 -silent &> /dev/null
-    
-}
-
-run_subtake() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for subdomain takeovers of subdomains of $domain [${GREEN}${BLINK}50%${NORMAL}] \r"
-    cat $file-alive.txt | nuclei -t ~/nuclei-templates/takeovers/ -o vulnerabilities/$file-takeovers.txt -silent | notify -silent &> /dev/null
 }
 
 run_params() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
-    cat $file-finalsubdomains.txt | hakrawler -depth 5 -plain -wayback | anew $file-hakrawler.txt &> /dev/null
-    python3 ~/tools/ParamSpider/paramspider.py --domain $domain --exclude woff,css,js,png,svg,jpg --level high --quiet --output $file-paramspider.txt &> /dev/null
-    cat output/$file-paramspider.txt $file-hakrawler.txt | sort -u | uniq -u > $file-params.txt
-    rm $file-hakrawler.txt
-    rm -rf output/
+    cat $file-alive.txt | gauplus --random-agent -b png,jpg,svg,gif -t 100 -o gau-urls.txt
+    cat gau-urls.txt | urldedupe -s > $file-params.txt
+    rm gau-urls.txt
 }
 
 run_gf() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}${BLINK}75%${NORMAL}] \r"
-    cat $file-params.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' > $file-xss.txt
-    cat $file-params.txt | gf ssrf > $file-ssrf.txt
-    cat $file-params.txt | gf ssti > $file-ssti.txt
-    cat $file-params.txt | gf redirect > $file-redirect.txt
-    cat $file-params.txt | gf sqli > $file-sqli.txt
-    cat $file-params.txt | gf lfi > $file-lfi.txt
-    cat $file-params.txt | gf rce > $file-rce.txt
+    mkdir patterns/ &> /dev/null
+    cat $file-params.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' > patterns/$file-xss.txt
+    cat $file-params.txt | gf ssrf > patterns/$file-ssrf.txt
+    cat $file-params.txt | gf ssti > patterns/$file-ssti.txt
+    cat $file-params.txt | gf redirect > patterns/$file-redirect.txt
+    cat $file-params.txt | gf sqli > patterns/$file-sqli.txt
+    cat $file-params.txt | gf lfi > patterns/$file-lfi.txt
+    cat $file-params.txt | gf rce > patterns/$file-rce.txt
 }
 
 check_xss() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
     mkdir vulnerabilities/ &> /dev/null
-    cat $file-xss.txt | kxss | tee vulnerabilities/$file-xssvuln.txt | notify -silent &> /dev/null
-    dalfox file $file-xss.txt pipe --silence --no-color --no-spinner | tee vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
+    cat patterns/$file-xss.txt | kxss | tee vulnerabilities/$file-xss.txt &> /dev/null
+    dalfox file $file-params.txt pipe --silence --no-color --no-spinner | tee vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
 }
 
 check_crlf() {
@@ -228,25 +194,28 @@ check_mail() {
 check_nuclei() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
-    cat $file-alive.txt | nuclei -t ~/nuclei-templates/ -silent -o vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
+    cat $file-alive.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low,medium,high,critical -bs 100 -c 50 -rl 300 -nc -silent;done | tee vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
 }
 
 check_infoleak() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain using dirsearch [${GREEN}${BLINK}94%${NORMAL}] \r"
-    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 3 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
+    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 40 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
+}
+
+check_smuggle() {
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for smuggling vulnerabilities of $domain using smuggler [${GREEN}${BLINK}96%${NORMAL}] \r"
+    cat $file-alive.txt | while read -r line; do echo $line;done | xargs -P 100 -I X bash -c "python3 ~/tools/smuggler/smuggler.py -u 'X' --quite" &> /dev/null
 }
 
 check_open() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
-    cat $file-redirect.txt | qsreplace FUZZ | anew redirect-open.txt &> /dev/null
+    cat patterns/$file-redirect.txt | qsreplace "FUZZ" | anew redirect-open.txt &> /dev/null
     python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
     sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" vulnerabilities/redirect.txt &> /dev/null
-    ffuf -c -u "FUZZ///www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null # this oneliner I got from Musab Khan youtube channel. Video Link: https://youtu.be/LVQcVDWZv88
-    ffuf -c -u "FUZZ//@www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | anew $file-ffufv.txt &> /dev/null
-    ffuf -c -u "FUZZ//\/\/www.evil.com" -r -w $file-alive.txt -mr evil.com -s | notify -silent | tee $file-ffufv.txt &> /dev/null
-    cat $file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt | notify -silent &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
+    cat patterns/$file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt | notify -silent &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
     sleep 1s
@@ -257,9 +226,11 @@ check_open() {
 slack_bot() {
     sleep 3s
     echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
-    function notification_text()
-    {
-    echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud";
+    echo -e "$(cat $file-finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
+    echo -e "$(cat $file-alive.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
+    echo -e "$(cat vulnerabilities/* | wc -l) vulnerabilities found of $domain" | notify -silent &> /dev/null
+    function notification_text() {
+        echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud";
     }
     python3 ~/slack-bot.py "$(notification_text)."
 }
@@ -268,7 +239,6 @@ run_scans() {
     scan_targets
     run_subenum
     run_gettitle
-    run_subtake
     run_params
     run_gf
     check_xss
@@ -284,10 +254,6 @@ run_scans() {
 while true
 do
     load_colors
-    show_logo
-    check_tools
-    sleep 5
-    clear
     show_logo
     run_scans
 done
