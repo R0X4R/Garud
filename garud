@@ -138,14 +138,14 @@ run_subenum() {
     fi
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
-    cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -silent > $file-alive.txt
+    cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -threads 200 -tls-probe -csp-probe-silent > $file-alive.txt
     cat $file-alive.txt | sed -E 's/^\s*.*:\/\///g' > $file-alwpr.txt
 }
 
 run_gettitle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
-    cat $file-alive.txt | httpx -status-code -title -silent > $file-title.txt
+    cat $file-alive.txt | httpx -threads 200 -status-code -title -silent > $file-title.txt
     cat $file-alive.txt | aquatone -chrome-path /snap/bin/chromium -out $file-aqua_out/ -threads 5 -silent &> /dev/null
 }
 
