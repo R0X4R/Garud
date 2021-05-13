@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/R0X4R/Garud/"><img src="https://github.com/R0X4R/Garud/blob/master/garud.png?raw=true" width="500px" alt="Garud"></a>
+  <a href="https://github.com/R0X4R/Garud/"><img src="img/garud.png" width="500px" alt="Garud"></a>
 </h1>
                                                                                                                                             
 <h4 align="center">An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.</h4>
@@ -21,7 +21,7 @@ I made this tool to automate my recon and save my time. It really give me headac
 The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
 
 <p align="center">
-<img src="https://github.com/R0X4R/Garud/blob/master/map.png?raw=true" alt="Garud Map">
+<img src="img/map.png" alt="How garud works"">
 </p>
 
 + **Requirements:** Go Language and Python 3.
@@ -70,7 +70,7 @@ The script first enumerates all the subdomains of the give target domain using a
     ```
 
   <p align="center">
-  <img src="https://github.com/R0X4R/Garud/blob/master/garud_1.gif?raw=true">
+  <img src="img/usage.gif" alt="Garud usage">
   </p>
     
 + **Slack Bot**
@@ -81,9 +81,12 @@ The script first enumerates all the subdomains of the give target domain using a
    ```
    Add your slack token in slack-bot.py file. <br/>
       
-   ![token-test](https://github.com/R0X4R/Garud/blob/master/token-key.jpg?raw=true)
+   <img src="img/token-key.jpg" alt="slack token">
+
    - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)
+
    - Slack Webhook for notify: [https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
+   
    - Configure Notify: [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
 
 #### Thanks to the authors of the tools used in this script.
