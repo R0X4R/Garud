@@ -211,7 +211,7 @@ check_smuggle() {
 
 check_open() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for openredirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for open redirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
     cat patterns/$file-redirect.txt | qsreplace "FUZZ" | anew redirect-open.txt &> /dev/null
     python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
     sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" vulnerabilities/redirect.txt &> /dev/null
