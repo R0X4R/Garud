@@ -15,7 +15,7 @@ sudo apt install cmake
 sudo snap install chromium
 sleep 2s
 clear
-echo "Installing essential tools"
+echo "Installing python tools"
 mkdir ~/tools
 git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt
 git clone https://github.com/maurosoria/dirsearch.git ~/tools/dirsearch && cd ~/tools/dirsearch && sudo pip3 install -r requirements.txt
@@ -26,6 +26,9 @@ cd
 mkdir ~/wordlists/
 cd ~/wordlists/ && wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt
 wget https://gist.githubusercontent.com/Lopseg/33106eb13372a72a31154e0bbab2d2b3/raw/a79331799a70d0ae0ea906f2b143996d85f71de5/dicc.txt
+clear
+echo "All python tools are installed"
+sleep 2s
 echo "Installing go-lang tools"
 go get github.com/michenriksen/aquatone
 go get -u github.com/tomnomnom/assetfinder
@@ -50,7 +53,7 @@ git clone https://github.com/1ndianl33t/Gf-Patterns
 mv ~/Gf-Patterns/*.json ~/.gf
 sudo cp ~/go/bin/* /usr/bin/
 nuclei -update-templates
-wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot.py ~/slack-bot.py
+wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/slack-bot.py ~/slack-bot.py
 sudo pip3 install slackclient slacker
 sleep 2s
 clear

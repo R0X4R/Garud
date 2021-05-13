@@ -76,7 +76,7 @@ The script first enumerates all the subdomains of the give target domain using a
 + **Slack Bot**
    
    ```sh
-   wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot.py ~/slack-bot.py
+   wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/slack-bot.py ~/slack-bot.py
    pip3 install slackclient slacker
    ```
    Add your slack token in slack-bot.py file. <br/>
@@ -86,7 +86,7 @@ The script first enumerates all the subdomains of the give target domain using a
    - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)
 
    - Slack Webhook for notify: [https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
-   
+
    - Configure Notify: [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
 
 #### Thanks to the authors of the tools used in this script.
