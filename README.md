@@ -80,18 +80,19 @@ The script first enumerates all the subdomains of the give target domain using a
    pip3 install slackclient slacker
    ```
    Add your slack token in slack-bot.py file. <br/>
-      
-   <img src="img/token-key.jpg" alt="slack token">
 
-   - Slack bot tutorial: [https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)
-
-   - Slack Webhook for notify: [https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack)
-
-   - Configure Notify: [https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file)
+  <p align="center">
+  <img src="img/token-key.jpg" alt="slack token">
+  <br/>
+  <br/>
+  <a href="#how-it-works">Slack Bot Tutorial</a> •
+  <a href="#install-nuclei">Slack Webhook for Notify</a> •
+  <a href="#for-security-engineers">Configure Notify</a>
+  </p>
 
 #### Thanks to the authors of the tools used in this script.
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t)
 
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t)
 
 
 **Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution.
