@@ -87,7 +87,7 @@ The script first enumerates all the subdomains of the give target domain using a
   <br/>
   <a href="https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/">Slack Bot Tutorial</a> •
   <a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Webhook for Notify</a> •
-  <a href="https://github.com/projectdiscovery/notify#config-file](https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
+  <a href="https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
   </p>
 
 #### Thanks to the authors of the tools used in this script.
