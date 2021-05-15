@@ -58,15 +58,18 @@ The script first enumerates all the subdomains of the give target domain using a
 + **Usage**
 
     ```css
+    
    █▀▀ ▄▀█ █▀█ █░█ █▀▄
    █▄█ █▀█ █▀▄ █▄█ █▄▀
 
-   coded by R0X4R with <3
+   coded by R0X4R in INDIA with <3
 
    Usage: -d       target you want to scan (target.com)
    Usage: -f       output directory where you want to save file (~/target-output/)
+   Usage: -t       Add threads to get results more faster (default=100)
    Usage: -x       Exclude out of scope domains (~/out-domains.txt)
-   garud -d target.com -f target-output
+   garud -d target.com -f target-output -x except.txt -t 200
+   
     ```
 
   <p align="center">
