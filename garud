@@ -11,6 +11,7 @@ fi
 domain=
 file=
 excl=
+thrds=
 
 load_colors() {
     RED="\e[31m"
@@ -28,12 +29,13 @@ usage() {
     echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
+    echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-t\t ${BOLD}Add threads to get results more faster (${YELLOW}default=100${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-x\t ${BOLD}Exclude out of scope domains (${YELLOW}~/out-domains.txt${NORMAL})"
     echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL} target-output \n"
     exit 1
 }
 
-while getopts ":d:f:h:x:" o; do
+while getopts ":d:f:h:t:x:" o; do
     case "${o}" in
         d)
             domain=${OPTARG} ;;
@@ -43,7 +45,10 @@ while getopts ":d:f:h:x:" o; do
         
         h)
             usage ;;
-        
+
+        t)
+            thrds=${OPTARG} ;;
+
         x)
             excl=${OPTARG} ;;
         
@@ -77,6 +82,11 @@ if [ -z "$file" ]
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
     echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL} target-output \n"
     exit 1
+fi
+
+if [ -z "$thrds" ]
+    then
+    thrds=100
 fi
 
 if [ ! -d "$file" ]; then
@@ -120,13 +130,14 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
 scan_targets() {
     echo -e "${NORMAL}${BOLD}\n\n Target: ${RED}$domain${NORMAL}"
     echo -e "${NORMAL}${BOLD} Output: ${GREEN}$(pwd)${NORMAL}"
+    echo -e "${NORMAL}${BOLD} Threads: ${GREEN}$thrds${NORMAL}"
 }
 
 run_subenum() {
     echo -ne "${NORMAL}${BOLD}${YELLOW}\n ● Scanning is in progress:${NORMAL}${BOLD} Scanning subdomains of $domain [${GREEN}${BLINK}20%${NORMAL}] \r"
     assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
     python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
-    subfinder -silent -d $domain -o $file-subfinder.txt > /dev/null
+    subfinder -silent -d $domain -all -t $thrds -o $file-subfinder.txt > /dev/null
     amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}${BLINK}30%${NORMAL}] \r"
     sleep 1s
@@ -138,21 +149,21 @@ run_subenum() {
     fi
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
-    cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -threads 200 -tls-probe -csp-probe-silent > $file-alive.txt
+    cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -threads $thrds -tls-probe -csp-probe -silent > $file-alive.txt
     cat $file-alive.txt | sed -E 's/^\s*.*:\/\///g' > $file-alwpr.txt
 }
 
 run_gettitle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
-    cat $file-alive.txt | httpx -threads 200 -status-code -title -silent > $file-title.txt
+    cat $file-alive.txt | httpx -threads $thrds -status-code -title -silent > $file-title.txt
     cat $file-alive.txt | aquatone -chrome-path /snap/bin/chromium -out $file-aqua_out/ -threads 5 -silent &> /dev/null
 }
 
 run_params() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
-    cat $file-alive.txt | gauplus --random-agent -b png,jpg,svg,gif -t 100 -o gau-urls.txt
+    cat $file-alive.txt | gauplus --random-agent -b png,jpg,svg,gif -t $thrds -o gau-urls.txt
     cat gau-urls.txt | urldedupe -s > $file-params.txt
     rm gau-urls.txt
 }
@@ -181,7 +192,7 @@ check_xss() {
 check_crlf() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for crlf in $domain [${GREEN}${BLINK}86%${NORMAL}] \r"
-    crlfuzz -l $file-alive.txt -s | anew vulnerabilities/$file-crlf.txt | notify -silent &> /dev/null
+    crlfuzz -l $file-alive.txt -c $thrds -s | anew vulnerabilities/$file-crlf.txt | notify -silent &> /dev/null
 }
 
 check_mail() {
@@ -194,19 +205,19 @@ check_mail() {
 check_nuclei() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
-    cat $file-alive.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low,medium,high,critical -bs 100 -c 50 -rl 300 -nc -silent;done | tee vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
+    cat $file-alive.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low,medium,high,critical -bs 100 -c 200 -rl 300 -nc -silent;done | tee vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
 }
 
 check_infoleak() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain using dirsearch [${GREEN}${BLINK}94%${NORMAL}] \r"
-    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 40 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
+    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak --threads $thrds -r -R 40 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
 }
 
 check_smuggle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for smuggling vulnerabilities of $domain using smuggler [${GREEN}${BLINK}96%${NORMAL}] \r"
-    cat $file-alive.txt | while read -r line; do echo $line;done | xargs -P 100 -I X bash -c "python3 ~/tools/smuggler/smuggler.py -u 'X' --quite" &> /dev/null
+    cat $file-alive.txt | while read -r line; do echo $line;done | xargs -P $thrds -I X bash -c "python3 ~/tools/smuggler/smuggler.py -u 'X' --quite" &> /dev/null
 }
 
 check_open() {
