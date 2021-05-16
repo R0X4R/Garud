@@ -194,9 +194,9 @@ check_xss() {
     cat patterns/$file-xss.txt | kxss | tee vulnerabilities/$file-xss.txt &> /dev/null
     if [ -n "$bxssServer" ]
         then
-            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds -b $bxssServer | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
+            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds -b $bxssServer 2> /dev/null | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
         else
-            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
+            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds 2> /dev/null | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
     fi
 }
 
@@ -225,6 +225,14 @@ check_nuclei() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
     cat $file-alive.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low,medium,high,critical -bs 100 -c 200 -rl 300 -nc -silent;done | tee vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
+}
+
+check_sqli() {
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for sqli vulnerabilities of $domain using sqlmap [${GREEN}${BLINK}92%${NORMAL}] \r"
+    cat patterns/$file-sqli.txt | qsreplace "FUZZ" | anew -q sqlicheck.txt
+    cat sqlicheck.txt | xargs -P 30 -I X bash -c "python3 ~/tools/sqlmap.py -u X -b --batch --disable-coloring --random-agent --risk 3 --level 5 --output-dir=vulnerabilities/sqlmap_output 2> /dev/null" &> /dev/null
+    rm sqlicheck.txt
 }
 
 check_infoleak() {
@@ -278,6 +286,7 @@ run_scans() {
     check_mail
     check_ssti
     check_nuclei
+    check_sqli
     check_infoleak
     check_open
     slack_bot
