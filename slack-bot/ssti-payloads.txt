@@ -4,6 +4,6 @@ check-ssti{{7*'7'}}
 check-ssti<%= 7 * 7 %>
 check-ssti${7*7}
 check-ssti${{7*7}}
-check-ssti@(6+5)
+check-ssti@(7*7)
 check-ssti#{7*7}
 check-ssti#{ 7 * 7 }
