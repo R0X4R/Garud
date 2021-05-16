@@ -12,6 +12,7 @@ domain=
 file=
 excl=
 thrds=
+bxssServer=
 
 load_colors() {
     RED="\e[31m"
@@ -35,14 +36,17 @@ usage() {
     exit 1
 }
 
-while getopts ":d:f:h:t:x:" o; do
+while getopts ":b:d:f:h:t:x:" o; do
     case "${o}" in
+        b)
+            bxssServer=${OPTARG} ;;
+
         d)
             domain=${OPTARG} ;;
 
         f)
             file=${OPTARG} ;;
-        
+
         h)
             usage ;;
 
@@ -51,7 +55,7 @@ while getopts ":d:f:h:t:x:" o; do
 
         x)
             excl=${OPTARG} ;;
-        
+
         *)
             usage ;;
 
@@ -123,7 +127,7 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
 
     echo -e "${RED}\n                             █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e "${RED}                             █▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\n                           coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
+    echo -e "${NORMAL}${BOLD}\n                        coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3"
     sleep 1
 }
 
@@ -151,6 +155,7 @@ run_subenum() {
     sleep 1s
     cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -threads $thrds -tls-probe -csp-probe -silent > $file-alive.txt
     cat $file-alive.txt | sed -E 's/^\s*.*:\/\///g' > $file-alwpr.txt
+
 }
 
 run_gettitle() {
@@ -186,7 +191,12 @@ check_xss() {
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
     mkdir vulnerabilities/ &> /dev/null
     cat patterns/$file-xss.txt | kxss | tee vulnerabilities/$file-xss.txt &> /dev/null
-    dalfox file $file-params.txt pipe --silence --no-color --no-spinner | tee vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
+    if [ -n "$bxssServer" ]
+        then
+            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds -b $bxssServer | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
+        else
+            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
+    fi
 }
 
 check_crlf() {
@@ -202,6 +212,14 @@ check_mail() {
     for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-email.txt | notify -silent &> /dev/null
 }
 
+check_ssti() {
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for ssti vulnerabilities in $domain [${GREEN}${BLINK}88%${NORMAL}] \r"
+    cat ~/ssti-payloads.txt | while read -r line; do cat patterns/$file-ssti.txt | qsreplace "$line" | anew -q ssticheck.txt;done
+    cat ssticheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"check-ssti49\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew vulnerabilities/$file-ssti-vulns.txt | notify -silent &> /dev/null
+    rm ssticheck.txt
+}
+
 check_nuclei() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
@@ -211,13 +229,13 @@ check_nuclei() {
 check_infoleak() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain using dirsearch [${GREEN}${BLINK}94%${NORMAL}] \r"
-    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak --threads $thrds -r -R 40 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
+    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 40 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt | notify -silent &> /dev/null
 }
 
 check_smuggle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for smuggling vulnerabilities of $domain using smuggler [${GREEN}${BLINK}96%${NORMAL}] \r"
-    cat $file-alive.txt | while read -r line; do echo $line;done | xargs -P $thrds -I X bash -c "python3 ~/tools/smuggler/smuggler.py -u 'X' --quite" &> /dev/null
+    cat $file-alive.txt | while read -r line; do echo $line;done | xargs -P 100 -I X bash -c "python3 ~/tools/smuggler/smuggler.py -u 'X' --quite" &> /dev/null
 }
 
 check_open() {
@@ -227,6 +245,7 @@ check_open() {
     python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
     sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" vulnerabilities/redirect.txt &> /dev/null
     cat patterns/$file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt | notify -silent &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
+    rm redirect-open.txt
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
     sleep 1s
@@ -240,6 +259,7 @@ slack_bot() {
     echo -e "$(cat $file-finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
     echo -e "$(cat $file-alive.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
     echo -e "$(cat vulnerabilities/* | wc -l) vulnerabilities found of $domain" | notify -silent &> /dev/null
+    cat vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
     function notification_text() {
         echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud";
     }
@@ -255,6 +275,7 @@ run_scans() {
     check_xss
     check_crlf
     check_mail
+    check_ssti
     check_nuclei
     check_infoleak
     check_open
