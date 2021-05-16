@@ -67,8 +67,10 @@ The script first enumerates all the subdomains of the give target domain using a
    Usage: -d       target you want to scan (target.com)
    Usage: -f       output directory where you want to save file (~/target-output/)
    Usage: -t       Add threads to get results more faster (default=100)
+   Usage: -b       Add your xss server for Blind XSS (-b test.xss.ht)
    Usage: -x       Exclude out of scope domains (~/out-domains.txt)
-   garud -d target.com -f target-output -x except.txt -t 200
+   
+   garud -d target.com -f target-output -x except.txt -t 200 -b test.xss.ht
    
     ```
 
