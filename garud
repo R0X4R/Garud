@@ -31,6 +31,7 @@ usage() {
     echo -e "${NORMAL}${BOLD}\n Usage: ${NORMAL}-d\t ${BOLD}target you want to scan (${YELLOW}target.com${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-f\t ${BOLD}output directory where you want to save file (${YELLOW}~/target-output/${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-t\t ${BOLD}Add threads to get results more faster (${YELLOW}default=100${NORMAL})"
+    echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-b\t ${BOLD}Add your xss server for Blind XSS (${YELLOW}-b test.xss.ht${NORMAL})"
     echo -e "${NORMAL}${BOLD} Usage: ${NORMAL}-x\t ${BOLD}Exclude out of scope domains (${YELLOW}~/out-domains.txt${NORMAL})"
     echo -e "${NORMAL}${BOLD} garud ${GREEN}-d${NORMAL} target.com ${GREEN}-f${NORMAL} target-output \n"
     exit 1
