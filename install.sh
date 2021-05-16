@@ -21,6 +21,7 @@ git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/to
 git clone https://github.com/maurosoria/dirsearch.git ~/tools/dirsearch && cd ~/tools/dirsearch && sudo pip3 install -r requirements.txt
 git clone https://github.com/devanshbatham/OpenRedireX.git ~/tools/OpenRedireX && cd ~/tools/OpenRedireX && sudo pip3 install -r requirements.txt
 git clone https://github.com/defparam/smuggler.git ~/tools/smuggler
+git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ~/tools/sqlmap/
 git clone https://github.com/ameenmaali/urldedupe.git ~/tools/urldedupe && cd ~/tools/urldedupe && cmake CMakeLists.txt && make && mv urldedupe /usr/bin/
 cd
 mkdir ~/wordlists/
