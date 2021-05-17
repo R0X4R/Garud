@@ -191,7 +191,7 @@ check_xss() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
     mkdir vulnerabilities/ &> /dev/null
-    cat patterns/$file-xss.txt | kxss | tee vulnerabilities/$file-xss.txt &> /dev/null
+    cat patterns/$file-xss.txt | kxss 2> /dev/null | tee vulnerabilities/$file-xss.txt &> /dev/null
     if [ -n "$bxssServer" ]
         then
             dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds -b $bxssServer 2> /dev/null | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
