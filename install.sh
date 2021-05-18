@@ -42,7 +42,7 @@ cd ~/tools/ && git clone https://github.com/hahwul/dalfox && cd dalfox && go ins
 cd ~/tools/ && git clone https://github.com/dwisiswant0/crlfuzz && cd crlfuzz/cmd/crlfuzz && go build . && sudo mv crlfuzz /usr/bin/
 cd ~/tools/ && git clone https://github.com/projectdiscovery/nuclei.git && cd nuclei/v2/cmd/nuclei && go build && mv nuclei /usr/bin/
 cd ~/tools/ && git clone https://github.com/projectdiscovery/subfinder.git && cd subfinder/v2/cmd/subfinder && go build && mv subfinder /usr/bin/
-cd ~/tools/ && wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.6/httpx_1.0.6_linux_386.tar.gz && tar -xvf httpx_1.0.3_linux_386.tar.gz && mv httpx /usr/bin/
+cd ~/tools/ && wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.6/httpx_1.0.6_linux_386.tar.gz && tar -xvf httpx_1.0.6_linux_386.tar.gz && mv httpx /usr/bin/
 cd ~/tools/ && wget https://github.com/OWASP/Amass/releases/download/v3.12.3/amass_linux_i386.zip && unzip amass_linux_i386.zip && cd amass_linux_i386 && mv amass /usr/bin/
 cd
 go get -u github.com/tomnomnom/anew
