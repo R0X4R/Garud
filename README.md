@@ -74,6 +74,14 @@ The script first enumerates all the subdomains of the give target domain using a
    
     ```
 
++ **Fix errors while using or installing Garud**
+    
+    ```
+    Error: ./install.sh : /bin/bash^M : bad interpretor: No such file or directory
+    Fix: sed -i -e 's/\r$//' install.sh
+    ```
+    You can also copy the error and search on google this will make your debugging skills better ;)
+
   <p align="center">
   <img src="img/usage.gif" alt="Garud usage">
   </p>
