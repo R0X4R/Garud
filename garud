@@ -221,6 +221,14 @@ check_ssti() {
     rm ssticheck.txt
 }
 
+check_lfi() {
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for lfi vulnerabilities in $domain [${GREEN}${BLINK}89%${NORMAL}] \r"
+    cat ~/lfi-payloads.txt | while read -r line; do cat patterns/$file-lfi.txt | qsreplace "$line" | anew -q lficheck.txt;done
+    cat lficheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"root:\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew vulnerabilities/$file-lfi-vulns.txt | notify -silent &> /dev/null
+    rm lficheck.txt
+}
+
 check_nuclei() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
@@ -285,6 +293,7 @@ run_scans() {
     check_crlf
     check_mail
     check_ssti
+    check_lfi
     check_nuclei
     check_sqli
     check_infoleak
