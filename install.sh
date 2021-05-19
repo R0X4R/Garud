@@ -56,6 +56,7 @@ sudo cp ~/go/bin/* /usr/bin/
 nuclei -update-templates
 wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/slack-bot.py ~/slack-bot.py
 wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/ssti-payloads.txt ~/ssti-payloads.txt
+wget https://gist.githubusercontent.com/detonxx/a885ce7dd64a7139cb6f5b6860499ba8/raw ~/lfi-payloads.txt
 sudo pip3 install slackclient slacker
 sleep 2s
 clear
