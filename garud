@@ -142,7 +142,7 @@ run_subenum() {
     echo -ne "${NORMAL}${BOLD}${YELLOW}\n ● Scanning is in progress:${NORMAL}${BOLD} Scanning subdomains of $domain [${GREEN}${BLINK}20%${NORMAL}] \r"
     assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
     python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
-    subfinder -silent -d $domain -all -t $thrds -o $file-subfinder.txt > /dev/null
+    subfinder -silent -d $domain -t $thrds -o $file-subfinder.txt > /dev/null
     amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}${BLINK}30%${NORMAL}] \r"
     sleep 1s
