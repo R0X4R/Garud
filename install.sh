@@ -18,11 +18,11 @@ clear
 echo "Installing python tools"
 mkdir ~/tools
 git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt
-git clone https://github.com/maurosoria/dirsearch.git ~/tools/dirsearch && cd ~/tools/dirsearch && sudo pip3 install -r requirements.txt
 git clone https://github.com/devanshbatham/OpenRedireX.git ~/tools/OpenRedireX && cd ~/tools/OpenRedireX && sudo pip3 install -r requirements.txt
 git clone https://github.com/defparam/smuggler.git ~/tools/smuggler
 git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ~/tools/sqlmap/
 git clone https://github.com/ameenmaali/urldedupe.git ~/tools/urldedupe && cd ~/tools/urldedupe && cmake CMakeLists.txt && make && mv urldedupe /usr/bin/
+git clone https://github.com/codingo/Interlace.git ~/tools/interlace && cd ~/tools/interlace && python3 setup.py install
 cd
 mkdir ~/wordlists/
 cd ~/wordlists/ && wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt
@@ -34,6 +34,7 @@ echo "Installing go-lang tools"
 go get github.com/michenriksen/aquatone
 go get -u github.com/tomnomnom/assetfinder
 GO111MODULE=on go get -u -v github.com/bp0lr/gauplus
+go get github.com/tomnomnom/waybackurls
 go get github.com/Emoe/kxss
 go get -u github.com/tomnomnom/qsreplace
 git clone https://github.com/projectdiscovery/dnsx.git; cd dnsx/cmd/dnsx; go build; mv dnsx /usr/bin/ &> /dev/null
@@ -44,6 +45,10 @@ cd ~/tools/ && git clone https://github.com/projectdiscovery/nuclei.git && cd nu
 cd ~/tools/ && git clone https://github.com/projectdiscovery/subfinder.git && cd subfinder/v2/cmd/subfinder && go build && mv subfinder /usr/bin/
 cd ~/tools/ && wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.6/httpx_1.0.6_linux_386.tar.gz && tar -xvf httpx_1.0.6_linux_386.tar.gz && mv httpx /usr/bin/
 cd ~/tools/ && wget https://github.com/OWASP/Amass/releases/download/v3.12.3/amass_linux_i386.zip && unzip amass_linux_i386.zip && cd amass_linux_i386 && mv amass /usr/bin/
+cd ~/tools/ && go get -u github.com/ffuf/ffuf
+cd ~/tools/ && git clone https://github.com/R0X4R/Fuzzy.git
+cd Fuzzy
+chmod +x fuzzy && mv /usr/bin/
 cd
 go get -u github.com/tomnomnom/anew
 go get -u github.com/tomnomnom/gf
@@ -54,11 +59,9 @@ git clone https://github.com/1ndianl33t/Gf-Patterns
 mv ~/Gf-Patterns/*.json ~/.gf
 sudo cp ~/go/bin/* /usr/bin/
 nuclei -update-templates
-wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/slack-bot.py ~/slack-bot.py
-wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/ssti-payloads.txt ~/ssti-payloads.txt
-wget https://gist.githubusercontent.com/detonxx/a885ce7dd64a7139cb6f5b6860499ba8/raw ~/lfi-payloads.txt
-sudo pip3 install slackclient slacker
+mkdir ~/tools/payloads/
+wget https://raw.githubusercontent.com/R0X4R/Garud/master/payloads/ssti.txt ~/tools/payloads/ssti.txt
+wget https://gist.githubusercontent.com/detonxx/a885ce7dd64a7139cb6f5b6860499ba8/raw ~/tools/payloads/lfi.txt
 sleep 2s
 clear
-echo -e "Please add your slack token in ~/slack-bot.py file"
 echo -e "Please add your slack webhook in ~/.config/notify/notify.conf file"

@@ -29,26 +29,27 @@ The script first enumerates all the subdomains of the give target domain using a
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
 + **Tools used - You must need to install these tools to use this script**<br/>
 
-  + [SubFinder](https://github.com/projectdiscovery/subfinder)
-  + [Sublist3r](https://github.com/aboul3la/Sublist3r)
-  + [GF Patterns](https://github.com/1ndianl33t/Gf-Patterns)
-  + [Smuggler](https://github.com/defparam/smuggler)
-  + [OpenRedireX](https://github.com/devanshbatham/OpenRedireX)
+  + [subFinder](https://github.com/projectdiscovery/subfinder)
+  + [sublist3r](https://github.com/aboul3la/Sublist3r)
+  + [gf patterns](https://github.com/1ndianl33t/Gf-Patterns)
+  + [smuggler](https://github.com/defparam/smuggler)
+  + [apenRedireX](https://github.com/devanshbatham/OpenRedireX)
   + [dnsx](https://github.com/projectdiscovery/dnsx)
-  + [Assetfinder](https://github.com/tomnomnom/assetfinder)
-  + [HTTPX](https://github.com/projectdiscovery/httpx)
-  + [Kxss](https://github.com/Emoe/kxss)
-  + [QSreplace](https://github.com/tomnomnom/qsreplace)
-  + [Nuclei](https://github.com/projectdiscovery/nuclei)
-  + [Dalfox](https://github.com/hahwul/dalfox)
-  + [Dirsearch](https://github.com/maurosoria/dirsearch)
-  + [ANEW](https://github.com/tomnomnom/anew)
-  + [Notify](https://github.com/projectdiscovery/notify)
-  + [Aquatone](https://github.com/michenriksen/aquatone)
+  + [assetfinder](https://github.com/tomnomnom/assetfinder)
+  + [httpx](https://github.com/projectdiscovery/httpx)
+  + [kxss](https://github.com/Emoe/kxss)
+  + [qsreplace](https://github.com/tomnomnom/qsreplace)
+  + [nuclei](https://github.com/projectdiscovery/nuclei)
+  + [dalfox](https://github.com/hahwul/dalfox)
+  + [anew](https://github.com/tomnomnom/anew)
+  + [notify](https://github.com/projectdiscovery/notify)
+  + [aquatone](https://github.com/michenriksen/aquatone)
   + [urldedupe](https://github.com/ameenmaali/urldedupe)
-  + [Amass](https://github.com/OWASP/Amass)
-  + [Gauplus](https://github.com/bp0lr/gauplus)
+  + [amass](https://github.com/OWASP/Amass)
+  + [gauplus](https://github.com/bp0lr/gauplus)
   + [crlfuzz](https://github.com/dwisiswant0/crlfuzz)
+  + [ffuf](https://github.com/ffuf/ffuf)
+  + [waybackurls](https://github.com/tomnomnom/waybackurls)
   
 + **Installation** - Make sure you're root before installing the tool
 
@@ -108,7 +109,7 @@ The script first enumerates all the subdomains of the give target domain using a
 
 #### Thanks to the authors of the tools used in this script.
 
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject) [@codingo](https://github.com/codingo/)
 
 
 **Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution.

