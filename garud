@@ -239,7 +239,7 @@ check_sqli() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for sqli vulnerabilities of $domain using sqlmap [${GREEN}${BLINK}92%${NORMAL}] \r"
     cat patterns/$file-sqli.txt | qsreplace "FUZZ" | anew -q sqlicheck.txt
-    cat sqlicheck.txt | xargs -P 30 -I X bash -c "python3 ~/tools/sqlmap.py -u X -b --batch --disable-coloring --random-agent --risk 3 --level 5 --output-dir=vulnerabilities/sqlmap_output 2> /dev/null" &> /dev/null
+    cat sqlicheck.txt | xargs -P 30 -I X bash -c "python3 ~/tools/sqlmap/sqlmap.py -u X -b --batch --disable-coloring --random-agent --risk 3 --level 5 --output-dir=vulnerabilities/sqlmap_output 2> /dev/null" &> /dev/null
     rm sqlicheck.txt
 }
 
