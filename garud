@@ -259,7 +259,6 @@ check_sqli() {
 check_xss() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}95%${NORMAL}] \r"
-    mkdir vulnerabilities/ &> /dev/null
     cat parameters/patterns/xss.txt | xargs -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | anew -q scanresults/xss/kxss.txt &> /dev/null
     if [ -n "$bxssServer" ]
         then
