@@ -87,16 +87,8 @@ The script first enumerates all the subdomains of the give target domain using a
   <p align="center">
   <img src="img/usage.gif" alt="Garud usage">
   </p>
-    
-+ **Slack Bot**
-   
-   ```sh
-   wget https://raw.githubusercontent.com/R0X4R/Garud/master/slack-bot/slack-bot.py ~/slack-bot.py
-   pip3 install slackclient slacker
-   ```
-   Add your slack token in slack-bot.py file. <br/>
-
   <p align="center">
+  ### Notifications
   <img src="img/token-key.jpg" alt="slack token">
   <br/>
   <br/>
@@ -107,7 +99,7 @@ The script first enumerates all the subdomains of the give target domain using a
 
 <br>**If you like the script, [Buyme a Coffee](https://ko-fi.com/i/IK3K34SJSA)**
 
-#### Thanks to the authors of the tools used in this script.
+### Thanks to the authors of the tools used in this script.
 
 [@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject) [@codingo](https://github.com/codingo/)
 
