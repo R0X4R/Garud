@@ -7,11 +7,12 @@
 
 <p align="center">
 <a href="#"><img src="https://madewithlove.org.in/badge.svg"></a>
-<a href="https://twitter.com/R0X4R"><img src="https://img.shields.io/twitter/follow/r0x4r?style=social"></a>
+<a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://img.shields.io/badge/buy%20me%20a%20ko--fi%20-donate-red"></a>
+<a href="https://twitter.com/R0X4R/"><img src="https://img.shields.io/badge/twitter-%40R0X4R-blue.svg"></a>
 <a href="https://github.com/R0X4R/Garud/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
 <a href="https://github.com/R0X4R/Garud/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 <a href="#"><img src="https://img.shields.io/badge/Made%20with-Bash-1f425f.svg"></a>
-<a href="https://github.com/R0X4R?tab=followers"><img src="https://img.shields.io/github/followers/R0X4R?style=social"></a>
+<a href="https://github.com/R0X4R?tab=followers"><img src="https://img.shields.io/badge/github-%40R0X4R-orange"></a>
 </p>
 
 ---
@@ -102,6 +103,8 @@ The script first enumerates all the subdomains of the give target domain using a
   <a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Webhook for Notify</a> •
   <a href="https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
   </p>
+
+<br>**If you like the script, [Buyme a Coffee](https://ko-fi.com/i/IK3K34SJSA)**
 
 #### Thanks to the authors of the tools used in this script.
 
