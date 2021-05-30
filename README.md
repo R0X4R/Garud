@@ -29,11 +29,11 @@ The script first enumerates all the subdomains of the give target domain using a
 + **System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.
 + **Tools used - You must need to install these tools to use this script**<br/>
 
-  + [subFinder](https://github.com/projectdiscovery/subfinder)
+  + [subfinder](https://github.com/projectdiscovery/subfinder)
   + [sublist3r](https://github.com/aboul3la/Sublist3r)
   + [gf patterns](https://github.com/1ndianl33t/Gf-Patterns)
   + [smuggler](https://github.com/defparam/smuggler)
-  + [apenRedireX](https://github.com/devanshbatham/OpenRedireX)
+  + [openRedireX](https://github.com/devanshbatham/OpenRedireX)
   + [dnsx](https://github.com/projectdiscovery/dnsx)
   + [assetfinder](https://github.com/tomnomnom/assetfinder)
   + [httpx](https://github.com/projectdiscovery/httpx)
