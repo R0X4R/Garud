@@ -299,6 +299,7 @@ final_bot() {
 
 run_scans() {
     scan_targets
+    makeFolders
     run_subenum
     run_gettitle
     run_params
