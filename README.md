@@ -88,7 +88,7 @@ The script first enumerates all the subdomains of the give target domain using a
   <img src="img/usage.gif" alt="Garud usage">
   </p>
   <p align="center">
-  ### Notifications
+  <h3> Notifications</h3>
   <img src="img/token-key.jpg" alt="slack token">
   <br/>
   <br/>
