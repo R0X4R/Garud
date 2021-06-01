@@ -17,7 +17,12 @@ sudo snap install chromium
 sleep 2s
 clear
 echo "Installing python tools"
-mkdir ~/tools
+mkdir -p ~/tools
+mkdir -p ~/tools/payloads/
+wget https://raw.githubusercontent.com/R0X4R/Garud/master/payloads/ssti.txt
+wget https://raw.githubusercontent.com/R0X4R/Garud/master/payloads/lfi.txt
+mv lfi.txt ~/tools/payloads/
+mv ssti.txt ~/tools/payloads/
 git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt
 git clone https://github.com/devanshbatham/OpenRedireX.git ~/tools/OpenRedireX && cd ~/tools/OpenRedireX && sudo pip3 install -r requirements.txt
 git clone https://github.com/defparam/smuggler.git ~/tools/smuggler
@@ -60,9 +65,6 @@ git clone https://github.com/1ndianl33t/Gf-Patterns
 mv ~/Gf-Patterns/*.json ~/.gf
 sudo cp ~/go/bin/* /usr/bin/
 nuclei -update-templates
-mkdir ~/tools/payloads/
-wget https://raw.githubusercontent.com/R0X4R/Garud/master/payloads/ssti.txt ~/tools/payloads/ssti.txt
-wget https://gist.githubusercontent.com/detonxx/a885ce7dd64a7139cb6f5b6860499ba8/raw ~/tools/payloads/lfi.txt
 sleep 2s
 clear
 echo -e "Please add your slack webhook in ~/.config/notify/notify.conf file"
