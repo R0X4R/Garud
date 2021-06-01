@@ -49,7 +49,7 @@ cd ~/tools/ && wget https://github.com/OWASP/Amass/releases/download/v3.12.3/ama
 cd ~/tools/ && go get -u github.com/ffuf/ffuf
 cd ~/tools/ && git clone https://github.com/R0X4R/Fuzzy.git
 cd Fuzzy
-chmod +x fuzzy && mv /usr/bin/
+chmod +x fuzzy && mv fuzzy /usr/bin/
 cd
 go get -u github.com/tomnomnom/anew
 go get -u github.com/tomnomnom/gf
