@@ -213,8 +213,8 @@ check_crlf() {
 check_mail() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}86%${NORMAL}] \r"
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/email/spf.txt | notify -silent &> /dev/null
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/email/email.txt | notify -silent &> /dev/null
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/mail/spf.txt | notify -silent &> /dev/null
+    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/mail/email.txt | notify -silent &> /dev/null
 }
 
 check_ssti() {
@@ -301,7 +301,7 @@ run_scans() {
     scan_targets
     makeFolders
     run_subenum
-    run_gettitle
+    run_info
     run_params
     run_gf
     check_crlf
