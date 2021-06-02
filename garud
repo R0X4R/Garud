@@ -291,7 +291,7 @@ check_open() {
 
 final_bot() {
     sleep 2s
-    echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending notification to your slack.\n"
+    echo -e "${NORMAL}${BOLD}${YELLOW}\n ●Sending Notifications.....\n"
     echo -e "$(cat domains/finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
     echo -e "$(cat domains/aliveDomains.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
     echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud" | notify -silent &> /dev/null
