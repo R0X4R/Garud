@@ -271,7 +271,7 @@ check_xss() {
 check_smuggle() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for smuggling vulnerabilities of $domain using smuggler [${GREEN}${BLINK}96%${NORMAL}] \r"
-    cat domains/aliveDomains.txt | xargs -P 100 -I % bash -c "python3 ~/tools/smuggler/smuggler.py -u '%' --quite --log scanresults/smuggle/output.txt" &> /dev/null
+    cat domains/aliveDomains.txt | xargs -P 100 -I % bash -c "python3 ~/tools/smuggler/smuggler.py -u '%' --quiet --log scanresults/smuggle/output.txt" &> /dev/null
 }
 
 check_open() {
