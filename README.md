@@ -83,9 +83,12 @@ garud -d target.com -f target-output -x except.txt -t 200 -b test.xss.ht
 
 **Fix errors while using or installing Garud**
     
-```css
+```bash
+garud:~ chmod +x install.sh && ./install.sh
 Error: ./install.sh : /bin/bash^M : bad interpretor: No such file or directory
-Fix: sed -i -e 's/\r$//' install.sh
+                                                    
+# fix
+garud:~ sed -i -e 's/\r$//' install.sh
 ```
 You can also copy the error and search on google this will make your debugging skills better ;)
 
