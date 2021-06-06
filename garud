@@ -195,13 +195,13 @@ run_params() {
 run_gf() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}${BLINK}75%${NORMAL}] \r"
-    cat parameters/allParameters.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' | qsreplace "FUZZ" | anew -q parameters/patterns/xss.txt
-    cat parameters/allParameters.txt | gf ssrf | qsreplace "FUZZ" | anew -q parameters/patterns/ssrf.txt
-    cat parameters/allParameters.txt | gf ssti | qsreplace "FUZZ" | anew -q parameters/patterns/ssti.txt
-    cat parameters/allParameters.txt | gf redirect | qsreplace "FUZZ" | anew -q parameters/patterns/redirect.txt
-    cat parameters/allParameters.txt | gf sqli | qsreplace "FUZZ" | anew -q parameters/patterns/sqli.txt
-    cat parameters/allParameters.txt | gf lfi | qsreplace "FUZZ" | anew -q parameters/patterns/lfi.txt
-    cat parameters/allParameters.txt | gf rce | qsreplace "FUZZ" | anew -q parameters/patterns/rce.txt
+    cat parameters/allParameters.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/xss.txt
+    cat parameters/allParameters.txt | gf ssrf | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/ssrf.txt
+    cat parameters/allParameters.txt | gf ssti | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/ssti.txt
+    cat parameters/allParameters.txt | gf redirect | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/redirect.txt
+    cat parameters/allParameters.txt | gf sqli | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/sqli.txt
+    cat parameters/allParameters.txt | gf lfi | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/lfi.txt
+    cat parameters/allParameters.txt | gf rce | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/rce.txt
 }
 
 check_crlf() {
@@ -221,7 +221,7 @@ check_ssti() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for ssti vulnerabilities in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
     cat ~/tools/payloads/ssti.txt | while read -r line; do cat parameters/patterns/ssti.txt | qsreplace "$line" | anew -q ssticheck.txt;done &> /dev/null
-    cat ssticheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"check-ssti49\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew scanresults/ssti/output.txt | notify -silent &> /dev/null
+    cat ssticheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"check-ssti49\" && echo -e \"[VULNERABLE] - host \n \"" 2> /dev/null | grep "VULNERABLE" | anew scanresults/ssti/output.txt | notify -silent &> /dev/null
     rm ssticheck.txt
 }
 
@@ -229,7 +229,7 @@ check_lfi() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for lfi vulnerabilities in $domain [${GREEN}${BLINK}88%${NORMAL}] \r"
     cat ~/tools/payloads/lfi.txt | while read -r line; do cat parameters/patterns/lfi.txt | qsreplace "$line" | anew -q lficheck.txt;done &> /dev/null
-    cat lficheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"root:\" && echo -e \"[VULNERABLE] - host \n \"" | grep "VULNERABLE" | anew scanresults/lfi/output.txt | notify -silent &> /dev/null
+    cat lficheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"root:\" && echo -e \"[VULNERABLE] - host \n \"" 2> /dev/null| grep "VULNERABLE" | anew scanresults/lfi/output.txt | notify -silent &> /dev/null
     rm lficheck.txt
 }
 
