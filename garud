@@ -1,6 +1,6 @@
 #!/bin/bash
 # coded by R0X4R
-# Contributers: KathanP19 (https://github.com/KathanP19), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec).
+# Contributers: KathanP19 (https://github.com/KathanP19), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec), simrotion13 (https://github.com/simrotion13)
 
 wget -q --spider http://google.com
 if [ $? -ne 0 ];then
