@@ -9,7 +9,7 @@ if [ $? -ne 0 ];then
 fi
 
 domain=
-file=
+output=
 excl=
 thrds=
 bxssServer=
@@ -48,7 +48,7 @@ while getopts ":b:d:f:h:t:x:" o; do
             domain=${OPTARG} ;;
 
         f)
-            file=${OPTARG} ;;
+            output=${OPTARG} ;;
 
         h)
             usage ;;
@@ -81,7 +81,7 @@ if [ -z "$domain" ]
     exit 1
 fi
 
-if [ -z "$file" ]
+if [ -z "$output" ]
   then
     load_colors
     echo -e "${RED}\n█▀▀ ▄▀█ █▀█ █░█ █▀▄"
@@ -102,11 +102,11 @@ if [ -z "$thrds" ]
     thrds=100
 fi
 
-if [ ! -d "$file" ]; then
-    mkdir -p $file
+if [ ! -d "$output" ]; then
+    mkdir -p $output
 fi
 
-cd $file/
+cd $output/
 
 show_logo() {
 	clear
@@ -290,7 +290,7 @@ check_open() {
 
 final_bot() {
     sleep 2s
-    echo -e "${NORMAL}${BOLD}${YELLOW}\n ● Sending Notifications.....\n"
+    echo -e "${NORMAL}${BOLD}${YELLOW}\n ●Sending Notifications.....\n"
     echo -e "$(cat domains/finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
     echo -e "$(cat domains/activeurls.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
     echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud" | notify -silent &> /dev/null
