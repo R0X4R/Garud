@@ -35,8 +35,6 @@ The script first enumerates all the subdomains of the give target domain using a
   <a href="https://github.com/projectdiscovery/subfinder">subfinder</a> •
   <a href="https://github.com/aboul3la/Sublist3r">sublist3r</a> •
   <a href="https://github.com/1ndianl33t/Gf-Patterns">gf patterns</a> •
-  <a href="https://github.com/defparam/smuggler">smuggler</a> •
-  <a href="https://github.com/devanshbatham/OpenRedireX">openredirex</a> •
   <a href="https://github.com/projectdiscovery/dnsx">dnsx</a> •
   <a href="https://github.com/tomnomnom/assetfinder">assetfinder</a> •
   <a href="https://github.com/projectdiscovery/httpx">httpx</a> •
@@ -96,20 +94,37 @@ garud:~ sed -i -e 's/\r$//' install.sh
 ```
 You can also copy the error and search on google this will make your debugging skills better ;)
 
-<p align="center">
-<img src="img/usage.gif" alt="Garud usage">
-</p>
+**Example Usage**
+
+```bash
+garud:~ garud -d hackerone.com -f hackerone
+```
+Add threads to your scan
+```bash
+garud:~ garud -d hackerone.com -f hackerone -t 200
+```
+Scan for blind xss, you can get your xss server from [xsshunter.com](https://xsshunter.com/)
+```bash
+garud:~ garud -d hackerone.com -f hackerone -b test.xss.ht
+```
+Exclude out of scope domains
+```bash
+garud:~ echo test.hackerone.com > ossdomain.txt
+garud:~ garud -d hackerone.com -f hackerone -x ~/ossdomain.txt
+```
+With all flags
+```bash
+garud:~ garud -d hackerone.com -f hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt
+```
 
 <h3>Notifications</h3>
-<p align="center">
-<img src="img/token-key.jpg" alt="slack token">
-<br/>
-<br/>
-<a href="https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/">Slack Bot Tutorial</a> •
-<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Webhook for Notify</a> •
+<p align="left">
+<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Notification BOT</a> •
+<a href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks">Discord Notification BOT</a> •
+<a href="https://core.telegram.org/bots#3-how-do-i-create-a-bot">Telegram Notification BOT</a> •
 <a href="https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
 </p>
-
+                                                                
 <p align="left">
 <h3>Donate</h3> 
 <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a>
