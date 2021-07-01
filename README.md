@@ -67,18 +67,22 @@ garud:~ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x ga
 
 
 ```js 
+                                                    
 █▀▀ ▄▀█ █▀█ █░█ █▀▄
 █▄█ █▀█ █▀▄ █▄█ █▄▀
 
 coded by R0X4R in INDIA with <3
 
-Usage: -d       target you want to scan (target.com)
-Usage: -f       output directory where you want to save file (~/target-output/)
-Usage: -t       Add threads to get results more faster (default=100)
-Usage: -b       Add your xss server for Blind XSS (-b test.xss.ht)
-Usage: -x       Exclude out of scope domains (~/out-domains.txt)
+Example Usage:
+garud [-d target.com] [-f output destination] [-t threads] [-b blind xss URL] [-x OOS domains]
 
-garud -d target.com -f target-output -x except.txt -t 200 -b test.xss.ht   
+FLags:
+  -d        Add your target (e.g -d target.com)
+  -f        Write to output folder (e.g -f results/)
+  -t        Number of threads [Default: 100] (e.g. -t 300)
+  -b        Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)
+  -x        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)
+                                                    
 ```
 
 **Fix errors while using or installing Garud**
