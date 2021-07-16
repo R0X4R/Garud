@@ -1,0 +1,4 @@
+{
+    "flags": "-HanriE",
+    "pattern": "(alloc|free|strcpy|gets|strncpy|strcat|sprintf|scanf)"
+}

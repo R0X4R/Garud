@@ -1,0 +1,4 @@
+{
+    "flags": "-HanriE",
+    "pattern": "(jwt|jks|jwk|jku)"
+}

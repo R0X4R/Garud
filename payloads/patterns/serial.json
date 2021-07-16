@@ -1,0 +1,4 @@
+{
+    "flags": "-HanriE",
+    "pattern": "(pickle|yaml|serialize|marshal|objectinput)"
+}

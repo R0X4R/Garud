@@ -1,0 +1,4 @@
+{
+    "flags": "-HanriE",
+    "pattern": "(eval|run|exec|process|system|popen|spawn|dup2)"
+}

@@ -1,0 +1,4 @@
+{
+    "flags": "-HanriE",
+    "pattern": "(parse|open|request|validate|verify)"
+}
