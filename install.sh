@@ -25,12 +25,13 @@ sudo snap install chromium 2> /dev/null
 sleep 2s
 clear
 echo "Installing python tools"
-git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt 2> /dev/null
-git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ~/tools/sqlmap/ 2> /dev/null
-git clone https://github.com/w9w/JSA.git ~/tools/JSA/ 2> /dev/null
-git clone https://github.com/ameenmaali/urldedupe.git ~/tools/urldedupe && cd ~/tools/urldedupe && cmake CMakeLists.txt && make && mv urldedupe /usr/bin/ 2> /dev/null
-git clone https://github.com/codingo/Interlace.git ~/tools/interlace && cd ~/tools/interlace && python3 setup.py install 2> /dev/null
-pip3 install tldextract 2> /dev/null
+cd && git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt 2> /dev/null
+cd && git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ~/tools/sqlmap/ 2> /dev/null
+cd && git clone https://github.com/w9w/JSA.git ~/tools/JSA/ 2> /dev/null
+cd && git clone https://github.com/commixproject/commix.git ~/tools/commix/ && cd ~/tools/commix/ && python3 setup.py install 2> /dev/null
+cd && git clone https://github.com/ameenmaali/urldedupe.git ~/tools/urldedupe && cd ~/tools/urldedupe && cmake CMakeLists.txt && make && mv urldedupe /usr/bin/ 2> /dev/null
+cd && git clone https://github.com/codingo/Interlace.git ~/tools/interlace && cd ~/tools/interlace && python3 setup.py install 2> /dev/null
+cd && pip3 install tldextract 2> /dev/null
 echo "Installing Wordlists"
 cd ~/wordlists/ && wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt
 wget https://gist.githubusercontent.com/Lopseg/33106eb13372a72a31154e0bbab2d2b3/raw/a79331799a70d0ae0ea906f2b143996d85f71de5/dicc.txt
@@ -55,10 +56,6 @@ cd ~/tools/temp/ && git clone https://github.com/projectdiscovery/nuclei.git && 
 cd ~/tools/temp/ && git clone https://github.com/projectdiscovery/subfinder.git && cd subfinder/v2/cmd/subfinder && go build && mv subfinder /usr/bin/ 2> /dev/null
 cd ~/tools/temp/ && wget https://github.com/projectdiscovery/httpx/releases/download/v1.0.6/httpx_1.0.6_linux_386.tar.gz && tar -xvf httpx_1.0.6_linux_386.tar.gz && mv httpx /usr/bin/ 2> /dev/null
 cd ~/tools/temp/ && wget https://github.com/OWASP/Amass/releases/download/v3.12.3/amass_linux_i386.zip && unzip amass_linux_i386.zip && cd amass_linux_i386 && mv amass /usr/bin/ 2> /dev/null
-cd ~/tools/temp/ && go get -u github.com/ffuf/ffuf
-cd ~/tools/temp/ && git clone https://github.com/R0X4R/Fuzzy.git
-cd Fuzzy
-chmod +x fuzzy && mv fuzzy /usr/bin/
 cd
 rm -rf ~/tools/temp/
 cp -r ~/go/src/github.com/tomnomnom/gf/examples ~/.gf/
