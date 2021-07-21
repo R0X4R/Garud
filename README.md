@@ -50,6 +50,8 @@ The script first enumerates all the subdomains of the give target domain using a
   <a href="https://github.com/bp0lr/gauplus">gauplus</a> •
   <a href="https://github.com/dwisiswant0/crlfuzz">crlfuzz</a> •
   <a href="https://github.com/ffuf/ffuf">ffuf</a> •
+  <a href="https://github.com/lc/subjs">subjs</a> •
+  <a href="https://github.com/w9w/JSA">JSA</a> •
   <a href="https://github.com/tomnomnom/waybackurls">waybackurls</a><br>
 
 
@@ -72,11 +74,11 @@ garud:~ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x ga
 coded by R0X4R in INDIA with <3
 
 Example Usage:
-garud [-d target.com] [-f output destination] [-t threads] [-b blind xss URL] [-x OOS domains]
+garud [-d target.com] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains]
 
 FLags:
   -d        Add your target (e.g -d target.com)
-  -f        Write to output folder (e.g -f results/)
+  -o        Write to output folder (e.g -o results/)
   -t        Number of threads [Default: 100] (e.g. -t 300)
   -b        Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)
   -x        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)
@@ -97,24 +99,24 @@ You can also copy the error and search on google this will make your debugging s
 **Example Usage**
 
 ```bash
-garud:~ garud -d hackerone.com -f hackerone
+garud:~ garud -d hackerone.com -o hackerone
 ```
 Add threads to your scan
 ```bash
-garud:~ garud -d hackerone.com -f hackerone -t 200
+garud:~ garud -d hackerone.com -o hackerone -t 200
 ```
 Scan for blind xss, you can get your xss server from [xsshunter.com](https://xsshunter.com/)
 ```bash
-garud:~ garud -d hackerone.com -f hackerone -b test.xss.ht
+garud:~ garud -d hackerone.com -o hackerone -b test.xss.ht
 ```
 Exclude out of scope domains
 ```bash
 garud:~ echo test.hackerone.com > ossdomain.txt
-garud:~ garud -d hackerone.com -f hackerone -x ~/ossdomain.txt
+garud:~ garud -d hackerone.com -o hackerone -x ~/ossdomain.txt
 ```
 With all flags
 ```bash
-garud:~ garud -d hackerone.com -f hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt
+garud:~ garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt
 ```
 
 <h3>Notifications</h3>
@@ -132,7 +134,7 @@ garud:~ garud -d hackerone.com -f hackerone -t 300 -b test.xss.ht -x ~/ossdomain
 
 ### Thanks to the authors of the tools used in this script.
 
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject) [@codingo](https://github.com/codingo/)
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject)[@w9w](https://github.com/w9w)
 
 
 **Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution.

