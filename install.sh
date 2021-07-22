@@ -43,6 +43,7 @@ go get -u github.com/tomnomnom/anew 2> /dev/null
 go get -u github.com/tomnomnom/gf 2> /dev/null
 go get github.com/michenriksen/aquatone 2> /dev/null
 go get -u github.com/tomnomnom/assetfinder 2> /dev/null
+go get github.com/cgboal/sonarsearch/crobat 2> /dev/null
 GO111MODULE=on go get -u -v github.com/lc/subjs 2> /dev/null
 GO111MODULE=on go get -u -v github.com/bp0lr/gauplus 2> /dev/null
 go get github.com/tomnomnom/waybackurls 2> /dev/null
