@@ -28,7 +28,6 @@ echo "Installing python tools"
 cd && git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r && cd ~/tools/Sublist3r && sudo pip3 install -r requirements.txt 2> /dev/null
 cd && git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ~/tools/sqlmap/ 2> /dev/null
 cd && git clone https://github.com/w9w/JSA.git ~/tools/JSA/ 2> /dev/null
-cd && git clone https://github.com/commixproject/commix.git ~/tools/commix/ && cd ~/tools/commix/ && python3 setup.py install 2> /dev/null
 cd && git clone https://github.com/ameenmaali/urldedupe.git ~/tools/urldedupe && cd ~/tools/urldedupe && cmake CMakeLists.txt && make && mv urldedupe /usr/bin/ 2> /dev/null
 cd && git clone https://github.com/codingo/Interlace.git ~/tools/interlace && cd ~/tools/interlace && python3 setup.py install 2> /dev/null
 cd && pip3 install tldextract 2> /dev/null
@@ -37,6 +36,8 @@ cd ~/wordlists/ && wget https://raw.githubusercontent.com/danielmiessler/SecList
 wget https://gist.githubusercontent.com/Lopseg/33106eb13372a72a31154e0bbab2d2b3/raw/a79331799a70d0ae0ea906f2b143996d85f71de5/dicc.txt
 wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/dns-Jhaddix.txt -O dns.txt
 wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/deepmagic.com-prefixes-top50000.txt -O subdomains.txt
+wget https://raw.githubusercontent.com/janmasarik/resolvers/master/resolvers.txt -O resolvers.txt
+wget https://raw.githubusercontent.com/Bo0oM/fuzz.txt/master/fuzz.txt -O fuzz.txt
 sleep 2s
 echo "Installing go-lang tools"
 go get -u github.com/tomnomnom/anew 2> /dev/null
