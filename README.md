@@ -21,6 +21,10 @@ I made this tool to automate my recon and save my time. It really give me headac
 
 The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
 
+```txt
+What's new in v2.0: You can resume where you left just delete the last completed file and run the script again in the same output folder.
+```
+
 <p align="center">
 <img src="img/roadmap.png" alt="How garud works"">
 </p>
@@ -112,6 +116,15 @@ garud:~ garud -d hackerone.com -o hackerone -x ~/ossdomain.txt
 With all flags
 ```bash
 garud:~ garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt
+```
+Start where you left
+```bash
+garud:~ garud -d hackerone.com. -o hackerone -t 300
+Starting scan...
+^C # assume you stopped at nuclei scan
+garud:~ cd hackerone && rm -rf nuclei
+garud:~ cd
+garud:~ garud -d hackerone.com. -o hackerone -t 300
 ```
 
 <h3>Notifications</h3>
