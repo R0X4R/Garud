@@ -25,7 +25,8 @@ The script first enumerates all the subdomains of the give target domain using a
 What's new in v2.0: You can resume where you left just delete the last completed file and run the script again in the same output folder.
 ```
 
-<p align="center">
+<p align="center"><br/>
+<img src="img/mindmap.png" alt="garud mindmap"><br/>
 <img src="img/roadmap.png" alt="How garud works"">
 </p>
 
@@ -36,27 +37,27 @@ What's new in v2.0: You can resume where you left just delete the last completed
 
 **Tools used - You must need to install these tools to use this script**<br>
 
-  <a href="https://github.com/projectdiscovery/subfinder">subfinder</a> •
-  <a href="https://github.com/aboul3la/Sublist3r">sublist3r</a> •
-  <a href="https://github.com/1ndianl33t/Gf-Patterns">gf patterns</a> •
-  <a href="https://github.com/projectdiscovery/dnsx">dnsx</a> •
-  <a href="https://github.com/tomnomnom/assetfinder">assetfinder</a> •
-  <a href="https://github.com/projectdiscovery/httpx">httpx</a> •
-  <a href="https://github.com/Emoe/kxss">kxss</a> •
-  <a href="https://github.com/tomnomnom/qsreplace">qsreplace</a> •
-  <a href="https://github.com/projectdiscovery/nuclei">nuclei</a> •
-  <a href="https://github.com/hahwul/dalfox">dalfox</a> •
-  <a href="https://github.com/tomnomnom/anew">anew</a> •
-  <a href="https://github.com/projectdiscovery/notify">notify</a> •
-  <a href="https://github.com/michenriksen/aquatone">aquatone</a> •
-  <a href="https://github.com/ameenmaali/urldedupe">urldedupe</a> •
-  <a href="https://github.com/OWASP/Amass">amass</a> •
-  <a href="https://github.com/bp0lr/gauplus">gauplus</a> •
-  <a href="https://github.com/dwisiswant0/crlfuzz">crlfuzz</a> •
-  <a href="https://github.com/ffuf/ffuf">ffuf</a> •
-  <a href="https://github.com/lc/subjs">subjs</a> •
-  <a href="https://github.com/w9w/JSA">JSA</a> •
-  <a href="https://github.com/tomnomnom/waybackurls">waybackurls</a><br>
+  <a href="https://github.com/projectdiscovery/subfinder">`subfinder`</a> •
+  <a href="https://github.com/aboul3la/Sublist3r">`sublist3r`</a> •
+  <a href="https://github.com/1ndianl33t/Gf-Patterns">`gf patterns`</a> •
+  <a href="https://github.com/projectdiscovery/dnsx">`dnsx`</a> •
+  <a href="https://github.com/tomnomnom/assetfinder">`assetfinder`</a> •
+  <a href="https://github.com/projectdiscovery/httpx">`httpx`</a> •
+  <a href="https://github.com/Emoe/kxss">`kxss`</a> •
+  <a href="https://github.com/tomnomnom/qsreplace">`qsreplace`</a> •
+  <a href="https://github.com/projectdiscovery/nuclei">`nuclei`</a> •
+  <a href="https://github.com/hahwul/dalfox">`dalfox`</a> •
+  <a href="https://github.com/tomnomnom/anew">`anew`</a> •
+  <a href="https://github.com/projectdiscovery/notify">`notify`</a> •
+  <a href="https://github.com/michenriksen/aquatone">`aquatone`</a> •
+  <a href="https://github.com/ameenmaali/urldedupe">`urldedupe`</a> •
+  <a href="https://github.com/OWASP/Amass">`amass`</a> •
+  <a href="https://github.com/bp0lr/gauplus">`gauplus`</a> •
+  <a href="https://github.com/dwisiswant0/crlfuzz">`crlfuzz`</a> •
+  <a href="https://github.com/ffuf/ffuf">`ffuf`</a> •
+  <a href="https://github.com/lc/subjs">`subjs`</a> •
+  <a href="https://github.com/w9w/JSA">`JSA`</a> •
+  <a href="https://github.com/tomnomnom/waybackurls">`waybackurls`</a><br>
 
 
 ```bash
