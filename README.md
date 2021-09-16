@@ -57,6 +57,7 @@ What's new in v2.0: You can resume where you left just delete the last completed
   <a href="https://github.com/ffuf/ffuf">`ffuf`</a> •
   <a href="https://github.com/lc/subjs">`subjs`</a> •
   <a href="https://github.com/w9w/JSA">`JSA`</a> •
+  <a href="https://github.com/OJ/gobuster">`goBuster`</a> •
   <a href="https://github.com/tomnomnom/waybackurls">`waybackurls`</a><br>
 
 
@@ -131,9 +132,9 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 <h3>Notifications</h3>
 <p align="left">
-<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Notification BOT</a> •
-<a href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks">Discord Notification BOT</a> •
-<a href="https://core.telegram.org/bots#3-how-do-i-create-a-bot">Telegram Notification BOT</a> •
+<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">`Slack Notification BOT`</a> •
+<a href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks">`Discord Notification BOT`</a> •
+<a href="https://core.telegram.org/bots#3-how-do-i-create-a-bot">`Telegram Notification BOT`</a> •
 <a href="https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
 </p>
                                                                 
@@ -144,7 +145,7 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 ### Thanks to the authors of the tools used in this script.
 
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject) [@w9w](https://github.com/w9w)
-
+[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject) [@w9w](https://github.com/w9w) [@OJ]
+(https://github.com/OJ)
 
 **Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution.
