@@ -132,9 +132,9 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 <h3>Notifications</h3>
 <p align="left">
-<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">`Slack Notification BOT`</a> •
-<a href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks">`Discord Notification BOT`</a> •
-<a href="https://core.telegram.org/bots#3-how-do-i-create-a-bot">`Telegram Notification BOT`</a> •
+<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Notification BOT</a> •
+<a href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks">Discord Notification BOT</a> •
+<a href="https://core.telegram.org/bots#3-how-do-i-create-a-bot">Telegram Notification BOT</a> •
 <a href="https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
 </p>
                                                                 
