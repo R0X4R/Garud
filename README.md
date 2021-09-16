@@ -78,11 +78,12 @@ Example Usage:
 garud [-d target.tld] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains]
 
 Flags:
-  -d        Add your target (e.g -d target.tld)
-  -o        Write to output folder (e.g -o results/)
-  -t        Number of threads [Default: 100] (e.g. -t 300)
-  -b        Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)
-  -x        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)                                                    
+  -d, --domain         Add your target (e.g -d target.tld)
+  -o, --output         Write to output folder (e.g -o results/)
+  -t, --threads        Number of threads [Default: 100] (e.g. -t 300)
+  -b, --blind          Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)
+  -v, --version        Print current version of Garud
+  -x, --exclude        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)                                                    
 ```
 
 **Fix errors while using or installing Garud**
