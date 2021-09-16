@@ -41,6 +41,7 @@ wget https://raw.githubusercontent.com/Bo0oM/fuzz.txt/master/fuzz.txt -O fuzz.tx
 sleep 2s
 echo "Installing go-lang tools"
 go get -u github.com/tomnomnom/anew 2> /dev/null
+go install github.com/OJ/gobuster/v3@latest 2> /dev/null
 go get -u github.com/tomnomnom/gf 2> /dev/null
 go get github.com/michenriksen/aquatone 2> /dev/null
 go get -u github.com/tomnomnom/assetfinder 2> /dev/null
