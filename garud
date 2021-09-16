@@ -2,14 +2,15 @@
 # coded by R0X4R
 # Contributers: KathanP19 (https://github.com/KathanP19), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec), simrotion13 (https://github.com/simrotion13)
 
-# Check connection
+#> Check connection
 wget -q --spider http://google.com
 if [ $? -ne 0 ];then
     echo "Connect to internet before running Garud!"
     exit 1
 fi
 
-# Variables
+#> VARIABLES
+version="2.0"
 domain=
 outdir=
 exclude=
@@ -20,48 +21,60 @@ red="\e[31m"
 bold="\e[1m"
 normal="\e[0m"
 
-# Print usage
+#> PRINT USAGE
 printUsage(){
     echo -e " "
     echo -e "[${bold}GARUD${normal}] - (v2.0) Coded by ${bold}R0X4R${normal} in ${bold}INDIA${normal} with ${red}<3${normal}\n"
     echo -e "Example Usage:"
     echo -e "garud [-d target.tld] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains]\n"
     echo -e "Flags:"
-    echo -e "  -d        Add your target (e.g -d target.tld)"
-    echo -e "  -o        Write to output folder (e.g -o results/)"
-    echo -e "  -t        Number of threads [Default: 100] (e.g. -t 300)"
-    echo -e "  -b        Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)"
-    echo -e "  -x        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)"
+    echo -e "  -d, --domain         Add your target (e.g -d target.tld)"
+    echo -e "  -o, --output         Write to output folder (e.g -o results/)"
+    echo -e "  -t, --threads        Number of threads [Default: 100] (e.g. -t 300)"
+    echo -e "  -b, --blind          Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)"
+    echo -e "  -v, --version        Print current version of Garud"
+    echo -e "  -x, --exclude        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)"
     exit 1
 }
 
-# Argument flags
-while getopts ":b:d:o:h:t:x:" opt; do
-    case "${opt}" in
-        b)
-            blindxss=${OPTARG} ;;
+#> ARGUMENT FLAGS
+while [ -n "$1" ]; do
+  case $1 in
+        -b|--blind)
+            blindxss=$2
+            shift ;;
 
-        d)
-            domain=${OPTARG} ;;
+        -d|--domain)
+            domain=$2
+            shift ;;
 
-        o)
-            outdir=${OPTARG} ;;
+        -o|--output)
+            outdir=$2
+            shift ;;
 
-        h)
-            printUsage ;;
+        -h|--help)
+            printUsage
+            shift ;;
 
-        t)
-            threads=${OPTARG} ;;
+        -t|--threads)
+            threads=$2
+            shift ;;
 
-        x)
-            exclude=${OPTARG} ;;
+        -x|--exclude)
+            exclude=$2
+            shift ;;
+        
+        -v|--version)
+            echo -e "$version"
+            exit 1 ;;
 
         *)
-            printUsage ;;
-    esac
+            printUsage
+  esac
+  shift
 done
 
-# Intial config
+#> INITIAL CONFIGS
 if [ -z "$domain" ]; then
         echo -e "\n${red}ERROR${normal} - Target not supplied.\n${normal}"
         printUsage
@@ -79,7 +92,7 @@ fi
 mkdir -p $outdir
 cd $outdir
 
-# Print banner
+#> BANNER
 printBanner(){
 	clear
     echo -e "${red}█▀▀ ▄▀█ █▀█ █░█ █▀▄"
@@ -90,7 +103,7 @@ printBanner(){
     sleep 1s
 }
 
-# Make folders to store output
+#> MAKE FOLDER
 makeFolders(){
     mkdir -p temporary/
     mkdir -p domains/
@@ -99,8 +112,10 @@ makeFolders(){
     mkdir -p injections/
     mkdir -p nuclei/
 }
+#-------------------------------------------------------------------------------
 
-# Subdomain enumeration
+#> SUBDOMAIN ENUMERATION
+#> This may take sometime
 passiveEnum(){
     [ ! -f temporary/crt.txt ] && curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' 2>/dev/null | sed 's/\*\.//g' | sort -u | grep -o "\w.*$domain" | anew -q temporary/crt.txt
     [ ! -f temporary/hackertarget.txt ] && curl -s "https://api.hackertarget.com/hostsearch/?q=$domain" | grep -o "\w.*$domain" | anew -q temporary/hackertarget.txt
@@ -110,28 +125,28 @@ passiveEnum(){
     [ ! -f temporary/subfinder.txt ] && subfinder -silent -d $domain -all -t $threads -o temporary/subfinder.txt &> /dev/null
     [ ! -f temporary/amass.txt ] && amass enum -passive -d $domain -o temporary/amass.txt &> /dev/null
     [ ! -f temporary/crobat.txt ] && crobat -s $domain | anew -q temporary/crobat.txt
-
 }
 
 activeEnum(){
-    [ ! -f temporary/ffuf.json ] && ffuf -u http://FUZZ.$domain/ -t 200 -p 1.0-2.0 -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200,403 -r -o temporary/ffuf.json -s &> /dev/null
-    cat temporary/ffuf.json | jq -r '.results[] | {status:.status, host:.host} | .host' 2> /dev/null | anew -q temporary/ffuf.txt
+    [ ! -f temporary/ffuf.json ] && ffuf -u http://FUZZ.$domain/ -t 100 -p '1.0-2.0' -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200 -r -o temporary/ffuf.json -s 2> /dev/null &> /dev/null
+    cat temporary/ffuf.json 2> /dev/null | jq -r '.results[] | .host' 2> /dev/null | anew -q temporary/ffuf.txt
+    [ ! -f temporary/gobuster.txt ] && gobuster dns -d $domain --no-error -z -q -t 50 -w ~/wordlists/subdomains.txt 2> /dev/null | sed 's/Found: //g' | anew -q temporary/gobuster.txt
     [ ! -f temporary/amassact.txt ] && timeout 50m amass enum -active -brute -w ~/wordlists/subdomains.txt -d $domain -o temporary/amassact.txt &> /dev/null
 }
 
-sndlEnum(){
+secondLevel(){
     cat temporary/*.txt | grep -v "*" | sed '/@\|<BR>\|\_\|*/d' | grep "$domain" | anew -q temporary/domains
     [ ! -f temporary/seconddomains.txt ] && xargs -a temporary/domains -P 50 -I % bash -c "assetfinder --subs-only % | anew -q temporary/seconddomains.txt" 2> /dev/null; timeout 30m xargs -a temporary/domains -P 10 -I % bash -c "amass enum -passive -d %" 2> /dev/null | anew -q temporary/seconddomains.txt
 }
 
-checkDomains() {
-    # Filtering outofscope domains
+checkDomains(){
+    #> FILTERING DOMAINS
     if [ -f "$exclude" ]; then
         cat temporary/*.txt | grep -v "*" | grep -vf $exclude | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 2 -r ~/wordlists/resolvers.txt -t 100 -silent | anew -q domains/subdomains.txt
     else
         cat temporary/*.txt | grep -v "*" | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 2 -r ~/wordlists/resolvers.txt -t 100 -silent | anew -q domains/subdomains.txt
     fi
-    # Web probing and screenshoting
+    #> WEB PROBING AND SCREENSHOT
     [ ! -f domains/titles.txt ] && xargs -a domains/subdomains.txt -P 50 -I % bash -c "echo % | httpx -silent -threads 150 -ports $ports -status-code -title -timeout 20 -retries 2 -follow-host-redirects -random-agent -no-color" 2> /dev/null | anew -q domains/titles.txt
     cat domains/titles.txt | awk '{print $1}' 2> /dev/null | anew -q domains/liveurls.txt
     [ ! -d domains/aquatone ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path /snap/bin/chromium -out domains/aquatone/ -threads 10 -silent" 2> /dev/null &> /dev/null
@@ -141,19 +156,22 @@ subEnum(){
     echo -e "${bold}Starting subdomain enumeration of $domain${normal}"
     passiveEnum
     activeEnum
-    sndlEnum
+    secondLevel
     checkDomains
     echo -e "[$(date)] - Subdomain enumeration completed, total [Subdomains:$(cat domains/subdomains.txt | wc -l)  Activeurls:$(cat domains/liveurls.txt | wc -l)] found" | notify -silent &> /dev/null
 }
+#> SUBDOMAIN ENUMERATION COMPLETED
+#-------------------------------------------------------------------------------
 
+#> WEB CRAWLING AND FILTERING
 enumCrawl(){
     echo -e "${bold}Crawling subdomains of $domain${normal}"
     [ ! -f temporary/gospider.txt ] && timeout 50m gospider -S domains/liveurls.txt -d 10 -c 20 -t 50 -K 3 --no-redirect --js -a -w --blacklist ".(eot|jpg|jpeg|gif|css|tif|tiff|png|ttf|otf|woff|woff2|ico|svg|txt)" --include-subs -q -o temporary/gospider 2> /dev/null | anew -q temporary/gospider.txt
     [ ! -f temporary/waybackurls.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q temporary/waybackurls.txt
     [ ! -f temporary/gauplus.txt ] && cat domains/liveurls.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt -t $threads -o temporary/gauplus.txt
-    [ ! -f temporary/jslinks.txt ] && cat temporary/gauplus.txt temporary/waybackurls.txt | subjs -c 50 2> /dev/null | parallel -j 20 'echo "{}" | python3 ~/tools/JSA/jsa.py' 2> /dev/null | anew -q temporary/jslinks.txt
-    cat temporary/gauplus.txt temporary/waybackurls.txt | sed '/\[/d' | grep $domain | sort -u | urldedupe -s | anew -q domains/endpoints.txt
-    # Filtering endpoints using gf patterns
+    # [ ! -f temporary/jslinks.txt ] && cat temporary/gauplus.txt temporary/waybackurls.txt | subjs -c 50 2> /dev/null | parallel -j 20 'echo "{}" | python3 ~/tools/JSA/jsa.py' 2> /dev/null | anew -q temporary/jslinks.txt
+    cat temporary/gospider.txt temporary/gauplus.txt temporary/waybackurls.txt 2> /dev/null | sed '/\[/d' | grep $domain | sort -u | urldedupe -s | anew -q domains/endpoints.txt # <-- Filtering duplicate and common endpoints
+    #> FILTERING ENDPOINTS USING PATTERNS
     cat domains/endpoints.txt | gf xss | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q domains/patterns/xss.txt
     cat domains/endpoints.txt | gf ssrf | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q domains/patterns/ssrf.txt
     cat domains/endpoints.txt | gf ssti | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q domains/patterns/ssti.txt
@@ -168,7 +186,10 @@ enumCrawl(){
     cat temporary/xssp.txt 2> /dev/null | qsreplace "\">/><svg/onload=confirm(document.domain)>" 2> /dev/null | anew -q temporary/xss.txt
     cat domains/patterns/redirect.txt | qsreplace "http://www.evil.com/" 2> /dev/null | anew -q temporary/redirect.txt
 }
+#> WEB CRAWLING AND FILTERING COMPLETED
+#-------------------------------------------------------------------------------
 
+#> NUCLEI SCAN
 nucleiScan(){
     echo -e "${bold}Starting nuclei scan on $domain${normal}"
     [ ! -f nuclei/info.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity info -c 50 -silent" 2> /dev/null | anew -q nuclei/info.txt
@@ -177,7 +198,10 @@ nucleiScan(){
     [ ! -f nuclei/high.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity high -c 50 -silent" 2> /dev/null | anew nuclei/high.txt | notify -silent &> /dev/null
     [ ! -f nuclei/critical.txt] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity critical -c 50 -silent" 2> /dev/null | anew nuclei/critical.txt | notify -silent &> /dev/null
 }
+#> NUCLEI SCAN COMPLETED
+#-------------------------------------------------------------------------------
 
+#> VULNERABILITY SCANNING
 vulnScan(){
     echo -e "${bold}Starting vulnerability scan on $domain${normal}"
     [ ! -f injections/crlf.txt ] &&  crlfuzz -l domains/liveurls.txt -c $threads -s | anew injections/crlf.txt | notify -silent &> /dev/null
@@ -195,29 +219,37 @@ vulnScan(){
         dalfox file temporary/xssp.txt pipe --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew injections/dalfoxss.txt | notify -silent &> /dev/null
     fi
 }
+#> VULNERABILITY SCANNING COMPLETED
+#-------------------------------------------------------------------------------
 
+#> DIRECTORY FUZZING
 dirFuzz(){
     echo -e "${bold}Starting directory fuzzing on $domain${normal}"
     for target in $(cat domains/liveurls.txt); do
         fuzzout=$(echo $target | awk -F// '{print $NF}' | sed -E 's/[\.|:]+/_/g')
         ffuf -u $target/FUZZ -ac -t 150 -mc 200 -sf -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -w ~/wordlists/fuzz.txt -p '0.6-1.2' -e .html,.json,.php,.asp,.aspx,.log,.sql,.txt,.asp,.jsp,.bak,~,.db -maxtime 900 -o domains/directories/$fuzzout.json -s 2> /dev/null &> /dev/null
-        cat domains/directories/$fuzzout.json | jq -r '.results[] | {length: .length, status: .status, url: .url} | .status, .length, .url' 2> /dev/null | xargs -n3 | anew -q domains/directories/$fuzzout.txt
+        cat domains/directories/$fuzzout.json | jq -r '.results[] | .status, .length, .url' 2> /dev/null | xargs -n3 | anew -q domains/directories/$fuzzout.txt
         rm -rf domains/directories/$fuzzout.json
     done
 }
+#> DIRECTORY FUZZING COMPLETED
+#-------------------------------------------------------------------------------
 
+#> SENDING FINAL NOTIFICATION
 finalnot(){
     echo -e "\n${bold}Time: $(date)${normal}"
     echo -e "${bold}Scanning completed on $domain${normal}"
     echo -e "[Garud] - Scanning completed on $domain at $(date)" | notify -silent
 }
+#> NOTIFICATION SENDING COMPLETED
+#-------------------------------------------------------------------------------
 
 runGarud(){
-    subEnum 2> /dev/null
-    enumCrawl 2> /dev/null
-    nucleiScan 2> /dev/null
-    vulnScan 2> /dev/null
-    dirFuzz 2> /dev/null
+    subEnum 2>> .log
+    enumCrawl 2>> .log
+    nucleiScan 2>> .log
+    vulnScan 2>> .log
+    dirFuzz 2>> .log
     finalnot
 }
 
