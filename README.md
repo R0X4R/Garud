@@ -22,7 +22,7 @@ I made this tool to automate my recon and save my time. It really give me headac
 The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
 
 ```txt
-What's new in v2.0: You can resume where you left just delete the last completed file and run the script again in the same output folder.
+What's new in v2.5: Get results on the terminal screen. You can resume where you left just delete the last completed file and run the script again in the same output folder.
 ```
 
 <p align="center"><br/>
@@ -73,16 +73,17 @@ garud:~ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x ga
 
 
 ```js 
-[GARUD] - (v2.0) Coded by R0X4R in INDIA with <3
+[GARUD] - Coded by R0X4R in INDIA with <3
 
 Example Usage:
 garud [-d target.tld] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains]
 
 Flags:
+  -b, --blind          Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)
   -d, --domain         Add your target (e.g -d target.tld)
   -o, --output         Write to output folder (e.g -o results/)
+  -s, --silent         Hide output in the terminal [Default: false]
   -t, --threads        Number of threads [Default: 100] (e.g. -t 300)
-  -b, --blind          Add your xss server for BXSS [Default: false] (e.g. -b test.xss.ht)
   -v, --version        Print current version of Garud
   -x, --exclude        Exclude out of scope domains [Default: false] (e.g. -x ~/oosdomains.txt)                                                    
 ```
@@ -120,6 +121,13 @@ With all flags
 ```bash
 garud:~ garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt
 ```
+
+Hide output in the terminal
+
+```bash
+garud:~ garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt -s
+```
+
 Start where you left
 ```bash
 garud:~ garud -d hackerone.com. -o hackerone -t 300
@@ -131,12 +139,11 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 ```
 
 <h3>Notifications</h3>
-<p align="left">
-<a href="https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack">Slack Notification BOT</a> •
-<a href="https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks">Discord Notification BOT</a> •
-<a href="https://core.telegram.org/bots#3-how-do-i-create-a-bot">Telegram Notification BOT</a> •
-<a href="https://github.com/projectdiscovery/notify#config-file">Configure Notify</a>
-</p>
+
+[`Slack Notification Bot`](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack) •
+[`Discord Notification Bot`](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) •
+[`Telegram Notification Bot`](https://core.telegram.org/bots#3-how-do-i-create-a-bot) •
+[`Configure Notify`](https://github.com/projectdiscovery/notify#config-file)
                                                                 
 <p align="left">
 <h3>Donate</h3> 
@@ -145,6 +152,6 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 ### Thanks to the authors of the tools used in this script.
 
-[@aboul3la](https://github.com/aboul3la) [@tomnomnom](https://github.com/tomnomnom) [@lc](https://github.com/lc) [@hahwul](https://github.com/hahwul) [@projectdiscovery](https://github.com/projectdiscovery) [@maurosoria](https://github.com/maurosoria) [@shelld3v](https://github.com/shelld3v) [@devanshbatham](https://github.com/devanshbatham) [@michenriksen](https://github.com/michenriksen) [@defparam](https://github.com/defparam/) [@projectdiscovery](https://github.com/projectdiscovery) [@bp0lr](https://github.com/bp0lr/) [@ameenmaali](https://github.com/ameenmaali) [@dwisiswant0](https://github.com/dwisiswant0) [@OWASP](https://github.com/OWASP/) [@1ndianl33t](https://github.com/1ndianl33t) [@sqlmapproject](https://github.com/sqlmapproject) [@w9w](https://github.com/w9w) [@OJ](https://github.com/OJ)
+[`@aboul3la`](https://github.com/aboul3la) [`@tomnomnom`](https://github.com/tomnomnom) [`@lc`](https://github.com/lc) [`@hahwul`](https://github.com/hahwul) [`@projectdiscovery`](https://github.com/projectdiscovery) [`@maurosoria`](https://github.com/maurosoria) [`@shelld3v`](https://github.com/shelld3v) [`@devanshbatham`](https://github.com/devanshbatham) [`@michenriksen`](https://github.com/michenriksen) [`@defparam`](https://github.com/defparam/) [`@projectdiscovery`](https://github.com/projectdiscovery) [`@bp0lr`](https://github.com/bp0lr/) [`@ameenmaali`](https://github.com/ameenmaali) [`@dwisiswant0`](https://github.com/dwisiswant0) [`@OWASP`](https://github.com/OWASP/) [`@1ndianl33t`](https://github.com/1ndianl33t) [`@sqlmapproject`](https://github.com/sqlmapproject) [`@w9w`](https://github.com/w9w) [`@OJ`](https://github.com/OJ)
 
 **Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution.
