@@ -15,6 +15,7 @@ cd
 sudo apt-get install git -y 2> /dev/null
 sudo apt-get install python3 -y 2> /dev/null
 sudo apt-get install python3-pip -y 2> /dev/null
+sudo apt install -y libpcap-dev 2> /dev/null
 sudo apt-get install ruby -y 2> /dev/null
 sudo apt-get install golang-go -y 2> /dev/null
 sudo apt install snapd -y 2> /dev/null
@@ -31,6 +32,7 @@ cd && git clone https://github.com/w9w/JSA.git ~/tools/JSA/ 2> /dev/null
 cd && git clone https://github.com/ameenmaali/urldedupe.git ~/tools/urldedupe && cd ~/tools/urldedupe && cmake CMakeLists.txt && make && mv urldedupe /usr/bin/ 2> /dev/null
 cd && git clone https://github.com/codingo/Interlace.git ~/tools/interlace && cd ~/tools/interlace && python3 setup.py install 2> /dev/null
 cd && pip3 install tldextract 2> /dev/null
+cd && pip3 install uro 2> /dev/null
 echo "Installing Wordlists"
 cd ~/wordlists/ && wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/big.txt
 wget https://gist.githubusercontent.com/Lopseg/33106eb13372a72a31154e0bbab2d2b3/raw/a79331799a70d0ae0ea906f2b143996d85f71de5/dicc.txt
@@ -41,6 +43,7 @@ wget https://raw.githubusercontent.com/Bo0oM/fuzz.txt/master/fuzz.txt -O fuzz.tx
 sleep 2s
 echo "Installing go-lang tools"
 go get -u github.com/tomnomnom/anew 2> /dev/null
+go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest 2> /dev/null
 go install github.com/OJ/gobuster/v3@latest 2> /dev/null
 go get -u github.com/tomnomnom/gf 2> /dev/null
 go get github.com/michenriksen/aquatone 2> /dev/null
