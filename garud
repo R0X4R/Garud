@@ -20,7 +20,7 @@ exclude=
 threads=
 blindxss=
 silent=False
-ports="80,81,280,300,443,583,591,593,832,981,1010,1099,1311,2082,2087,2095,2096,2480,3000,3128,3333,4243,4444,4445,4567,4711,4712,4993,5000,5104,5108,5280,5281,5601,5800,6543,7000,7001,7002,7396,7474,8000,8001,8008,8009,8014,8042,8060,8069,8080,8081,8083,8088,8090,8091,8095,8118,8123,8172,8181,8222,8243,8280,8281,8333,8337,8443,8500,8530,8531,8834,8880,8887,8888,8983,9000,9001,9043,9060,9080,9090,9091,9092,9200,9443,9502,9800,9981,10000,10250,10443,11371,12043,12046,12443,15672,16080,17778,18091,18092,20720,28017,32000,55440,55672"
+ports="21,22,80,81,280,300,443,583,591,593,832,981,1010,1099,1311,2082,2087,2095,2096,2480,3000,3128,3333,4243,4444,4445,4567,4711,4712,4993,5000,5104,5108,5280,5281,5601,5800,6543,7000,7001,7002,7396,7474,8000,8001,8008,8009,8014,8042,8060,8069,8080,8081,8083,8088,8090,8091,8095,8118,8123,8172,8181,8222,8243,8280,8281,8333,8337,8443,8500,8530,8531,8834,8880,8887,8888,8983,9000,9001,9043,9060,9080,9090,9091,9092,9200,9443,9502,9800,9981,10000,10250,10443,11371,12043,12046,12443,15672,16080,17778,18091,18092,20720,28017,32000,55440,55672"
 #> COLORS
 red="\e[31m"
 bold="\e[1m"
@@ -162,8 +162,9 @@ checkDomains(){
         cat temporary/*.txt | grep -v "*" | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 2 -r ~/wordlists/resolvers.txt -t 100 -silent | anew -q domains/subdomains.txt
     fi
     #> WEB PROBING AND SCREENSHOT
-    [ ! -f domains/titles.txt ] && xargs -a domains/subdomains.txt -P 50 -I % bash -c "echo % | httpx -silent -threads 150 -ports $ports -status-code -title -timeout 20 -retries 2 -follow-host-redirects -random-agent -no-color" 2> /dev/null | anew -q domains/titles.txt
-    cat domains/titles.txt | awk '{print $1}' 2> /dev/null | anew -q domains/liveurls.txt
+    [ ! -f domains/ports.txt ] && naabu -retries 2 -r ~/wordlists/resolvers.txt -l domains/subdomains.txt --port $ports -silent -no-color 2> /dev/null | anew -q domains/ports.txt
+    [ ! -f domains/probes.txt ] && xargs -a domains/ports.txt -P 50 -I % bash -c "echo % | httpx -silent -threads 150 -status-code -title -timeout 20 -retries 2 -follow-host-redirects -random-agent -no-color" 2> /dev/null | anew -q domains/probes.txt
+    cat domains/probes.txt | awk '{print $1}' 2> /dev/null | anew -q domains/liveurls.txt
     [ ! -d domains/aquatone ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path /snap/bin/chromium -out domains/aquatone/ -threads 10 -silent" 2> /dev/null &> /dev/null
 }
 
@@ -186,7 +187,7 @@ enumCrawl(){
     [ ! -f temporary/waybackurls.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q temporary/waybackurls.txt
     [ ! -f temporary/gauplus.txt ] && cat domains/liveurls.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt -t $threads -o temporary/gauplus.txt
     # [ ! -f temporary/jslinks.txt ] && cat temporary/gauplus.txt temporary/waybackurls.txt | subjs -c 50 2> /dev/null | parallel -j 20 'echo "{}" | python3 ~/tools/JSA/jsa.py' 2> /dev/null | anew -q temporary/jslinks.txt
-    cat temporary/gospider.txt temporary/gauplus.txt temporary/waybackurls.txt 2> /dev/null | sed '/\[/d' | grep $domain | sort -u | urldedupe -s | anew -q domains/endpoints.txt # <-- Filtering duplicate and common endpoints
+    cat temporary/gospider.txt temporary/gauplus.txt temporary/waybackurls.txt 2> /dev/null | sed '/\[/d' | grep $domain | sort -u | uro | anew -q domains/endpoints.txt # <-- Filtering duplicate and common endpoints
     #> FILTERING ENDPOINTS USING PATTERNS
     cat domains/endpoints.txt | gf xss | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q domains/patterns/xss.txt
     cat domains/endpoints.txt | gf ssrf | sed "s/'\|(\|)//g" | qsreplace "FUZZ" 2> /dev/null | anew -q domains/patterns/ssrf.txt
