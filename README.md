@@ -22,18 +22,19 @@ I made this tool to automate my recon and save my time. It really give me headac
 The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
 
 ```txt
-What's new in v2.5: Get results on the terminal screen. You can resume where you left just delete the last completed file and run the script again in the same output folder.
+What's new in v3.0: Fixed some error and added naabu for port scanning and uro for url filtering
 ```
 
+<h3 align="left">How garud works</h3>
 <p align="center"><br/>
 <img src="img/mindmap.png" alt="garud mindmap"><br/>
-<img src="img/roadmap.png" alt="How garud works"">
-</p>
+<!-- <img src="img/roadmap.png" alt="How garud works""> -->
+</p><br/>
 
 <h3>Installation</h3>
 
-**Requirements:** Go Language and Python 3.<br>
-**System requirements:** Recommended to run on vps with 1VCPU and 2GB ram.<br>
+**Requirements:** ``Go Language`` and ``Python 3``.<br>
+**System requirements:** Recommended to run on vps with ``1VCPU`` and ``2GB RAM``.<br>
 
 **Tools used - You must need to install these tools to use this script**<br>
 
@@ -54,10 +55,12 @@ What's new in v2.5: Get results on the terminal screen. You can resume where you
   <a href="https://github.com/OWASP/Amass">`amass`</a> •
   <a href="https://github.com/bp0lr/gauplus">`gauplus`</a> •
   <a href="https://github.com/dwisiswant0/crlfuzz">`crlfuzz`</a> •
+  <a href="https://github.com/s0md3v/uro">`uro`</a> •
   <a href="https://github.com/ffuf/ffuf">`ffuf`</a> •
-  <a href="https://github.com/lc/subjs">`subjs`</a> •
-  <a href="https://github.com/w9w/JSA">`JSA`</a> •
-  <a href="https://github.com/OJ/gobuster">`goBuster`</a> •
+  <a href="https://github.com/projectdiscovery/naabu">`naabu`</a> •
+  <a href="https://github.com/Cgboal/SonarSearch">`crobat`</a> •
+  <a href="https://github.com/OJ/gobuster">`gobuster`</a> •
+  <a href="https://github.com/jaeles-project/gospider">`gospider`</a> •
   <a href="https://github.com/tomnomnom/waybackurls">`waybackurls`</a><br>
 
 
@@ -140,10 +143,10 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 <h3>Notifications</h3>
 
-[`Slack Notification Bot`](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack) •
-[`Discord Notification Bot`](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) •
-[`Telegram Notification Bot`](https://core.telegram.org/bots#3-how-do-i-create-a-bot) •
-[`Configure Notify`](https://github.com/projectdiscovery/notify#config-file)
+[`slack notification bot`](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack) •
+[`discord notification bot`](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) •
+[`telegram notification bot`](https://core.telegram.org/bots#3-how-do-i-create-a-bot) •
+[`configure notify`](https://github.com/projectdiscovery/notify#config-file)
                                                                 
 <p align="left">
 <h3>Donate</h3> 
@@ -152,6 +155,6 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 ### Thanks to the authors of the tools used in this script.
 
-[`@aboul3la`](https://github.com/aboul3la) [`@tomnomnom`](https://github.com/tomnomnom) [`@lc`](https://github.com/lc) [`@hahwul`](https://github.com/hahwul) [`@projectdiscovery`](https://github.com/projectdiscovery) [`@maurosoria`](https://github.com/maurosoria) [`@shelld3v`](https://github.com/shelld3v) [`@devanshbatham`](https://github.com/devanshbatham) [`@michenriksen`](https://github.com/michenriksen) [`@defparam`](https://github.com/defparam/) [`@projectdiscovery`](https://github.com/projectdiscovery) [`@bp0lr`](https://github.com/bp0lr/) [`@ameenmaali`](https://github.com/ameenmaali) [`@dwisiswant0`](https://github.com/dwisiswant0) [`@OWASP`](https://github.com/OWASP/) [`@1ndianl33t`](https://github.com/1ndianl33t) [`@sqlmapproject`](https://github.com/sqlmapproject) [`@w9w`](https://github.com/w9w) [`@OJ`](https://github.com/OJ)
+[`@aboul3la`](https://github.com/aboul3la) [`@tomnomnom`](https://github.com/tomnomnom) [`@lc`](https://github.com/lc) [`@hahwul`](https://github.com/hahwul) [`@projectdiscovery`](https://github.com/projectdiscovery) [`@maurosoria`](https://github.com/maurosoria) [`@shelld3v`](https://github.com/shelld3v) [`@devanshbatham`](https://github.com/devanshbatham) [`@michenriksen`](https://github.com/michenriksen) [`@defparam`](https://github.com/defparam/) [`@projectdiscovery`](https://github.com/projectdiscovery) [`@bp0lr`](https://github.com/bp0lr/) [`@ameenmaali`](https://github.com/ameenmaali) [`@dwisiswant0`](https://github.com/dwisiswant0) [`@OWASP`](https://github.com/OWASP/) [`@1ndianl33t`](https://github.com/1ndianl33t) [`@sqlmapproject`](https://github.com/sqlmapproject) [`@w9w`](https://github.com/w9w) [`@OJ`](https://github.com/OJ) [`@jaeles-project`](https://github.com/jaeles-project) [`@s0md3v`](https://github.com/s0md3v) [`ffuf`](https://github.com/ffuf)
 
 **Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution.

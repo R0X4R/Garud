@@ -1,6 +1,6 @@
 #!/bin/bash
 # coded by R0X4R
-# Garud - version 2.5
+# Garud - version 3.0
 # Contributers: KathanP19 (https://github.com/KathanP19), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec), simrotion13 (https://github.com/simrotion13)
 #-------------------------------------------------------
 
@@ -13,7 +13,7 @@ fi
 #-------------------------------------------------------
 
 #> VARIABLES
-version="Garud v2.5"
+version="Garud v3.0"
 domain=
 outdir=
 exclude=
@@ -110,7 +110,7 @@ cd $outdir
 printBanner(){
 	clear
     echo -e "${red}█▀▀ ▄▀█ █▀█ █░█ █▀▄"
-    echo -e "█▄█ █▀█ █▀▄ █▄█ █▄▀ v2.5"
+    echo -e "█▄█ █▀█ █▀▄ █▄█ █▄▀ v3.0"
     echo -e "${normal}${bold}\ncoded by R0X4R in ${red}INDIA${normal}${bold} with ${red}<3${normal}\n"
     echo -e "${bold}Time: $(date)   Target: $domain   Output: $(pwd)${normal}\n"
     echo -e "[Garud] - Scanning started on $domain at $(date)" | notify -silent
