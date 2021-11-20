@@ -111,7 +111,7 @@ Add threads to your scan
 ```bash
 garud:~ garud -d hackerone.com -o hackerone -t 200
 ```
-Scan for blind xss, you can get your xss server from [xsshunter.com](https://xsshunter.com/)
+Scan for blind xss, you can get your xss server from [`xsshunter.com`](https://xsshunter.com/)
 ```bash
 garud:~ garud -d hackerone.com -o hackerone -b test.xss.ht
 ```
@@ -143,10 +143,10 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 <h3>Notifications</h3>
 
-[`slack notification bot`](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack) •
-[`discord notification bot`](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) •
-[`telegram notification bot`](https://core.telegram.org/bots#3-how-do-i-create-a-bot) •
-[`configure notify`](https://github.com/projectdiscovery/notify#config-file)
+[`@slack`](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack) •
+[`@discord`](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) •
+[`@telegram`](https://core.telegram.org/bots#3-how-do-i-create-a-bot) •
+[`configure-notify`](https://github.com/projectdiscovery/notify#config-file)
                                                                 
 <p align="left">
 <h3>Donate</h3> 
