@@ -150,7 +150,7 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
                                                                 
 <p align="left">
 <h3>Donate</h3> 
-<a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a>
+<a href="https://rzp.io/l/pQny7s0n"><img src=".github/support.svg" width="200"></a>    <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a>
 </p>
 
 ### Thanks to the authors of the tools used in this script.
