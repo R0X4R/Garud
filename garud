@@ -212,7 +212,7 @@ nucleiScan(){
     [ ! -f nuclei/low.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity low -c 50 -silent" 2> /dev/null | anew nuclei/low.txt | notify -silent &> /dev/null
     [ ! -f nuclei/medium.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity medium -c 50 -silent" 2> /dev/null | anew nuclei/medium.txt | notify -silent &> /dev/null
     [ ! -f nuclei/high.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity high -c 50 -silent" 2> /dev/null | anew nuclei/high.txt | notify -silent &> /dev/null
-    [ ! -f nuclei/critical.txt] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity critical -c 50 -silent" 2> /dev/null | anew nuclei/critical.txt | notify -silent &> /dev/null
+    [ ! -f nuclei/critical.txt ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -severity critical -c 50 -silent" 2> /dev/null | anew nuclei/critical.txt | notify -silent &> /dev/null
     [ "$silent" == "False" ] && cat nuclei/*.txt
 }
 #-------------------------------------------------------
