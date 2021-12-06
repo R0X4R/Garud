@@ -143,7 +143,7 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 **Docker**
 
-This image needs to be build with [Buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/)
+This image needs to be built with [Buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/)
 ```bash
 garud:~ git clone https://github.com/R0X4R/Garud.git
 garud:~ cd Garud 
