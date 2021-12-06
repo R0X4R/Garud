@@ -5,9 +5,9 @@
 FROM golang:1.16-alpine AS go-builder
 ENV GO111MODULE=on
 RUN <<eot
-#!/usr/bin/env sh
+#!/bin/sh
 ## Prerequisites
-  apk add --no-cache libpcap-dev
+  apk add --no-cache build-base libpcap-dev
 ## amass
   go get -v github.com/OWASP/Amass/v3/...
 ## anew
@@ -52,8 +52,6 @@ RUN <<eot
   go install github.com/tomnomnom/qsreplace@latest
 ## subfinder
   go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-## subzy
-  go install -v github.com/lukasikic/subzy@latest
 ## waybackurls
   go get github.com/tomnomnom/waybackurls
 ## Some cleanup
@@ -65,17 +63,19 @@ eot
 FROM alpine:latest AS py-builder
 WORKDIR /opt
 RUN <<eot
+#!/bin/sh
+## Prerequisites
   apk add --no-cache git
-  ## Interlace
-    git clone https://github.com/codingo/Interlace.git
-  ## Sublist3r
-    git clone https://github.com/aboul3la/Sublist3r.git
-  ## sqlmap
-    git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
-  ## urldedupe
-    git clone https://github.com/ameenmaali/urldedupe.git
-  ## GF-Patterns
-    git clone https://github.com/1ndianl33t/Gf-Patterns
+## Interlace
+  git clone https://github.com/codingo/Interlace.git
+## Sublist3r
+  git clone https://github.com/aboul3la/Sublist3r.git
+## sqlmap
+  git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
+## urldedupe
+  git clone https://github.com/ameenmaali/urldedupe.git
+## GF-Patterns
+  git clone https://github.com/1ndianl33t/Gf-Patterns
 eot
 
 WORKDIR /opt/urldedupe
@@ -87,10 +87,10 @@ eot
 
 WORKDIR /opt/wordlists
 RUN <<eot
-wget -q https://raw.githubusercontent.com/Bo0oM/fuzz.txt/master/fuzz.txt -O fuzz.txt
-wget -q https://raw.githubusercontent.com/janmasarik/resolvers/master/resolvers.txt -O resolvers.txt
-wget -q https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/dns-Jhaddix.txt -O dns.txt
-wget -q https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/deepmagic.com-prefixes-top50000.txt -O subdomains.txt
+  wget -q https://raw.githubusercontent.com/Bo0oM/fuzz.txt/master/fuzz.txt -O fuzz.txt
+  wget -q https://raw.githubusercontent.com/janmasarik/resolvers/master/resolvers.txt -O resolvers.txt
+  wget -q https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/dns-Jhaddix.txt -O dns.txt
+  wget -q https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/deepmagic.com-prefixes-top50000.txt -O subdomains.txt
 eot
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -98,13 +98,14 @@ eot
 FROM rastasheep/alpine-node-chromium:12-alpine AS base
 
 RUN <<eot
-  ## Dependencies
-    apk add --no-cache curl grep jq libpcap-dev
-  ## Install Python
-    apk add --no-cache python3
-    ln -sf python3 /usr/bin/python
-    python3 -m ensurepip
-    pip3 install --upgrade --no-cache pip setuptools
+#!/bin/sh
+## Dependencies
+  apk add --no-cache curl grep jq libpcap-dev
+## Install Python
+  apk add --no-cache python3
+  ln -sf python3 /usr/bin/python
+  python3 -m ensurepip
+  pip3 install --upgrade --no-cache pip setuptools
 eot
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -125,7 +126,7 @@ COPY --from=py-builder /opt/wordlists $HOME/wordlists
 
 COPY payloads/lfi.txt $HOME/tools/payloads/
 COPY payloads/ssti.txt $HOME/tools/payloads/
-COPY payloads/patterns/*.json /root/.gf
+COPY payloads/patterns/*.json /root/.gf/
 COPY LICENSE $HOME
 COPY garud /usr/local/bin
 
@@ -138,6 +139,8 @@ RUN <<eot
     pip3 install --upgrade --no-cache uro tldextract
   ## nuclei templates
     nuclei -update-templates
+  ## Aquatone Chrome-Path
+    sed -i -- 's/\/snap\/bin\/chromium/\$CHROME_BIN/' /usr/local/bin/garud
 eot
 
 ENTRYPOINT [ "/usr/local/bin/garud", "-o", "/output" ]
