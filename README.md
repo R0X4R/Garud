@@ -154,7 +154,7 @@ To run the container
 ```bash
 garud:~ docker run -t --rm \
   -v "/path/on/host":"/output" \    # Mount the Host Output Folder to "/output"
-  -v "/path/to/configs":"/Garud/.config" \    # Mount your Config files to "/Garud/.config"
+  -v "/path/to/configs":"/Garud/.config/notify" \    # Mount your Notify Config files to "/Garud/.config/notify"
   garud -d hackerone.com
 ```
 Garud runs as root inside the container & so it is advisable to configure Linux Namespaces 
