@@ -110,7 +110,8 @@ eot
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 FROM base AS final
-ENV HOME=/root
+ENV HOME=/Garud
+WORKDIR /Garud
 
 COPY --from=go-builder /go/bin/* /usr/local/bin
 COPY --from=go-builder /opt/gf/examples/*.json /root/.gf/
@@ -122,8 +123,8 @@ COPY --from=py-builder /opt/sqlmap $HOME/tools/sqlmap
 COPY --from=py-builder /opt/Gf-Patterns/*.json /root/.gf/
 COPY --from=py-builder /opt/wordlists $HOME/wordlists
 
-COPY payloads/lfi.txt $HOME/tools/payloads
-COPY payloads/ssti.txt $HOME/tools/payloads
+COPY payloads/lfi.txt $HOME/tools/payloads/
+COPY payloads/ssti.txt $HOME/tools/payloads/
 COPY payloads/patterns/*.json /root/.gf
 COPY LICENSE $HOME
 COPY garud /usr/local/bin
@@ -139,5 +140,4 @@ RUN <<eot
     nuclei -update-templates
 eot
 
-WORKDIR /output
 ENTRYPOINT [ "/usr/local/bin/garud", "-o", "/output" ]
