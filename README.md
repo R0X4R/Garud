@@ -141,6 +141,26 @@ garud:~ cd
 garud:~ garud -d hackerone.com. -o hackerone -t 300
 ```
 
+**Docker**
+
+This image needs to be built with [Buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/)
+```bash
+garud:~ git clone https://github.com/R0X4R/Garud.git
+garud:~ cd Garud 
+garud:~ docker buildx build -t garud -f Dockerfile .
+```
+
+To run the container
+```bash
+garud:~ docker run -t --rm \
+  -v "/path/on/host":"/output" \   # Mount the Host Output Folder to "/output"
+  -v "/path/to/configs":"/Garud/.config/notify" \   # Mount your Notify Config files to "/Garud/.config/notify"
+  garud -d hackerone.com
+```
+Garud runs as root inside the container & so it is advisable to configure Linux Namespaces 
+1. [Isolate containers with a user namespace](https://docs.docker.com/engine/security/userns-remap/)
+2. [Use Linux user namespaces to fix permissions in docker volumes](https://www.jujens.eu/posts/en/2017/Jul/02/docker-userns-remap/)
+
 <h3>Notifications</h3>
 
 [`@slack`](https://slack.com/intl/en-it/help/articles/115005265063-Incoming-webhooks-for-Slack) •
