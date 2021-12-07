@@ -124,9 +124,9 @@ COPY --from=py-builder /opt/sqlmap $HOME/tools/sqlmap
 COPY --from=py-builder /opt/Gf-Patterns/*.json /root/.gf/
 COPY --from=py-builder /opt/wordlists $HOME/wordlists
 
-COPY payloads/lfi.txt $HOME/tools/payloads/
-COPY payloads/ssti.txt $HOME/tools/payloads/
-COPY payloads/patterns/*.json /root/.gf/
+COPY .github/payloads/lfi.txt $HOME/tools/payloads/
+COPY .github/payloads/ssti.txt $HOME/tools/payloads/
+COPY .github/payloads/patterns/*.json /root/.gf/
 COPY LICENSE $HOME
 COPY garud /usr/local/bin
 

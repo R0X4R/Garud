@@ -7,9 +7,9 @@ mkdir -p ~/tools/.tmp/
 mkdir -p ~/tools/payloads/
 mkdir -p ~/.gf
 mkdir -p ~/wordlists/
-mv payloads/patterns/*.json ~/.gf/
-mv payloads/lfi.txt ~/tools/payloads/
-mv payloads/ssti.txt ~/tools/payloads/
+mv .github/payloads/patterns/*.json ~/.gf/
+mv .github/payloads/lfi.txt ~/tools/payloads/
+mv .github/payloads/ssti.txt ~/tools/payloads/
 
 echo -e "Installing all dependencies\n"
 cd
