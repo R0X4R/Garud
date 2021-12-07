@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/R0X4R/Garud/"><img src="img/garud.png" width="500px" alt="Garud"></a>
+  <a href="https://github.com/R0X4R/Garud/"><img src=".github/img/garud.png" width="500px" alt="Garud"></a>
 </h1>
                                                                                                                                             
 <h4 align="center">An automation tool that scans sub-domains, sub-domain takeover and then filters out xss, ssti, ssrf and more injection point parameters.</h4>
@@ -27,7 +27,7 @@ What's new in v3.0: Fixed some error and added naabu for port scanning and uro f
 
 <h3 align="left">How garud works</h3>
 <p align="center"><br/>
-<img src="img/mindmap.png" alt="garud mindmap"><br/>
+<img src=".github/img/mindmap.png" alt="garud mindmap"><br/>
 <!-- <img src="img/roadmap.png" alt="How garud works""> -->
 </p><br/>
 
@@ -143,7 +143,9 @@ garud:~ garud -d hackerone.com. -o hackerone -t 300
 
 **Docker**
 
-This image needs to be built with [Buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/)
+Contributed by [`@frost19k`](https://github.com/frost19k)
+
+This image needs to be built with [`Buildkit`](https://docs.docker.com/develop/develop-images/build_enhancements/)
 ```bash
 garud:~ git clone https://github.com/R0X4R/Garud.git
 garud:~ cd Garud 
@@ -170,7 +172,7 @@ Garud runs as root inside the container & so it is advisable to configure Linux 
                                                                 
 <p align="left">
 <h3>Donate</h3> 
-<a href="https://rzp.io/l/pQny7s0n"><img src=".github/support.svg" width="200"></a>    <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a>
+<a href="https://rzp.io/l/pQny7s0n"><img src=".github/img/support.svg" width="200"></a>    <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a>
 </p>
 
 ### Thanks to the authors of the tools used in this script.
