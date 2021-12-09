@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo "Make sure you're root before installing the tools"
 sleep 2s
 clear
