@@ -132,7 +132,7 @@ cd $outdir
 
 #> BANNER
 banner(){
-	clear
+    clear
     echo -e ""
     echo -e "${RED} \t\t    █▀▀ ▄▀█ █▀█ █░█ █▀▄"
     echo -e " \t\t    █▄█ █▀█ █▀▄ █▄█ █▄▀ v3.2"
