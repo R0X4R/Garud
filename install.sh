@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo "Make sure you're root before installing the tools"
 sleep 2s
 clear
@@ -75,6 +75,9 @@ cd
 git clone https://github.com/codingo/Interlace.git ~/tools/interlace 2> /dev/null &> /dev/null
 cd ~/tools/interlace
 python3 setup.py install 2> /dev/null &> /dev/null
+
+echo -e "-Installing bhedak"
+cd && wget -q https://raw.githubusercontent.com/R0X4R/bhedak/main/bhedak && chmod +x bhedak && mv bhedak /usr/bin/
 
 echo -e "- Installing uro"
 cd && pip3 install tldextract 2> /dev/null &> /dev/null
