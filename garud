@@ -60,7 +60,7 @@ while [ -n "$1" ]; do
             -d|--domain)
                 domain=$2
                 shift ;;
-            
+
             -h|--help)
                 printusage
                 shift ;;
@@ -68,7 +68,7 @@ while [ -n "$1" ]; do
             -o|--output)
                 outdir=$2
                 shift ;;
-            
+
             -j|--json)
                 jsonout='true'
                 ;;
@@ -80,7 +80,7 @@ while [ -n "$1" ]; do
             -t|--threads)
                 threads=$2
                 shift ;;
-            
+
             -r|--remove)
                 remout='true'
                 shift ;;
@@ -88,7 +88,7 @@ while [ -n "$1" ]; do
             -x|--exclude)
                 exclude=$2
                 shift ;;
-            
+
             -v|--version)
                 echo -e "$version"
                 exit 0 ;;
@@ -113,6 +113,11 @@ fi
 
 if [ -z "$threads" ]; then
     threads=100
+fi
+
+## For Docker Compatibility
+if [ -z "$CHROME_BIN" ]; then
+    CHROME_BIN="/snap/bin/chromium"
 fi
 
 if [ "$remout" == "true" ]; then
@@ -192,7 +197,7 @@ domaincheck(){
     [ ! -f "domains/probes.txt" ] && xargs -a domains/ports.txt -P 50 -I % bash -c "echo % | httpx -silent -threads 150 -status-code -title -timeout 20 -retries 2 -follow-host-redirects -random-agent -no-color" 2> /dev/null | anew -q domains/probes.txt
     cat domains/probes.txt | awk '{print $1}' 2> /dev/null | anew -q domains/liveurls.txt
     [ "$jsonout" == "False" ] || cat domains/liveurls.txt | python3 -c "import sys; import json; print (json.dumps({'liveurls':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/liveurls.json &> /dev/null
-    [ ! -d domains/aquatone ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path /snap/bin/chromium -out domains/aquatone/ -threads 10 -silent" 2> /dev/null &> /dev/null
+    [ ! -d domains/aquatone ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path $CHROME_BIN -out domains/aquatone/ -threads 10 -silent" 2> /dev/null &> /dev/null
 }
 
 subenum(){
@@ -214,7 +219,7 @@ webcrawl(){
     [ ! -f ".tmp/gauplus.txt" ] && cat domains/liveurls.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt -t $threads -o .tmp/gauplus.txt
     cat .tmp/gospider.txt .tmp/gauplus.txt .tmp/waybackurls.txt 2> /dev/null | sed '/\[/d' | grep $domain | sort -u | uro | anew -q domains/endpoints.txt # <-- Filtering duplicate and common endpoints
     [ "$jsonout" == "False" ] || cat domains/endpoints.txt | python3 -c "import sys; import json; print (json.dumps({'endpoints':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/endpoints.json &> /dev/null
-    
+
     #> FILTERING ENDPOINTS USING PATTERNS
     if [ -s "domains/endpoints.txt" ]; then
         gf xss domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/xss.txt
@@ -230,21 +235,21 @@ webcrawl(){
     fi
 
     if [ -s "~/tools/payloads/ssti.txt" ] && [ -s "~/tools/payloads/lfi.txt" ]; then
-        cat ~/tools/payloads/ssti.txt | while read -r line; do 
+        cat ~/tools/payloads/ssti.txt | while read -r line; do
             cat domains/patterns/ssti.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/ssti.txt
         done
-        
-        cat ~/tools/payloads/lfi.txt | while read -r line; do 
+
+        cat ~/tools/payloads/lfi.txt | while read -r line; do
             cat domains/patterns/lfi.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/lfi.txt
         done
     else
         wget -O ~/tools/payloads/lfi.txt https://raw.githubusercontent.com/R0X4R/Garud/master/.github/payloads/lfi.txt -q --no-check-certificate
         wget -O ~/tools/payloads/ssti.txt https://raw.githubusercontent.com/R0X4R/Garud/master/.github/payloads/ssti.txt -q --no-check-certificate
-        cat ~/tools/payloads/ssti.txt | while read -r line; do 
+        cat ~/tools/payloads/ssti.txt | while read -r line; do
             cat domains/patterns/ssti.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/ssti.txt
         done
-        
-        cat ~/tools/payloads/lfi.txt | while read -r line; do 
+
+        cat ~/tools/payloads/lfi.txt | while read -r line; do
             cat domains/patterns/lfi.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/lfi.txt
         done
     fi
