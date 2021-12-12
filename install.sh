@@ -77,7 +77,7 @@ cd ~/tools/interlace
 python3 setup.py install 2> /dev/null &> /dev/null
 
 echo -e "-Installing bhedak"
-cd && wget -q https://raw.githubusercontent.com/R0X4R/bhedak/main/bhedak && chmod +x bhedak && mv bhedak /usr/bin/
+cd && wget -q https://raw.githubusercontent.com/R0X4R/bhedak/main/bhedak.py && chmod +x bhedak && mv bhedak /usr/bin/
 
 echo -e "- Installing uro"
 cd && pip3 install tldextract 2> /dev/null &> /dev/null
