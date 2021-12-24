@@ -31,8 +31,8 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
-echo 'export GOPATH=$HOME/go'	>> ~/.bashrc			
-echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.bashrc	
+echo 'export GOPATH=$HOME/go'	>> ~/.bashrc
+echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 
 echo -e "- Installing snapd"
@@ -77,7 +77,7 @@ cd ~/tools/interlace
 python3 setup.py install 2> /dev/null &> /dev/null
 
 echo -e "-Installing bhedak"
-cd && wget -q https://raw.githubusercontent.com/R0X4R/bhedak/main/bhedak.py && chmod +x bhedak && mv bhedak /usr/bin/
+cd && wget -q https://raw.githubusercontent.com/R0X4R/bhedak/main/bhedak.py -O bhedak && chmod +x bhedak && mv bhedak /usr/bin/
 
 echo -e "- Installing uro"
 cd && pip3 install tldextract 2> /dev/null &> /dev/null
@@ -114,7 +114,7 @@ echo -e "- Installing gospider"
 cd
 wget https://github.com/jaeles-project/gospider/releases/download/v1.1.6/gospider_v1.1.6_linux_x86_64.zip -q 2> /dev/null &> /dev/null
 unzip gospider_v1.1.6_linux_x86_64.zip 2> /dev/null &> /dev/null
-cd gospider_v1.1.6_linux_x86_64 
+cd gospider_v1.1.6_linux_x86_64
 mv gospider /usr/bin/ 2> /dev/null &> /dev/null
 cd && rm -rf gospider*
 
