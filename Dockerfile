@@ -39,16 +39,13 @@ WORKDIR /opt
 RUN <<eot
 #!/bin/sh
   apk add --no-cache git
-  git clone https://github.com/R0X4R/bhedak.git
+  wget https://raw.githubusercontent.com/R0X4R/bhedak/main/bhedak.py -O bhedak && chmod +x bhedak
   git clone https://github.com/codingo/Interlace.git
   git clone https://github.com/aboul3la/Sublist3r.git
   git clone https://github.com/ameenmaali/urldedupe.git
   git clone https://github.com/1ndianl33t/Gf-Patterns.git
   git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
 eot
-
-WORKDIR /opt/bhedak
-RUN chmod +x bhedak
 
 WORKDIR /opt/Gf-Patterns
 RUN rm -rf $(ls -A | grep -v '.json')
@@ -93,7 +90,7 @@ COPY --from=go-builder /go/bin /usr/local/bin/
 COPY --from=go-builder /opt/gf/ /root/.gf/
 
 COPY --from=py-builder /opt/urldedupe/urldedupe /usr/local/bin/
-COPY --from=py-builder /opt/bhedak/bhedak /usr/local/bin/
+COPY --from=py-builder /opt/bhedak /usr/local/bin/
 COPY --from=py-builder /opt/Interlace /opt/Interlace/
 COPY --from=py-builder /opt/Gf-Patterns /root/.gf/
 COPY --from=py-builder /opt/sqlmap $HOME/tools/sqlmap/
