@@ -1,355 +1,297 @@
 #!/usr/bin/env bash
 # coded by R0X4R
-# Garud - version 3.2
+# Garud - version 3.5
 # Contributers: KathanP19 (https://github.com/KathanP19), frost19k (https://github.com/frost19k), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec), simrotion13 (https://github.com/simrotion13)
 
-#> CHECK CONNECTION
+#@> CHECK CONNECTION
 wget -q --spider http://google.com
 if [ $? -ne 0 ];then
     echo "Connect to internet before running Garud!"
     exit 127
 fi
 
-#> VARIABLES
-version="Garud v3.2"
-domain=
-outdir=
-exclude=
-threads=
-blindxss=
-silent=False
-jsonout=False
-remout=False
-ports="21,22,80,81,280,300,443,583,591,593,832,981,1010,1099,1311,2082,2087,2095,2096,2480,3000,3128,3333,4243,4444,4445,4567,4711,4712,4993,5000,5104,5108,5280,5281,5601,5800,6543,7000,7001,7002,7396,7474,8000,8001,8008,8009,8014,8042,8060,8069,8080,8081,8083,8088,8090,8091,8095,8118,8123,8172,8181,8222,8243,8280,8281,8333,8337,8443,8500,8530,8531,8834,8880,8887,8888,8983,9000,9001,9043,9060,9080,9090,9091,9092,9200,9443,9502,9800,9981,10000,10250,10443,11371,12043,12046,12443,15672,16080,17778,18091,18092,20720,28017,32000,55440,55672"
+#@> VARIABLES
+DM=
+EC=
+SL=False
+JO=False
+RO=False
+VR="Garud v3.5"
+PR="21,22,80,81,280,300,443,583,591,593,832,981,1010,1099,1311,2082,2087,2095,2096,2480,3000,3128,3333,4243,4444,4445,4567,4711,4712,4993,5000,5104,5108,5280,5281,5601,5800,6543,7000,7001,7002,7396,7474,8000,8001,8008,8009,8014,8042,8060,8069,8080,8081,8083,8088,8090,8091,8095,8118,8123,8172,8181,8222,8243,8280,8281,8333,8337,8443,8500,8530,8531,8834,8880,8887,8888,8983,9000,9001,9043,9060,9080,9090,9091,9092,9200,9443,9502,9800,9981,10000,10250,10443,11371,12043,12046,12443,15672,16080,17778,18091,18092,20720,28017,32000,55440,55672"
 
-#> COLORS
-RED="\e[31m"
-GREEN="\e[32m"
-BOLD="\e[1m"
-NORMAL="\e[0m"
+#@> COLORS
+BK="\e[7m"
+RT="\e[0m"
+YW="\e[93m"
+GR="\e[32m"
 
-#> PRINT USAGE
-printusage(){
+#@> PRINT USAGE
+PRINT_USAGE(){
     echo -e ""
-    echo -e "[${BOLD}GARUD${NORMAL}] - Coded by ${BOLD}R0X4R${NORMAL} in ${BOLD}INDIA${NORMAL} with ${RED}<3${NORMAL}\n"
+    echo -e "${YW}
+\t\t█▀▀▀ █▀▀█ █▀▀█ █░░█ █▀▀▄
+\t\t█░▀█ █▄▄█ █▄▄▀ █░░█ █░░█
+\t\t▀▀▀▀ ▀░░▀ ▀░▀▀ ░▀▀▀ ▀▀▀░
+${RT}"
+    echo -e "[${YW}GARUD${RT}] == A RECONNAISSANCE SUITE FOR BUG BOUNTY (${BK}@R0X4R${RT})"
+    echo -e ""
     echo -e "Example Usage:"
-    echo -e "garud [-d target.tld] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains] [--json] [-s] [-r]"
+    echo -e "garud [-d target.tld] [-x exclude domains] [--json] [-s]"
     echo -e ""
     echo -e "Flags:"
-    echo -e "   -b, --blind                  ${GREEN}string${NORMAL}     Add your xss server for BXSS            -b test.xss.ht"
-    echo -e "   -d, --domain                 ${GREEN}string${NORMAL}     Add your target                         -d target.tld"
-    echo -e "   -o, --output                 ${GREEN}string${NORMAL}     Write to output folder                  -o results"
-    echo -e "   -t, --threads                ${GREEN}int${NORMAL}        Number of threads                       -t 100"
-    echo -e "   -x, --exclude                ${GREEN}string${NORMAL}     Exclude out of scope domains            -x /home/oosd.txt"
+    echo -e "   -d, --domain                 ${BK}string${RT}     Add your target                         -d target.tld"
+    echo -e "   -x, --exclude                ${BK}string${RT}     Exclude out of scope domains            -x /home/dommains.list"
     echo -e ""
-    echo -e "Optional Flags:"
-    echo -e "   -s, --silent                            Hide output in the terminal             ${GREEN}Default: ${RED}False${NORMAL}"
-    echo -e "   -j, --json                              Store output in a single json file      ${GREEN}Default: ${RED}False${NORMAL}"
-    echo -e "   -r, --remove                            Delete everything except json output    ${GREEN}Default: ${RED}False${NORMAL}"
+    echo -e "${BK}Optional Flags: ${RT}"
+    echo -e "   -s, --silent                            Hide output in the terminal             ${GR}Default: ${BK}False${RT}"
+    echo -e "   -j, --json                              Store output in a single json file      ${GR}Default: ${BK}False${RT}"
     echo -e "   -v, --version                           Print current version of Garud"
     exit 0
 }
 
-#> ARGUMENT FLAGS
+#@> ARGUMENTS
 while [ -n "$1" ]; do
     case $1 in
-            -b|--blind)
-                blindxss=$2
-                shift ;;
-
             -d|--domain)
-                domain=$2
+                DM=$2
                 shift ;;
 
             -h|--help)
-                printusage
-                shift ;;
-
-            -o|--output)
-                outdir=$2
+                PRINT_USAGE
                 shift ;;
 
             -j|--json)
-                jsonout='true'
+                JO='true'
                 ;;
 
             -s|--silent)
-                silent='true'
+                SL='true'
                 ;;
 
-            -t|--threads)
-                threads=$2
-                shift ;;
-
-            -r|--remove)
-                remout='true'
-                shift ;;
-
             -x|--exclude)
-                exclude=$2
+                EC=$2
                 shift ;;
 
             -v|--version)
-                echo -e "$version"
+                echo -e "$VR"
                 exit 0 ;;
 
             *)
-                printusage
+                PRINT_USAGE
     esac
     shift
 done
 
 
-#> INITIAL CONFIGS
-if [ -z "$domain" ]; then
-        echo -e "\n${RED}ERROR${NORMAL} - Target not supplied.\n${NORMAL}"
-        printusage
+#@> INITIAL CONFIGS
+if [ -z "$DM" ]; then
+    echo -e "\n${BK}ERROR${RT} - TARGET NOT SUPPLIED."
+    PRINT_USAGE
 fi
 
-if [ -z "$outdir" ]; then
-        echo -e "\n${RED}ERROR${NORMAL} - Output destination not supplied.\n${NORMAL}"
-        printusage
+if [ "$RO" == "true" ]; then
+    JO='true'
 fi
 
-if [ -z "$threads" ]; then
-    threads=100
-fi
-
-## For Docker Compatibility
+#@> DOCKER
 if [ -z "$CHROME_BIN" ]; then
     CHROME_BIN="/snap/bin/chromium"
 fi
 
-if [ "$remout" == "true" ]; then
-    jsonout='true'
-fi
-
-#> TRAP FUNCTION
+#@> EXIT FUNCTION
 trap ctrl_c INT
 ctrl_c(){
     echo -e ""
-    echo -e "${RED}[!] ${NORMAL}KEYBOARD INTERRUPTION, ${GREEN}EXITING GARUD${NORMAL}..."
+    echo -e "${YW} [!] ${RT} KEYBOARD INTERRUPTION, ${GR}EXITING GARUD${RT}..."
     exit 127
 }
 
-mkdir -p $outdir
-cd $outdir
-
-#> BANNER
-banner(){
+#@> BANNER
+INFOM(){
     clear
     echo -e ""
-    echo -e "${RED} \t\t    █▀▀ ▄▀█ █▀█ █░█ █▀▄"
-    echo -e " \t\t    █▄█ █▀█ █▀▄ █▄█ █▄▀ v3.2"
-    echo -e "${NORMAL}${BOLD}\n \t\tcoded by R0X4R in ${RED}INDIA${NORMAL}${BOLD} with ${RED}<3${NORMAL}\n"
-    echo -e "- TARGET: ${GREEN}$domain${NORMAL} \t - OUTPUT: ${GREEN}$(pwd)${NORMAL}"
+    echo -e "${YW}
+\t\t█▀▀▀ █▀▀█ █▀▀█ █░░█ █▀▀▄
+\t\t█░▀█ █▄▄█ █▄▄▀ █░░█ █░░█
+\t\t▀▀▀▀ ▀░░▀ ▀░▀▀ ░▀▀▀ ▀▀▀░
+${RT}"
+    echo -e "[${YW}GARUD${RT}] == A RECONNAISSANCE SUITE FOR BUG BOUNTY (${BK}@R0X4R${RT})"
+    OT=$(echo -e "$(echo $DM | sed -e 's/\.[a-z]*$//')_$(date +"%Y_%M_%d-%H_%M_%S")")
+    mkdir -p $OT 2> /dev/null
+    cd $OT
     echo -e ""
-    echo -e "[Garud] - Scanning started on $domain at $(date)" | notify -silent
+    echo -e "${BK}DOMAIN> ${RT}" | tr -d "\n"; echo -e " $DM" | pv -qL 6
+    echo -e "${BK}OUTPUT> ${RT}" | tr -d "\n"; echo -e " $(pwd | sed 's/\// < /g' | cut -c 4-)" | pv -qL 6
+    echo -e "[GARUD] - Scanning started on $DM at $(date)" | notify -silent
 }
 
-#> MAKE FOLDERS
-makedir(){
+#@> MAKE FOLDERS
+MAKDR(){
     mkdir -p .tmp
-    mkdir -p domains
-    mkdir -p domains/patterns
-    mkdir -p domains/fuzz
-    mkdir -p injections
-    mkdir -p nuclei
-    [ "$jsonout" == "False" ] || mkdir -p .json
+    mkdir -p database
+    mkdir -p database/.gf
+    mkdir -p database/dirs
+    mkdir -p vulns
+    [ "$JO" == "False" ] || mkdir -p .json
 }
 
-#> SUBDOMAIN ENUMERATION
-passiveenum(){
-    [ ! -f ".tmp/crt.txt" ] && curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' 2>/dev/null | sed 's/\*\.//g' | sort -u | grep -o "\w.*$domain" | anew -q .tmp/crt.txt
-    [ ! -f ".tmp/hackertarget.txt" ] && curl -s "https://api.hackertarget.com/hostsearch/?q=$domain" | grep -o "\w.*$domain" | anew -q .tmp/hackertarget.txt
-    [ ! -f ".tmp/riddler.txt" ] && curl -s "https://riddler.io/search/exportcsv?q=pld:$domain" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | grep -o "\w.*$domain" | anew -q .tmp/riddler.txt
-    [ ! -f ".tmp/assetfinder.txt" ] && assetfinder --subs-only $domain | anew -q .tmp/assetfinder.txt
-    [ ! -f ".tmp/sublister.txt" ] && python3 ~/tools/Sublist3r/sublist3r.py -d $domain -o .tmp/sublister.txt &> /dev/null
-    [ ! -f ".tmp/subfinder.txt" ] && subfinder -silent -d $domain -all -t $threads -o .tmp/subfinder.txt &> /dev/null
-    [ ! -f ".tmp/amass.txt" ] && amass enum -passive -d $domain -o .tmp/amass.txt &> /dev/null
-    [ ! -f ".tmp/crobat.txt" ] && crobat -s $domain | anew -q .tmp/crobat.txt
+#@> SUBDOMAIN ENUMERATION
+SUBD_PASV(){
+    curl -s "https://crt.sh/?q=%25.$DM&output=json" | jq -r '.[].name_value' 2>/dev/null | sed 's/\*\.//g' | sort -u | grep -o "\w.*$DM" | anew -q .tmp/cert.list
+    curl -s "https://api.hackertarget.com/hostsearch/?q=$DM" | grep -o "\w.*$DM" | anew -q .tmp/htarget.list
+    curl -s "https://riddler.io/search/exportcsv?q=pld:$DM" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | grep -o "\w.*$DM" | anew -q .tmp/riddler.list
+    assetfinder --subs-only $DM | anew -q .tmp/assetfinder.list
+    python3 ~/tools/Sublist3r/sublist3r.py -d $DM -o .tmp/sublister.list &> /dev/null
+    subfinder -silent -d $DM -all -t 100 -o .tmp/subfinder.list &> /dev/null
+    amass enum -passive -d $DM -o .tmp/amass.list &> /dev/null
+    crobat -s $DM | anew -q .tmp/crobat.list
 }
 
-activeenum(){
-    [ ! -f ".tmp/ffuf.json" ] && ffuf -u http://FUZZ.$domain/ -t 100 -p '1.0-2.0' -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200 -r -o .tmp/ffuf.json -s 2> /dev/null &> /dev/null
-    cat .tmp/ffuf.json 2> /dev/null | jq -r '.results[] | .host' 2> /dev/null | anew -q .tmp/ffuf.txt
-    [ ! -f ".tmp/gobuster.txt" ] && gobuster dns -d $domain --no-error -z -q -t 50 -w ~/wordlists/subdomains.txt 2> /dev/null | sed 's/Found: //g' | anew -q .tmp/gobuster.txt
-    [ ! -f ".tmp/amassact.txt" ] && timeout 50m amass enum -active -brute -w ~/wordlists/subdomains.txt -d $domain -o .tmp/amassact.txt &> /dev/null
+SUBD_ACTV(){
+    timeout 50m ffuf -u http://FUZZ.$DM/ -t 100 -p '1.0-2.0' -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200 -r -o .tmp/ffuf.json -s 2> /dev/null &> /dev/null
+    timeout 50m gobuster dns -d $DM --no-error -z -q -t 100 -w ~/wordlists/subdomains.txt 2> /dev/null | sed 's/Found: //g' | anew -q .tmp/gobuster.list
+    timeout 50m amass enum -active -brute -w ~/wordlists/subdomains.txt -d $DM -o .tmp/amassact.list &> /dev/null
+    cat .tmp/ffuf.json 2> /dev/null | jq -r '.results[] | .host' 2> /dev/null | anew -q .tmp/ffuf.list && rm -rf .tmp/ffuf.json
 }
 
-secondlevel(){
-    cat .tmp/*.txt | grep -v "*" | sed '/@\|<BR>\|\_\|*/d' | grep "$domain" | anew -q .tmp/domains
-    [ ! -f ".tmp/seconddomains.txt" ] && xargs -a .tmp/domains -P 50 -I % bash -c "assetfinder --subs-only % | anew -q .tmp/seconddomains.txt" 2> /dev/null; timeout 30m xargs -a .tmp/domains -P 10 -I % bash -c "amass enum -passive -d %" 2> /dev/null | anew -q .tmp/seconddomains.txt
+SUBD_SCND(){
+    cat .tmp/*.list | grep -v "*" | sed '/@\|<BR>\|\_\|*/d' | grep "$DM" | anew -q .tmp/domains
+    xargs -a .tmp/domains -P 50 -I % bash -c "assetfinder --subs-only % | anew -q .tmp/seconddomains.list" 2> /dev/null; timeout 30m xargs -a .tmp/domains -P 10 -I % bash -c "amass enum -passive -d %" 2> /dev/null | anew -q .tmp/seconddomains.list
 }
 
-domaincheck(){
-    #> FILTERING DOMAINS
-    if [ -f "$exclude" ]; then
-        cat .tmp/*.txt | grep -v "*" | grep -vf $exclude | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 2 -r ~/wordlists/resolvers.txt -t 100 -silent | anew -q domains/subdomains.txt
+SUBD_CHCK(){
+    #@> FILTERING DOMAINS
+    if [ -f "$EC" ]; then
+        cat .tmp/*.list | grep -v "*" | grep -vf $EC | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 3 -r ~/wordlists/resolvers.txt -t 10 -silent | anew -q database/subdomains.txt
     else
-        cat .tmp/*.txt | grep -v "*" | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 2 -r ~/wordlists/resolvers.txt -t 100 -silent | anew -q domains/subdomains.txt
+        cat .tmp/*.list | grep -v "*" | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 3 -r ~/wordlists/resolvers.txt -t 10 -silent | anew -q database/subdomains.txt
     fi
 
-    #> WEB PROBING AND SCREENSHOT
-    [ "$jsonout" == "False" ] || cat domains/subdomains.txt | python3 -c "import sys; import json; print (json.dumps({'subdomains':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/subdomains.json &> /dev/null
-    [ ! -f "domains/ports.txt" ] && naabu -retries 2 -r ~/wordlists/resolvers.txt -l domains/subdomains.txt --port $ports -silent -no-color 2> /dev/null | anew -q domains/ports.txt
-    [ "$jsonout" == "False" ] || cat domains/ports.txt | python3 -c "import sys; import json; print (json.dumps({'ports':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/ports.json &> /dev/null
-    [ ! -f "domains/probes.txt" ] && xargs -a domains/ports.txt -P 50 -I % bash -c "echo % | httpx -silent -threads 150 -status-code -title -timeout 20 -retries 2 -follow-host-redirects -random-agent -no-color" 2> /dev/null | anew -q domains/probes.txt
-    cat domains/probes.txt | awk '{print $1}' 2> /dev/null | anew -q domains/liveurls.txt
-    [ "$jsonout" == "False" ] || cat domains/liveurls.txt | python3 -c "import sys; import json; print (json.dumps({'liveurls':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/liveurls.json &> /dev/null
-    [ ! -d domains/aquatone ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path $CHROME_BIN -out domains/aquatone/ -threads 10 -silent" 2> /dev/null &> /dev/null
+    #@> WEB PROBING AND SCREENSHOT
+    naabu -retries 3 -r ~/wordlists/resolvers.txt -l database/subdomains.txt -p "$PR" -silent -no-color 2> /dev/null | anew -q database/ports.txt
+    cat database/ports.txt | httprobe -prefer-https | anew -q database/lives.txt
+    xargs -a database/lives.txt -P 50 -I % bash -c "echo % | aquatone -chrome-path $CHROME_BIN -out database/screenshots/ -threads 10 -silent" 2> /dev/null &> /dev/null
+    [ "$JO" == "False" ] || cat database/lives.txt | python3 -c "import sys; import json; print (json.dumps({'liveurls':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/liveurls.json &> /dev/null
+    [ "$JO" == "False" ] || cat database/subdomains.txt | python3 -c "import sys; import json; print (json.dumps({'subdomains':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/subdomains.json &> /dev/null
+    [ "$JO" == "False" ] || cat database/ports.txt | python3 -c "import sys; import json; print (json.dumps({'ports':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/ports.json &> /dev/null
 }
 
-subenum(){
-    echo -e "${BOLD}Starting subdomain enumeration of $domain${NORMAL}"
-    passiveenum
-    activeenum
-    secondlevel
-    domaincheck
-    [ "$silent" == "False" ] && cat domains/liveurls.txt 2> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- SUBDOMAINS: $(cat domains/liveurls.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    echo -e "[$(date)] - Subdomain enumeration completed, total [Subdomains:$(cat domains/subdomains.txt | wc -l)  Activeurls:$(cat domains/liveurls.txt | wc -l)] found" | notify -silent &> /dev/null
+SUBD_SCAN(){
+    echo -e ""
+    echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 4; echo -e " STARTING SUBDOMAIN SCANNING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
+    SUBD_PASV
+    SUBD_ACTV
+    SUBD_SCND
+    SUBD_CHCK
+    [ "$SL" == "False" ] && cat database/lives.txt 2> /dev/null
+    echo -e "Subdomain enumeration completed, total [Subdomains:$(cat database/subdomains.txt | wc -l)  Activeurls:$(cat database/lives.txt | wc -l)] found" | notify -silent &> /dev/null
 }
 
-#> WEB CRAWLING AND FILTERING
-webcrawl(){
-    echo -e "${BOLD}Crawling subdomains of $domain${NORMAL}"
-    [ ! -f ".tmp/gospider.txt" ] && timeout 50m gospider -S domains/liveurls.txt -d 10 -c 20 -t 50 -K 3 --no-redirect --js -a -w --blacklist ".(eot|jpg|jpeg|gif|css|tif|tiff|png|ttf|otf|woff|woff2|ico|svg|txt)" --include-subs -q -o .tmp/gospider 2> /dev/null | anew -q .tmp/gospider.txt
-    [ ! -f ".tmp/waybackurls.txt" ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q .tmp/waybackurls.txt
-    [ ! -f ".tmp/gauplus.txt" ] && cat domains/liveurls.txt | gauplus --random-agent -b eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,pdf,svg,txt -t $threads -o .tmp/gauplus.txt
-    cat .tmp/gospider.txt .tmp/gauplus.txt .tmp/waybackurls.txt 2> /dev/null | sed '/\[/d' | grep $domain | sort -u | uro | anew -q domains/endpoints.txt # <-- Filtering duplicate and common endpoints
-    [ "$jsonout" == "False" ] || cat domains/endpoints.txt | python3 -c "import sys; import json; print (json.dumps({'endpoints':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/endpoints.json &> /dev/null
+#@> WEB CRAWLING AND FILTERING
+WEBC_RAWL(){
+    echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 6; echo -e " STARTING WEBCRAWLING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
+    timeout 50m gospider -S database/lives.txt -d 10 -c 20 -t 50 -K 3 --no-redirect --js -a -w --blacklist ".(eot|jpg|jpeg|gif|css|tif|tiff|png|ttf|otf|woff|woff2|ico|svg|txt)" --include-subs -q -o .tmp/gospider 2> /dev/null | anew -q .tmp/gospider.list
+    xargs -a database/lives.txt -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q .tmp/waybackurls.list
+    xargs -a database/lives.txt -P 50 -I % bash -c "echo % | gau --blacklist eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,svg,txt --retries 3 --threads 50" 2> /dev/null | anew -q .tmp/gau.list 2> /dev/null &> /dev/null
+    cat .tmp/gospider.list .tmp/gau.list .tmp/waybackurls.list 2> /dev/null | sed '/\[/d' | grep $DM | sort -u | uro | anew -q database/urls.txt # <-- Filtering duplicate and common endpoints
+    [ "$JO" == "False" ] || cat database/urls.txt | python3 -c "import sys; import json; print (json.dumps({'endpoints':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/urls.json &> /dev/null
 
-    #> FILTERING ENDPOINTS USING PATTERNS
-    if [ -s "domains/endpoints.txt" ]; then
-        gf xss domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/xss.txt
-        gf lfi domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/lfi.txt
-        gf rce domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/rce.txt
-        gf ssrf domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/ssrf.txt
-        gf ssti domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/ssti.txt
-        gf sqli domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/sqli.txt
-        gf redirect domains/endpoints.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q domains/patterns/redirect.txt
+    #@> FILTERING ENDPOINTS USING PATTERNS
+    if [ -s "database/urls.txt" ]; then
+        gf xss database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/xss.list
+        gf lfi database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/lfi.list
+        gf rce database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/rce.list
+        gf ssrf database/urls.txt | sed "s/'\|(\|)//g" | bhedak "http://169.254.169.254/latest/meta-data/hostname" 2> /dev/null | anew -q database/.gf/ssrf.list
+        gf ssti database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/ssti.list
+        gf sqli database/urls.txt | sed "s/'\|(\|)//g" | bhedak "(select(0)from(select(sleep(5)))v)" 2> /dev/null | anew -q database/.gf/sqli.list
+        gf redirect database/urls.txt | sed "s/'\|(\|)//g" | bhedak "http://www.evil.com/" 2> /dev/null | anew -q database/.gf/redirect.list
     else
-        echo -e "[!] - \"domains/endpoints.txt\" file not found or doesn't contain anything"
+        echo -e "[!] - \"database/urls.txt\" file not found or doesn't contain anything"
         exit 127
     fi
 
-    if [ -s "~/tools/payloads/ssti.txt" ] && [ -s "~/tools/payloads/lfi.txt" ]; then
-        cat ~/tools/payloads/ssti.txt | while read -r line; do
-            cat domains/patterns/ssti.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/ssti.txt
-        done
-
-        cat ~/tools/payloads/lfi.txt | while read -r line; do
-            cat domains/patterns/lfi.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/lfi.txt
-        done
-    else
-        wget -O ~/tools/payloads/lfi.txt https://raw.githubusercontent.com/R0X4R/Garud/master/.github/payloads/lfi.txt -q --no-check-certificate
-        wget -O ~/tools/payloads/ssti.txt https://raw.githubusercontent.com/R0X4R/Garud/master/.github/payloads/ssti.txt -q --no-check-certificate
-        cat ~/tools/payloads/ssti.txt | while read -r line; do
-            cat domains/patterns/ssti.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/ssti.txt
-        done
-
-        cat ~/tools/payloads/lfi.txt | while read -r line; do
-            cat domains/patterns/lfi.txt | bhedak "$line" 2> /dev/null | anew -q .tmp/lfi.txt
-        done
-    fi
-
-    [ -s "domains/patterns/ssrf.txt" ] && cat domains/patterns/ssrf.txt | bhedak "http://169.254.169.254/latest/meta-data/hostname" 2> /dev/null | anew -q .tmp/ssrf.txt
-    [ -s "domains/patterns/xss.txt" ] && xargs -a domains/patterns/xss.txt -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >\|\"" | awk '{print $2}' | anew -q .tmp/xssp.txt
-    [ -s ".tmp/xssp.txt" ] && cat .tmp/xssp.txt 2> /dev/null | bhedak "\">/><svg/onload=confirm(document.domain)>" 2> /dev/null | anew -q .tmp/xss.txt
-    [ -s "domains/patterns/redirect.txt" ] && cat domains/patterns/redirect.txt | bhedak "http://www.evil.com/" 2> /dev/null | anew -q .tmp/redirect.txt
+    xargs -a database/.gf/xss.list -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >\|\"" | awk '{print $2}' | anew -q .tmp/xssp.list
+    cat .tmp/xssp.list 2> /dev/null | bhedak "\">/><svg/onload=confirm(document.domain)>" 2> /dev/null | anew -q .tmp/xss.txt
 }
 
-#> NUCLEI SCAN
-nucleiscan(){
-    echo -e "${BOLD}Starting nuclei scan on $domain${NORMAL}"
+#@> NUCLEI SCAN
+NUCL_SCAN(){
+    echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 6; echo -e " STARTING NUCLEI VULNERABILITY SCANNING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
     nuclei -update-templates 2> /dev/null &> /dev/null
-    [ ! -f "nuclei/info.txt" ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -severity info -c 50 -silent" 2> /dev/null | anew -q nuclei/info.txt
-    [ ! -f "nuclei/low.txt" ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -severity low -c 50 -silent" 2> /dev/null | anew nuclei/low.txt | notify -silent &> /dev/null
-    [ ! -f "nuclei/medium.txt" ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -severity medium -c 50 -silent" 2> /dev/null | anew nuclei/medium.txt | notify -silent &> /dev/null
-    [ ! -f "nuclei/high.txt" ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -severity high -c 50 -silent" 2> /dev/null | anew nuclei/high.txt | notify -silent &> /dev/null
-    [ ! -f "nuclei/critical.txt" ] && xargs -a domains/liveurls.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -severity critical -c 50 -silent" 2> /dev/null | anew nuclei/critical.txt | notify -silent &> /dev/null
-    [ "$jsonout" == "False" ] || cat nuclei/info.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_info':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/info.json &> /dev/null
-    [ "$jsonout" == "False" ] || cat nuclei/low.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_low':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/low.json &> /dev/null
-    [ "$jsonout" == "False" ] || cat nuclei/medium.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_medium':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/medium.json &> /dev/null
-    [ "$jsonout" == "False" ] || cat nuclei/high.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_high':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/high.json &> /dev/null
-    [ "$jsonout" == "False" ] || cat nuclei/critical.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_critical':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/critical.json &> /dev/null
-    [ "$silent" == "False" ] && cat nuclei/*.txt
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s info -c 10 -silent" 2> /dev/null | anew -q vulns/nuclei.txt
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s low -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s medium -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s high -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s critical -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    [ "$JO" == "False" ] || cat vulns/nuclei.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_info':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/nuclei.json &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/nuclei.txt
 }
 
-#> VULNERABILITY SCANNING
-vulnscan(){
-    echo -e "${BOLD}Starting vulnerability scan on $domain${NORMAL}"
-    [ ! -f "injections/crlf.txt" ] &&  crlfuzz -l domains/liveurls.txt -c $threads -s | anew injections/crlf.txt | notify -silent &> /dev/null
-    [ "$silent" == "False" ] && cat injections/crlf.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/crlf.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_crlf':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/crlf.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- CRLF: $(cat injections/crlf.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    cat domains/endpoints.txt | cut -d"?" -f1 | cut -d"=" -f1 | grep -iaE "([^.]+)\.zip$|([^.]+)\.zip\.[0-9]+$|([^.]+)\.zip[0-9]+$|([^.]+)\.zip[a-z][A-Z][0-9]+$|([^.]+)\.zip\.[a-z][A-Z][0-9]+$|([^.]+)\.rar$|([^.]+)\.tar$|([^.]+)\.tar\.gz$|([^.]+)\.tgz$|([^.]+)\.sql$|([^.]+)\.db$|([^.]+)\.sqlite$|([^.]+)\.pgsql\.txt$|([^.]+)\.mysql\.txt$|([^.]+)\.gz$|([^.]+)\.config$|([^.]+)\.log$|([^.]+)\.bak$|([^.]+)\.backup$|([^.]+)\.bkp$|([^.]+)\.crt$|([^.]+)\.dat$|([^.]+)\.eml$|([^.]+)\.java$|([^.]+)\.lst$|([^.]+)\.key$|([^.]+)\.passwd$|([^.]+)\.pl$|([^.]+)\.pwd$|([^.]+)\.mysql-connect$|([^.]+)\.jar$|([^.]+)\.cfg$|([^.]+)\.dir$|([^.]+)\.orig$|([^.]+)\.bz2$|([^.]+)\.old$|([^.]+)\.vbs$|([^.]+)\.img$|([^.]+)\.inf$|([^.]+)\.sh$|([^.]+)\.py$|([^.]+)\.vbproj$|([^.]+)\.mysql-pconnect$|([^.]+)\.war$|([^.]+)\.go$|([^.]+)\.psql$|([^.]+)\.sql\.gz$|([^.]+)\.vb$|([^.]+)\.webinfo$|([^.]+)\.jnlp$|([^.]+)\.cgi$|([^.]+)\.tmp$|([^.]+)\.ini$|([^.]+)\.webproj$|([^.]+)\.xsql$|([^.]+)\.raw$|([^.]+)\.inc$|([^.]+)\.lck$|([^.]+)\.nz$|([^.]+)\.rc$|([^.]+)\.html\.gz$|([^.]+)\.gz$|([^.]+)\.env$|([^.]+)\.yml$" | httpx -silent -follow-host-redirects | anew -q domains/sensitivefiles.txt &> /dev/null
-    [ "$jsonout" == "False" ] || cat domains/sensitivefiles.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'sensitive':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/sensitive.json &> /dev/null
-    [ ! -f "injections/ssti.txt" ] && xargs -a .tmp/ssti.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"check-ssti49\" && echo -e \"[POTENTIAL SSTI] - % \n \"" 2> /dev/null | grep "POTENTIAL SSTI" | anew injections/ssti.txt | notify -silent &> /dev/null
-    [ "$silent" == "False" ] && cat injections/ssti.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/ssti.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_ssti':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/ssti.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- SERVER-SIDE TEMPLATE INJECTION: $(cat injections/ssti.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    [ ! -f "injections/xss.txt" ] && xargs -a .tmp/xss.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"<svg/onload=confirm(document.domain)>\" && echo -e \"[POTENTIAL XSS] - % \n \"" 2> /dev/null | grep "POTENTIAL XSS" | anew injections/xss.txt | notify -silent &> /dev/null
-    [ "$silent" == "False" ] && cat injections/xss.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/xss.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_xss':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/xss.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- CROSS-SITE SCRIPTING: $(cat injections/xss.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    [ ! -f "injections/ssrf.txt" ] && xargs -a .tmp/ssrf.txt -P 50 -I % bash -c "curl -ks -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"compute.internal\" && echo -e \"[POTENTIAL SSRF] - % \n \"" 2> /dev/null | grep "POTENTIAL SSRF" | anew injections/ssrf.txt | notify -silent &> /dev/null
-    [ "$silent" == "False" ] && cat injections/ssrf.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/ssrf.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_ssrf':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/ssrf.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- SERVER-SIDE REQUEST FORGERY: $(cat injections/ssrf.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    [ ! -f "injections/lfi.txt" ] && xargs -a .tmp/lfi.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"root:x:\" && echo -e \"[POTENTIAL LFI] - % \n \"" 2> /dev/null | grep "POTENTIAL LFI" | anew injections/lfi.txt | notify -silent &> /dev/null
-    [ "$silent" == "False" ] && cat injections/lfi.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/lfi.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_lfi':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/lfi.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- LOCAL FILE INCLUSION: $(cat injections/lfi.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    [ ! -f "injections/redirect.txt" ] && xargs -a .tmp/redirect.txt -P 50 -I % bash -c "curl -s -iL -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"Evil.Com - We get it...Daily\" && echo -e \"[POTENTIAL REDIRECT] - % \n \"" 2> /dev/null | grep "POTENTIAL REDIRECT" | anew injections/redirect.txt | notify -silent &> /dev/null
-    [ "$silent" == "False" ] && cat injections/redirect.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/redirect.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_redirect':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/redirect.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- OPEN-redirectION: $(cat injections/redirect.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    [ ! -d injections/sqli ] && timeout 50m xargs -a domains/patterns/sqli.txt -P 50 -I % bash -c "python3 ~/tools/sqlmap/sqlmap.py -u % -b --batch --disable-coloring --random-agent --output-dir=injections/sqli/" 2> /dev/null &> /dev/null
-    if [ -n "$blindxss" ]; then
-        dalfox file .tmp/xssp.txt --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -b $blindxss -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew injections/dalfoxss.txt | notify -silent &> /dev/null
-    else
-        dalfox file .tmp/xssp.txt --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew injections/dalfoxss.txt | notify -silent &> /dev/null
-    fi
-    [ "$silent" == "False" ] && cat injections/dalfoxss.txt 2> /dev/null
-    [ "$jsonout" == "False" ] || cat injections/dalfoxss.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'dalfox':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/dalfox.json &> /dev/null
-    [ "$silent" == "False" ] && echo -e "${RED}${BOLD}-- DALFOX: $(cat injections/dalfoxss.txt 2> /dev/null | wc -l)${NORMAL}\n"
-    [ "$jsonout" == "False" ] || cat .json/*.json | jq -s 'add' 2> /dev/null | tee output.json &> /dev/null
-    [ "$remout" == "True" ] && rm -rf domains/*.txt domains/patterns/ injections/*.txt nuclei/
+#@> VULNERABILITY SCANNING
+VULN_SCAN(){
+    echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 6; echo -e " STARTING INJECTION VULNERABILITY SCANNING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
+
+    crlfuzz -l database/lives.txt -c 50 -s | anew vulns/crlf.txt | notify -silent &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/crlf.txt 2> /dev/null
+    [ "$JO" == "False" ] || cat vulns/crlf.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_crlf':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/crlf.json &> /dev/null
+
+    cat database/urls.txt | cut -d"?" -f1 | cut -d"=" -f1 | grep -iaE "([^.]+)\.zip$|([^.]+)\.zip\.[0-9]+$|([^.]+)\.zip[0-9]+$|([^.]+)\.zip[a-z][A-Z][0-9]+$|([^.]+)\.zip\.[a-z][A-Z][0-9]+$|([^.]+)\.rar$|([^.]+)\.tar$|([^.]+)\.tar\.gz$|([^.]+)\.tgz$|([^.]+)\.sql$|([^.]+)\.db$|([^.]+)\.sqlite$|([^.]+)\.pgsql\.txt$|([^.]+)\.mysql\.txt$|([^.]+)\.gz$|([^.]+)\.config$|([^.]+)\.log$|([^.]+)\.bak$|([^.]+)\.backup$|([^.]+)\.bkp$|([^.]+)\.crt$|([^.]+)\.dat$|([^.]+)\.eml$|([^.]+)\.java$|([^.]+)\.lst$|([^.]+)\.key$|([^.]+)\.passwd$|([^.]+)\.pl$|([^.]+)\.pwd$|([^.]+)\.mysql-connect$|([^.]+)\.jar$|([^.]+)\.cfg$|([^.]+)\.dir$|([^.]+)\.orig$|([^.]+)\.bz2$|([^.]+)\.old$|([^.]+)\.vbs$|([^.]+)\.img$|([^.]+)\.inf$|([^.]+)\.sh$|([^.]+)\.py$|([^.]+)\.vbproj$|([^.]+)\.mysql-pconnect$|([^.]+)\.war$|([^.]+)\.go$|([^.]+)\.psql$|([^.]+)\.sql\.gz$|([^.]+)\.vb$|([^.]+)\.webinfo$|([^.]+)\.jnlp$|([^.]+)\.cgi$|([^.]+)\.tmp$|([^.]+)\.ini$|([^.]+)\.webproj$|([^.]+)\.xsql$|([^.]+)\.raw$|([^.]+)\.inc$|([^.]+)\.lck$|([^.]+)\.nz$|([^.]+)\.rc$|([^.]+)\.html\.gz$|([^.]+)\.gz$|([^.]+)\.env$|([^.]+)\.yml$" | httpx -silent -follow-host-redirects | anew -q vulns/files.txt &> /dev/null
+    [ "$JO" == "False" ] || cat vulns/files.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'sensitive':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/files.json &> /dev/null
+
+    xargs -a .tmp/xss.txt -P 50 -I % bash -c "curl -s -L -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"<svg/onload=confirm(document.domain)>\" && echo -e \"[POTENTIAL XSS] - % \n \"" 2> /dev/null | grep "POTENTIAL XSS" | anew vulns/xss.txt | notify -silent &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/xss.txt 2> /dev/null
+    [ "$JO" == "False" ] || cat vulns/xss.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_xss':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/xss.json &> /dev/null
+
+    xargs -a database/.gf/ssrf.list -P 50 -I % bash -c "curl -ks -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"compute.internal\" && echo -e \"[POTENTIAL SSRF] - % \n \"" 2> /dev/null | grep "POTENTIAL SSRF" | anew vulns/ssrf.txt | notify -silent &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/ssrf.txt 2> /dev/null
+    [ "$JO" == "False" ] || cat vulns/ssrf.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_ssrf':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/ssrf.json &> /dev/null
+
+    xargs -a database/.gf/redirect.list -P 50 -I % bash -c "curl -s -iL -H \"X-Bugbounty: Testing\" -H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36\" --insecure '%' | grep \"Evil.Com - We get it...Daily\" && echo -e \"[POTENTIAL REDIRECT] - % \n \"" 2> /dev/null | grep "POTENTIAL REDIRECT" | anew vulns/redirect.txt | notify -silent &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/redirect.txt 2> /dev/null
+    [ "$JO" == "False" ] || cat vulns/redirect.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_redirect':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/redirect.json &> /dev/null
+
+    timeout 50m xargs -a database/.gf/sqli.list -P 50 -I % bash -c "echo % | jeeves --payload-time 5" | grep "Vulnerable To" | anew vulns/sqli.txt | notify -silent 2> /dev/null &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/sqli.txt 2> /dev/null
+    [ "$JO" == "False" ] || cat vulns/sqli.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_redirect':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/redirect.json &> /dev/null
+
+    dalfox file .tmp/xssp.list --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew vulns/dalfoxss.txt | notify -silent &> /dev/null
+    [ "$SL" == "False" ] && cat vulns/dalfoxss.txt 2> /dev/null
+    [ "$JO" == "False" ] || cat vulns/dalfoxss.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'dalfox':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/dalfox.json &> /dev/null
+
+    [ "$JO" == "False" ] || cat .json/*.json | jq -s 'add' 2> /dev/null | tee output.json &> /dev/null
 }
 
-#> DIRECTORY FUZZING
-fuzzdir(){
-    echo -e "${BOLD}Starting directory fuzzing on $domain${NORMAL}"
-    for target in $(cat domains/liveurls.txt); do
+#@> DIRECTORY FUZZING
+FUZZ_DIRS(){
+    echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 6; echo -e " STARTING DIRECTORY FUZZING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
+    for target in $(cat database/lives.txt); do
         fuzzout=$(echo $target | awk -F// '{print $NF}' | sed -E 's/[\.|:]+/_/g')
-        ffuf -u $target/FUZZ -ac -t 150 -mc 200 -sf -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -w ~/wordlists/fuzz.txt -p '0.6-1.2' -e .html,.json,.php,.asp,.aspx,.log,.sql,.txt,.asp,.jsp,.bak,~,.db -maxtime 900 -o domains/fuzz/$fuzzout.json -s 2> /dev/null &> /dev/null
-        cat domains/directories/$fuzzout.json | jq -r '.results[] | .status, .length, .url' 2> /dev/null | xargs -n3 | anew -q domains/directories/$fuzzout.txt
-        rm -rf domains/directories/$fuzzout.json
+        ffuf -u $target/FUZZ -ac -t 100 -mc 200 -sf -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -w ~/wordlists/fuzz.txt -p '0.6-1.2' -e .html,.json,.php,.asp,.aspx,.log,.sql,.txt,.asp,.jsp,.bak,~,.db -maxtime 900 -o database/dirs/$fuzzout.json -s 2> /dev/null &> /dev/null
+        cat database/dirs/$fuzzout.json | jq -r '.results[] | .status, .length, .url' 2> /dev/null | xargs -n3 | anew -q database/dirs/$fuzzout.txt
+        rm -rf database/dirs/$fuzzout.json
     done
 }
 
-#> SENDING FINAL NOTIFICATION
-sendnote(){
+#@> SENDING FINAL NOTIFICATION
+SEND_NOTE(){
     echo -e ""
-    echo -e "${BOLD}Scanning completed on $domain${NORMAL}"
-    echo -e "[Garud] - Scanning completed on $domain at $(date)" | notify -silent
+    echo -e "${BK} SCANNING COMPLETED SUCCESSFULLY ON $DM ${RT}"
+    echo -e "[GARUD] - Scanning completed on $DM at $(date)" | notify -silent
 }
 
-vault(){
-    subenum    2> /dev/null
-    webcrawl   2> /dev/null
-    nucleiscan 2> /dev/null
-    vulnscan   2> /dev/null
-    fuzzdir    2> /dev/null
-    sendnote   2> /dev/null
+VAULT(){
+    SUBD_SCAN 2> /dev/null
+    WEBC_RAWL 2> /dev/null
+    NUCL_SCAN 2> /dev/null
+    VULN_SCAN 2> /dev/null
+    FUZZ_DIRS 2> /dev/null
+    SEND_NOTE 2> /dev/null
 }
 
 while true
 do
-    banner
-    makedir
-    vault
+    INFOM
+    MAKDR
+    VAULT
     exit 0
 done

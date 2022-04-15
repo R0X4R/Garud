@@ -22,7 +22,7 @@ I made this tool to automate my recon and save my time. It really give me headac
 The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
 
 ```txt
-What's new in v3.2: Fixed some error and added bhedak and some other filters and json output feature.
+What's new in v3.5: fixed some previous issues and filter out time waste vulns(you need to find them manually).
 ```
 
 <h3 align="left">How garud works</h3>
@@ -45,15 +45,13 @@ What's new in v3.2: Fixed some error and added bhedak and some other filters and
   <a href="https://github.com/tomnomnom/assetfinder">`assetfinder`</a> •
   <a href="https://github.com/projectdiscovery/httpx">`httpx`</a> •
   <a href="https://github.com/Emoe/kxss">`kxss`</a> •
-  <a href="https://github.com/tomnomnom/qsreplace">`qsreplace`</a> •
   <a href="https://github.com/projectdiscovery/nuclei">`nuclei`</a> •
   <a href="https://github.com/hahwul/dalfox">`dalfox`</a> •
   <a href="https://github.com/tomnomnom/anew">`anew`</a> •
   <a href="https://github.com/projectdiscovery/notify">`notify`</a> •
   <a href="https://github.com/michenriksen/aquatone">`aquatone`</a> •
-  <a href="https://github.com/ameenmaali/urldedupe">`urldedupe`</a> •
   <a href="https://github.com/OWASP/Amass">`amass`</a> •
-  <a href="https://github.com/bp0lr/gauplus">`gauplus`</a> •
+  <a href="https://github.com/lc/gau">`gau`</a> •
   <a href="https://github.com/dwisiswant0/crlfuzz">`crlfuzz`</a> •
   <a href="https://github.com/s0md3v/uro">`uro`</a> •
   <a href="https://github.com/ffuf/ffuf">`ffuf`</a> •
@@ -76,23 +74,26 @@ garud:~ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x ga
 
 
 ```js 
-[GARUD] - Coded by R0X4R in INDIA with <3
+
+
+                █▀▀▀ █▀▀█ █▀▀█ █░░█ █▀▀▄
+                █░▀█ █▄▄█ █▄▄▀ █░░█ █░░█
+                ▀▀▀▀ ▀░░▀ ▀░▀▀ ░▀▀▀ ▀▀▀░
+
+[GARUD] == A RECONNAISSANCE SUITE FOR BUG BOUNTY (@R0X4R)
 
 Example Usage:
-garud [-d target.tld] [-o output destination] [-t threads] [-b blind xss URL] [-x OOS domains] [--json] [-s] [-r]
+garud [-d target.tld] [-x exclude domains] [--json] [-s]
 
 Flags:
-   -b, --blind                  string     Add your xss server for BXSS            -b test.xss.ht
    -d, --domain                 string     Add your target                         -d target.tld
-   -o, --output                 string     Write to output folder                  -o results
-   -t, --threads                int        Number of threads                       -t 100
-   -x, --exclude                string     Exclude out of scope domains            -x /home/oosd.txt
+   -x, --exclude                string     Exclude out of scope domains            -x /home/dommains.list
 
 Optional Flags:
    -s, --silent                            Hide output in the terminal             Default: False
    -j, --json                              Store output in a single json file      Default: False
-   -r, --remove                            Delete everything except json output    Default: False
-   -v, --version                           Print current version of Garud                                                  
+   -v, --version                           Print current version of Garud
+
 ```
 
 **Fix errors while using or installing Garud**
@@ -109,36 +110,28 @@ You can also copy the error and search on google this will make your debugging s
 **Example Usage**
 
 ```txt
-# garud -d hackerone.com -o hackerone
-```
-Add threads to your scan
-```txt
-# garud -d hackerone.com -o hackerone -t 200
-```
-Scan for blind xss, you can get your xss server from [`xsshunter.com`](https://xsshunter.com/)
-```txt
-# garud -d hackerone.com -o hackerone -b test.xss.ht
+# garud -d hackerone.com
 ```
 Exclude out of scope domains
 ```txt
 # echo test.hackerone.com > ossdomain.txt
-# garud -d hackerone.com -o hackerone -x ~/ossdomain.txt
+# garud -d hackerone.com -x ~/ossdomain.txt
 ```
 With all flags
 ```txt
-# garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt
+# garud -d hackerone.com -j -s -x /home/oss.txt
 ```
 
 Hide output in the terminal
 
 ```txt
-# garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt -s
+# garud -d hackerone.com -s
 ```
 
 Store output in a single `json` file
 
 ```txt
-# garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt -s -j
+# garud -d hackerone.com -s -j
 # cd hackerone
 # cat output.json | jq
 {
@@ -158,22 +151,6 @@ Store output in a single `json` file
     "[POTENTIAL XSS] - http://subdomain.target.tld:80/hpp/index.php?pp=%22%3E%2F%3E%3Csvg%2Fonload%3Dconfirm%28document.domain%29%3E "
   ]
 }
-```
-
-Remove everything except some folders and `json` output.
-
-```txt
-# garud -d hackerone.com -o hackerone -t 300 -b test.xss.ht -x ~/ossdomain.txt -s -r
-```
-
-Start where you left
-```txt
-garud:~ garud -d hackerone.com. -o hackerone -t 300
-Starting scan...
-^C # assume you stopped at nuclei scan
-garud:~ cd hackerone && rm -rf nuclei
-garud:~ cd
-garud:~ garud -d hackerone.com. -o hackerone -t 300
 ```
 
 **Docker**
