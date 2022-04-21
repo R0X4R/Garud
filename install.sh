@@ -4,6 +4,7 @@ RT="\e[0m"
 echo -e "Make sure you're root before installing the tools"
 sleep 5s
 clear
+sudo apt-get install pv
 mkdir -p ~/tools
 mkdir -p ~/tools/.tmp/
 mkdir -p ~/.gf
