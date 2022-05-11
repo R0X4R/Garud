@@ -4,12 +4,12 @@ RT="\e[0m"
 echo -e "Make sure you're root before installing the tools"
 sleep 5s
 clear
-sudo apt-get install pv
+sudo apt-get install pv > /dev/null 2>&1
 mkdir -p ~/tools
 mkdir -p ~/tools/.tmp/
 mkdir -p ~/.gf
 mkdir -p ~/wordlists/
-mv .github/payloads/patterns/*.json ~/.gf/
+mv .github/payloads/patterns/*.json ~/.gf/ > /dev/null 2>&1
 cd
 
 echo -e "${BK}                              ${RT}" | tr -d '\n' | pv -qL 4; echo -e " ${BK}INSTALLING ALL DEPENDENCIES${RT}"
@@ -31,12 +31,13 @@ source ~/.bashrc
 echo -e "- Installing chromium"
 sudo snap install chromium > /dev/null 2>&1
 
+echo -e " "
 echo -e "${BK}                              ${RT}" | tr -d '\n' | pv -qL 4; echo -e " ${BK}DOWNLOADING ALL TOOLS FROM GITHUB${RT}"
 
 echo -e "- Installing sublister"
 cd && git clone https://github.com/aboul3la/Sublist3r.git ~/tools/Sublist3r > /dev/null 2>&1; cd ~/tools/Sublist3r; sudo pip3 install -r requirements.txt > /dev/null 2>&1
 
-echo -e "-Installing bhedak"
+echo -e "- Installing bhedak"
 cd && pip3 install bhedak > /dev/null 2>&1
 
 echo -e "- Installing uro"
@@ -104,8 +105,8 @@ go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest > /d
 
 echo -e "- Installing httprobe"
 cd ~/tools/.tmp && git clone https://github.com/tomnomnom/httprobe.git > /dev/null 2>&1
-cd httprobe && go build . > /dev/null 2>&1
-mv httprobe /usr/bin/
+cd httprobe && go build main.go > /dev/null 2>&1
+mv main /usr/bin/httprobe
 
 echo -e "- Installing httpx"
 go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest > /dev/null 2>&1
@@ -121,6 +122,7 @@ go install github.com/OJ/gobuster/v3@latest > /dev/null 2>&1
 echo -e "- Installing Jeeves"
 go install github.com/ferreiraklet/Jeeves@latest > /dev/null 2>&1
 
+echo -e " "
 echo -e "${BK}                              ${RT}" | tr -d '\n' | pv -qL 4; echo -e " ${BK}DOWNLOADING ALL THE WORDLISTS${RT}"
 cd ~/wordlists/
 echo -e "- Downloading subdomains wordlists"
@@ -131,6 +133,7 @@ echo -e "- Downloading fuzz wordlists"
 wget -q https://raw.githubusercontent.com/Bo0oM/fuzz.txt/master/fuzz.txt -O fuzz.txt > /dev/null 2>&1
 sleep 2s
 
+echo -e " "
 echo -e "${BK}                              ${RT}" | tr -d '\n' | pv -qL 4; echo -e " ${BK}FINISHING UP THINGS${RT}"
 rm -rf ~/tools/.tmp/ > /dev/null 2>&1
 cp -r ~/go/src/github.com/tomnomnom/gf/examples ~/.gf/ > /dev/null 2>&1
