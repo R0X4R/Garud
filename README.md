@@ -184,7 +184,7 @@ Garud runs as root inside the container & so it is advisable to configure Linux 
                                                                 
 <p align="left">
 <h3>Donate</h3> 
-<a href="https://rzp.io/l/pQny7s0n"><img src=".github/img/support.svg" width="200"></a>    <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a>
+<a href="https://pmny.in/TIiNwyGvihgf"><img src=".github/img/support.svg" width="200"></a>    <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a> [`Buy-Me-A-Coffee`](https://www.buymeacoffee.com/R0X4R) [``
 </p>
 
 ### Thanks to the authors of the tools used in this script.
