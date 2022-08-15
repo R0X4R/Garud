@@ -22,7 +22,7 @@ I made this tool to automate my recon and save my time. It really give me headac
 The script first enumerates all the subdomains of the give target domain using assetfinder, sublister, subfinder and amass then filters all live domains from the whole subdomain list then it extarct titles of the subdomains using httpx then it scans for subdomain takeover using nuclei. Then it uses gauplus to extract paramters of the given subdomains then it use gf patterns to filters xss, ssti, ssrf, sqli params from that given subdomains and then it scans for low hanging fruits as well. Then it'll save all the output in a text file like target-xss.txt. Then it will send the notifications about the scan using notify. <br/>
 
 ```txt
-What's new in v3.5: fixed some previous issues and filter out time waste vulns(you need to find them manually).
+What's new in v4.0: fixed some previous issues and filter out time waste vulns(you need to find them manually) and added dorking.
 ```
 
 <h3 align="left">How garud works</h3>
@@ -69,6 +69,8 @@ garud:~ sudo su
 garud:~ apt install git
 garud:~ git clone https://github.com/R0X4R/Garud.git && cd Garud/ && chmod +x garud install.sh && mv garud /usr/bin/ && ./install.sh
 ```
+
+> **Note**: If you encounter any-issue while running `install.sh` file or `garud` run `sed -i -e 's/\r$//' install.sh`
 
 <h3>Usage</h3>
 
@@ -184,8 +186,9 @@ Garud runs as root inside the container & so it is advisable to configure Linux 
                                                                 
 <p align="left">
 <h3>Donate</h3> 
-<a href="https://pmny.in/TIiNwyGvihgf"><img src=".github/img/support.svg" width="200"></a>    <a href="https://ko-fi.com/i/IK3K34SJSA"><img src="https://ko-fi.com/img/githubbutton_sm.svg"></a> <a href="https://www.buymeacoffee.com/R0X4R">BuyMeACoffee</a>
-</p>
+
+|[`buymeacoffee.com/R0X4R`](https://www.buymeacoffee.com/R0X4R)|[`payU India`](https://pmny.in/bIKNZngt4ys1)|[`kofi.com/R0X4R`](https://ko-fi.com/i/IK3K34SJSA)|
+|--------|--------|------|
 
 ### Thanks to the authors of the tools used in this script.
 
