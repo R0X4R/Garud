@@ -148,10 +148,10 @@ SUBD_PASV(){
 }
 
 SUBD_ACTV(){
-    timeout 50m ffuf -u http://FUZZ.$DM/ -t 100 -p '1.0-2.0' -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200 -r -o .tmp/ffuf.json -s 2> /dev/null &> /dev/null
-    timeout 50m gobuster dns -d $DM --no-error -z -q -t 100 -w ~/wordlists/subdomains.txt 2> /dev/null | sed 's/Found: //g' | anew -q .tmp/gobuster.list
-    timeout 50m amass enum -active -brute -w ~/wordlists/subdomains.txt -d $DM -o .tmp/amassact.list &> /dev/null
-    cat .tmp/ffuf.json 2> /dev/null | jq -r '.results[] | .host' 2> /dev/null | anew -q .tmp/ffuf.list && rm -rf .tmp/ffuf.json
+    ffuf -u http://FUZZ.$DM/ -t 100 -p '1.0-2.0' -w ~/wordlists/subdomains.txt -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" -mc 200 -r -o .tmp/ffuf.json 
+    gobuster dns -d $DM --no-error -z -q -t 100 -w ~/wordlists/subdomains.txt  | sed 's/Found: //g' | anew -q .tmp/gobuster.list
+    amass enum -active -brute -w ~/wordlists/subdomains.txt -d $DM -o .tmp/amassact.list 
+    cat .tmp/ffuf.json  | jq -r '.results[] | .host'  | anew -q .tmp/ffuf.list && rm -rf .tmp/ffuf.json
 }
 
 SUBD_SCND(){
