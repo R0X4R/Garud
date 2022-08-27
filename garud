@@ -179,7 +179,7 @@ SUBD_CHCK(){
 SUBD_SCAN(){
     echo -e ""
     echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 4; echo -e " STARTING SUBDOMAIN SCANNING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
-    #SUBD_PASV
+    SUBD_PASV
     SUBD_ACTV
     SUBD_SCND
     SUBD_CHCK
