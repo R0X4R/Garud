@@ -140,6 +140,12 @@ SUBD_PASV(){
     curl -s "https://crt.sh/?q=%25.$DM&output=json" | jq -r '.[].name_value' 2>/dev/null | sed 's/\*\.//g' | sort -u | grep -o "\w.*$DM" | anew -q .tmp/cert.list
     curl -s "https://api.hackertarget.com/hostsearch/?q=$DM" | grep -o "\w.*$DM" | anew -q .tmp/htarget.list
     curl -s "https://riddler.io/search/exportcsv?q=pld:$DM" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | grep -o "\w.*$DM" | anew -q .tmp/riddler.list
+    curl -s "https://jldc.me/anubis/subdomains/$DM" | grep -Po "((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | cut -d "/" | anew -q .tmp/jldc.list
+    curl -s "https://certspotter.com/api/v1/issuances?domain=$DM&include_subdomains=true&expand=dns_names" | jq .[].dns_names | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | anew -q .tmp/certspotter.list
+    curl -s "https://api.threatminer.org/v2/domain.php?q=$DM&rt=5" | jq -r '.results[]' |grep -o "\w.*$DM" | sort -u | anew -q .tmp/threatminer.list
+    curl -s "https://dns.bufferover.run/dns?q=.$DM" | jq -r .FDNS_A[] | cut -d',' -f2 | anew -q .tmp/bufferover.list
+    curl -s "https://www.threatcrowd.org/searchApi/v2/domain/report/?domain=$DM" | jq -r '.subdomains' | grep -o "\w.*$DM" | anew -q .tmp/threatcrowd.list
+    curl -s "http://web.archive.org/cdx/search/cdx?url=*.$DM/*&output=text&fl=original&collapse=urlkey" | sed -e 's_https*://__' -e "s/\/.*//" | anew -q .tmp/archive.list
     assetfinder --subs-only $DM | anew -q .tmp/assetfinder.list
     python3 ~/tools/Sublist3r/sublist3r.py -d $DM -o .tmp/sublister.list &> /dev/null
     subfinder -silent -d $DM -all -t 100 -o .tmp/subfinder.list &> /dev/null
@@ -214,11 +220,11 @@ WEBC_RAWL(){
 NUCL_SCAN(){
     echo -e "${BK}        ${RT}" | tr -d '\n' | pv -qL 6; echo -e " STARTING NUCLEI VULNERABILITY SCANNING ON ${BK}$DM${RT} (${YW}it may take time${RT})"
     nuclei -update-templates 2> /dev/null &> /dev/null
-    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s info -c 10 -silent" 2> /dev/null | anew -q vulns/nuclei.txt
-    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s low -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
-    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s medium -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
-    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s high -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
-    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s critical -c 10 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s info -c 10 -rl 100 -silent" 2> /dev/null | anew -q vulns/nuclei.txt
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s low -c 10 -rl 100 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s medium -c 10 -rl 100 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s high -c 10 -rl 100 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
+    xargs -a database/lives.txt -P 50 -I % bash -c "nuclei -target % -t ~/nuclei-templates/ -nc -s critical -c 10 -rl 100 -silent" 2> /dev/null | anew vulns/nuclei.txt | notify -silent &> /dev/null
     [ "$JO" == "False" ] || cat vulns/nuclei.txt | python3 -c "import sys; import json; print (json.dumps({'nuclei_info':list(sys.stdin)}))" | sed 's/\\n//g' | tee .json/nuclei.json &> /dev/null
     [ "$SL" == "False" ] && cat vulns/nuclei.txt
 }
